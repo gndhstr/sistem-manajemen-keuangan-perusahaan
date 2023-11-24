@@ -1,1 +1,0 @@
-# sistem-keuangan-pribadi
