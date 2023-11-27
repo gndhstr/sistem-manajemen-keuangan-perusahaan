@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,15 +14,19 @@
 |
 */
 
-Route::get('/', function() {
+Route::get('/', function () {
     return redirect(route('login'));
 });
-Route::get('/starter', function() {
+Route::get('/starter', function () {
     return view('starter');
 });
 
 Auth::routes(['verify' => false, 'reset' => false]);
 
-Route::middleware('auth')->group(function() {
+Route::middleware('auth')->group(function () {
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 });
+
+Route::get('/direktur/dashboard', function () {
+    return view('direktur.dashboard');
+}); //rute direktur sementara
