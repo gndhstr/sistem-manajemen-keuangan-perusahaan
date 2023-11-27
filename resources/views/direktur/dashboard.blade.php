@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('direktur.layouts.master')
 
 @section('content')
     <!-- Content Header (Page header) -->
@@ -22,8 +22,8 @@
     <div class="content">
         <div class="container-fluid">
             <div class="d-flex justify-content-center">
-                <img src="https://img.freepik.com/free-vector/construction-flat-icon_1284-14660.jpg?w=740&t=st=1701071760~exp=1701072360~hmac=5827c668c7dd9d15ccf3b99bb442d09bdd85d75207d77cef03e242735d81e05a"
-                    alt="">
+                <img src="https://png.pngtree.com/png-clipart/20230409/original/pngtree-website-under-construction-in-yellow-rounded-square-shape-with-black-line-png-image_9041997.png"
+                    alt="" width="500px">
             </div>
         </div><!-- /.container-fluid -->
     </div>

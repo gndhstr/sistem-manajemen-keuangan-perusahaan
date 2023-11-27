@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth; //class untuk Route
+use Illuminate\Support\Facades\Route; //class untuk auth
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +27,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 });
 
-Route::get('/direktur/dashboard', function () {
-    return view('direktur.dashboard');
+Route::prefix('direktur')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('direktur.dashboard');
+    });
 }); //rute direktur sementara
