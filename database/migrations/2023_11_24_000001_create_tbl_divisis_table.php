@@ -15,7 +15,6 @@ class CreateTblDivisisTable extends Migration
     {
         Schema::create('tbl_divisis', function (Blueprint $table) {
             $table->bigIncrements('id_divisi');
-            $table->integer('id_user');
             $table->string("nama_divisi",255);
             $table->timestamps();
         });

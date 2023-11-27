@@ -15,11 +15,13 @@ class CreateTblPemasukansTable extends Migration
     {
         Schema::create('tbl_pemasukans', function (Blueprint $table) {
             $table->bigIncrements('id_pemasukan');
-            $table->integer('id_kategori');
-            $table->integer('id_user');
+            $table->bigInteger('id_kategori')->unsigned();
+            $table->foreign('id_kategori')->references('id_kategori')->on('tbl_kategoris');
+            $table->bigInteger('id_user')->unsigned();
+            $table->foreign('id_user')->references('id')->on('tbl_users');
             // bingung tipenya
-            // $table->string("id_user_create",255);
-            // $table->string("id_user_edit",255);
+            $table->bigInteger("id_user_create");
+            $table->bigInteger("id_user_edit");
             $table->date("tgl_pemasukan");
             $table->text("catatan");
             $table->string('bukti_pemasukan');
