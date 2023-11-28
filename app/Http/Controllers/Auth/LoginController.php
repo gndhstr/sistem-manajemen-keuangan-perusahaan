@@ -36,4 +36,9 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    public function username() //fungsi supaya auth engga autentikasi email
+    {
+        return 'username'; //tapi pake username
+    }
 }
