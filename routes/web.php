@@ -32,3 +32,9 @@ Route::prefix('direktur')->group(function () {
         return view('direktur.dashboard');
     });
 }); //rute direktur sementara
+
+
+Route::get('/user', 'tbl_userController@index')->name('daftarUser');
+Route::get('/user/{user}/delete', 'tbl_userController@destroy')->name('deleteUser');
+
+//Route view user
