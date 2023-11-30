@@ -13,15 +13,15 @@ class CreateTblPengeluaransTable extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_pengeluarans', function (Blueprint $table) {
+               Schema::create('tbl_pengeluarans', function (Blueprint $table) {
             $table->bigIncrements('id_pengeluaran');
             $table->bigInteger('id_kategori')->unsigned();
             $table->foreign('id_kategori')->references('id_kategori')->on('tbl_kategoris');
             $table->bigInteger('id_user')->unsigned();
             $table->foreign('id_user')->references('id')->on('tbl_users');
-            // bingung tipenya
             $table->bigInteger("id_user_create");
             $table->bigInteger("id_user_edit");
+            $table->integer("jml_keluar");
             $table->date("tgl_pengeluaran");
             $table->text("catatan");
             $table->string('bukti_pengeluaran');
