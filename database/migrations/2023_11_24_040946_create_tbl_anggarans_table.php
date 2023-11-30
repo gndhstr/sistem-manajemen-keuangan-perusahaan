@@ -13,13 +13,14 @@ class CreateTblAnggaransTable extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_anggarans', function (Blueprint $table) {
+             Schema::create('tbl_anggarans', function (Blueprint $table) {
             $table->bigIncrements('id_anggaran');
             $table->bigInteger('id_kategori')->unsigned();
             $table->foreign('id_kategori')->references('id_kategori')->on('tbl_kategoris');
             $table->bigInteger('id_divisi')->unsigned();
             $table->foreign('id_divisi')->references('id_divisi')->on('tbl_divisis');
             $table->string('rencana_anggaran',255);
+            $table->integer('jml_anggaran');
             $table->string('aktualisasi_anggaran',255);
             $table->date("tgl_anggaran");
             $table->timestamps();
