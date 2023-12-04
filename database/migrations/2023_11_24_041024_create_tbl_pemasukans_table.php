@@ -19,6 +19,7 @@ class CreateTblPemasukansTable extends Migration
             $table->foreign('id_kategori')->references('id_kategori')->on('tbl_kategoris');
             $table->bigInteger('id_user')->unsigned();
             $table->foreign('id_user')->references('id')->on('tbl_users');
+            // bingung tipenya
             $table->bigInteger("id_user_create");
             $table->bigInteger("id_user_edit");
             $table->integer("jml_masuk");

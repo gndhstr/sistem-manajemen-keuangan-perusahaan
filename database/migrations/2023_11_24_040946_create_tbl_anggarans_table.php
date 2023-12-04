@@ -13,7 +13,7 @@ class CreateTblAnggaransTable extends Migration
      */
     public function up()
     {
-             Schema::create('tbl_anggarans', function (Blueprint $table) {
+        Schema::create('tbl_anggarans', function (Blueprint $table) {
             $table->bigIncrements('id_anggaran');
             $table->bigInteger('id_kategori')->unsigned();
             $table->foreign('id_kategori')->references('id_kategori')->on('tbl_kategoris');
