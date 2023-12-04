@@ -1,8 +1,6 @@
 <?php
 
 namespace App;
-
-use App\tbl_divisi;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,9 +17,9 @@ class User extends Authenticatable
      * @var array
      */
 
-    // protected $fillable = [
-    //     'nama', 'username', 'password',
-    // ];
+    // Model User
+    // protected $fillable = ['id_divisi', 'nama', 'role'];
+
 
     protected $guarded = [
         'id'
@@ -49,4 +47,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(tbl_divisi::class, 'id_divisi');
     } 
+    // User.php
+    public function role_user()
+    {
+        // return $this->belongsTo('App\tbl_role', 'role');
+        return $this->belongsTo(tbl_role::class, 'role');
+        
+    }
+
 }
