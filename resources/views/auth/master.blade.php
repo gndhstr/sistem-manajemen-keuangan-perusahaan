@@ -30,6 +30,7 @@
         @yield('content')
     </div>
     <!-- /.login-box -->
+    @yield('addJavascript')
 </body>
 
 </html>

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class tbl_pemasukan extends Model
 {
-    protected $table ="tbl_pemasukan";
+    protected $table ="tbl_pemasukans";
     protected $fillable =[
         "id_kategori",
         "id_user",

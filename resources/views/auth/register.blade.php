@@ -1,5 +1,17 @@
 @extends('auth.master')
 
+@section('addCss')
+    <style>
+        html {
+            overflow: hidden;
+        }
+
+        .login-box {
+            margin-top: 20px;
+        }
+    </style>
+@endsection
+
 @section('content')
     <div class="card">
         <div class="card-body login-card-body">
@@ -47,7 +59,7 @@
                 <strong>{{ $message }}</strong>
             </span>
             @enderror --}}
-                <div class="input-group mb-3">
+                <div class="input-group mb-1">
                     <select id="role" class="form-control @error('role') is-invalid @enderror" name="role"
                         value="{{ old('role') }}" required autocomplete="role">
                         <option value="direktur">Direktur</option>
@@ -69,7 +81,7 @@
                         value="{{ old('divisi') }}" required autocomplete="divisi">
                         @foreach ($user as $division)
                             <option value="{{ $division->id_divisi }}">{{ $division->nama_divisi }}</option>
-                            <option value=""></option>
+                            <option value="" hidden></option>
                         @endforeach
                     </select>
                     @error('role')
@@ -149,17 +161,13 @@
                     <!-- /.col -->
                 </div>
             </form>
-
-            @if (Route::has('login'))
-                <hr>
-                <p class="mb-0 text-center">
-                    <a href="{{ route('login') }}" class="text-center">{{ __('Sudah punya akun? Login sekarang') }}</a>
-                </p>
-            @endif
+            </form>
         </div>
         <!-- /.login-card-body -->
     </div>
+@endsection
 
+@section('addJavascript')
     <script>
         $(document).ready(function() {
             toggleDivisiVisibility();
