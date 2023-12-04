@@ -61,9 +61,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::prefix('direktur')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('direktur.dashboard');
-    });
+    Route::get('/dashboard', 'DirekturDashboardController@index');
 }); //rute direktur sementara
 
 Route::get('dashboards', 'DashboardController@index')->middleware('admin');

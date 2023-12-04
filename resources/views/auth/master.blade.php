@@ -29,6 +29,11 @@
         @yield('content')
     </div>
     <!-- /.login-box -->
+
+    <!-- jQuery -->
+	<script src="{{asset('js/jquery.min.js')}}"></script>
+
+    @yield('addJavascript')
 </body>
 
 </html>
