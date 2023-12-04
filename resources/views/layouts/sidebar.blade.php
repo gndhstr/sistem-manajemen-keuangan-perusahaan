@@ -31,6 +31,30 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{route('daftarDivisi')}}" class="nav-link">
+                        <i class="nav-icon fa fa-users"></i>
+                        <p>Divisi</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('daftarRole')}}" class="nav-link">
+                        <i class="nav-icon fa fa-briefcase"></i>
+                        <p>Role</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('daftarUser')}}" class="nav-link">
+                        <i class="nav-icon fa fa-user"></i>
+                        <p>User</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{route('daftarKategori')}}" class="nav-link">
+                        <i class="nav-icon fa fa-money"></i>
+                        <p>Kategori Keuangan</p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <form id="logout-form" action="{{route('logout')}}" method="post">
                         @csrf
                     </form>

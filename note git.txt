@@ -1,0 +1,15 @@
+dibagian layout ada di layout.master
+klo diubah DIINGET LAGI!!!
+
+-git clone https://github.com/Purnomo-Ribut/keuangankantor.git
+
+-dir
+-buka folder yang di clone
+-composer install
+-php artisan serve
+-ctrl c
+-git add .
+-git commit -m "push terbaru"
+-git push origin main
+- 
+

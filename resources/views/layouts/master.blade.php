@@ -36,7 +36,6 @@
 
 	<!-- REQUIRED SCRIPTS -->
 	@include('sweetalert::alert')
-
 	<!-- jQuery -->
 	<script src="{{asset('js/jquery.min.js')}}"></script>
 	<!-- Bootstrap 4 -->

@@ -4,13 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class tbl_divisi extends Model
 {
-    protected $table ="tbl_divisis";
+    protected $table = "tbl_divisis";
     protected $primaryKey = 'id_divisi';
-    
-    protected $fillable =[
-        "id_user",
+    protected $fillable = [
         "nama_divisi",
-    ]; 
+    ];
 }
+

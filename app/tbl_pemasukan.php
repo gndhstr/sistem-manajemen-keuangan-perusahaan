@@ -10,8 +10,8 @@ class tbl_pemasukan extends Model
     protected $fillable =[
         "id_kategori",
         "id_user",
-        // "id_user_create", belum 
-        // "id_user_edit",
+        "id_user_create",
+        "id_user_edit",
         "tgl_pemasukan",
         "status",
     ];

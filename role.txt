@@ -1,0 +1,50 @@
+-migrasi tabel
+-setup model
+-buat controller
+php artisan make:controller DivisiController -m Divisi
+
+web.php 
+-buat route
+
+-buat template
+
+
+##tambah data
+- {{route('createtbl_divisi')} di tambah data
+-{{route('storetbl_divisi'}} di action form
+controller create
+return view("divisi.create");
+controller store
+$validasiData = validator($request->all(),[
+          "nama" => "required|string|255",  
+        ])->validate();
+        $divisi = new tbl_divisi($validasiData);
+        $divisi->save();
+
+        return redirect(route("divisi"));
+-tambah controller
+ Route::get("/divisi/create","DivisiController@create")->name("createtbl_divisi");
+    Route::get("/divisi/store","DivisiController@store")->name("storetbl_divisi");
+
+##ubah 
+    Route::get("/divisi/{divisi}/edit","DivisiController@edit")->name("edittbl_divisi");
+    Route::post("/divisi/{divisi}/update","DivisiController@store")->name("updatetbl_divisi");
+
+-public function edit(Divisi $divisi)
+    {
+        return view("divisi.edit",[
+            "divisi"=>$divisi,
+        ]);
+    }
+-form
+="{{route('updatetbl_divisi',['id'=>$divisi->id_divisi])}}
+- index
+{{route('edittbl_divisi','id'=>$divisi->id_divisi}
+- update
+ $validasiData = validator($request->all(),[
+            "nama_divisi" => "required|string|max:255",  
+          ])->validate();
+         $divisi->nama=$validasiData["nama_divisi"];
+         $divisi->save();
+          
+          return redirect(route("daftarDivisi"));
