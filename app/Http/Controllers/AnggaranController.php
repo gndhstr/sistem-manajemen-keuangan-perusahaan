@@ -14,7 +14,8 @@ class AnggaranController extends Controller
      */
     public function index()
     {
-        //
+        $anggarans = tbl_anggaran::all();
+        return view("manajer.anggaran",["anggarans"=>$anggarans]);
     }
 
     /**
@@ -24,8 +25,12 @@ class AnggaranController extends Controller
      */
     public function create()
     {
-        //
+        $divisis = \App\tbl_divisi::all();
+        $kategoris = \App\tbl_kategori::all();
+        
+        return view("manajer.anggaran", ['divisis' => $divisis, 'kategoris' => $kategoris]);
     }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -35,7 +40,13 @@ class AnggaranController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validasiData = validator($request->all(),[
+            "nama_divisi" => "required|string|max:255",  
+          ])->validate();
+          $anggaran = new tbl_anggaran($validasiData);
+          $anggaran->save();
+          
+          return redirect(route("anggaran"))->with("success","Anggaran berhasil ditambah");
     }
 
     /**

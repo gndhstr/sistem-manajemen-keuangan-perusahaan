@@ -64,8 +64,14 @@ Route::prefix('direktur')->group(function () {
     Route::get('/dashboard', 'DirekturDashboardController@index');
 }); //rute direktur sementara
 
-Route::prefix('manajer')->group(function () {
-    
-})->middleware('manajer');
+Route::prefix('manajer')->middleware(['manajer'])->group(function () {
+    // CRUD Anggaran
+    Route::get("/anggaran","AnggaranController@index")->name("anggaran");
+    Route::get("/anggaran/create","AnggaranController@create")->name("createAnggaran");
+    Route::post("/anggaran/store","AnggaranController@store")->name("storeAnggaran");
+    Route::get("/anggaran/{anggaran}/edit","AnggaranController@edit")->name("editAnggaran");
+    Route::post("/anggaran/{anggaran}/update", "AnggaranController@update")->name("updateAnggaran");
+    Route::get("/anggaran/{anggaran}/delete", "AnggaranController@destroy")->name("deleteAnggaran");
+});
 
 Route::get('dashboards', 'DashboardController@index')->middleware('admin');

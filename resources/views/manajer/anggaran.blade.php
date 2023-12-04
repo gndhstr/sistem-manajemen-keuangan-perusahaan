@@ -35,18 +35,26 @@
 					<thead>
 						<tr>
 							<th class="text-center">No</th>
-							<th class="text-center">Jabatan</th>
+							<th class="text-center">Divisi</th>
+							<th class="text-center">Kategori</th>
+							<th class="text-center">Rencana</th>
+							<th class="text-center">Aktualisasi</th>
+							<th class="text-center">Tanggal</th>
 							<th class="text-center">Aksi</th>
 						</tr>
 					</thead>
 					<tbody>
-						@foreach ($roles as $role)
+						@foreach ($anggarans as $anggaran)
 						<tr>
 							<td class="text-center">{{ $loop->index + 1}}</td>
-							<td class="text-center">{{ $role->role}}</td>
+							<td class="text-center">{{ $anggaran->id_kategori}}</td>
+							<td class="text-center">{{ $anggaran->id_divisi}}</td>
+							<td class="text-center">{{ $anggaran->rencana_anggaran}}</td>
+							<td class="text-center">{{ $anggaran->aktualisasi_anggaran}}</td>
+							<td class="text-center">{{ $anggaran->tgl_anggaran}}</td>
 							<td class="text-center">
-								<a data-url="{{route('editRole',['id_role'=>$role->id_role])}}" class="btn btn-warning btn-sm" role="button" data-toggle="modal" data-target="#editData{{$role->id_role}}" >Edit</a>
-								<a onclick="confirmDelete(this)"  data-url="{{route('deleteRole',['id_role'=>$role->id_role])}}"data-nama="{{$role->role}}" class="btn btn-danger btn-sm ml-1 text-white" role="button">Hapus</a>
+								<a data-url="{{route('editAnggaran',['id_anggaran'=>$anggaran->id_anggaran])}}" class="btn btn-warning btn-sm" role="button" data-toggle="modal" data-target="#editData{{$anggaran->id_anggaran}}" >Edit</a>
+								<a onclick="confirmDelete(this)"  data-url="{{route('deleteAnggaran',['id_anggaran'=>$anggaran->id_anggaran])}}" class="btn btn-danger btn-sm ml-1 text-white" role="button">Hapus</a>
 							</td>
 						</tr>
 						@endforeach
@@ -56,66 +64,7 @@
 			</div>
 		</div>
 	</div><!-- /.container-fluid -->
-	<!-- Modal Tambah Data -->
-	<div class="modal fade" id="tambahData" tabindex="-1" role="dialog" aria-labelledby="tambahDataModalLabel" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="tambahDataModalLabel">Tambah Data Role</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<!-- Form Tambah Data Role -->
-					<form action="{{route('storeRole')}}" method="post">
-						@csrf
-							<div class="form-group">
-								<label for="nama">Jabatan</label>
-								<input type="text" name="role" id="role" class="form-control" required placeholder="Masukkan Nama Divisi">
-							</div>
-							<div class="text-right">
-							<a href="{{route('daftarRole')}}" class="btn btn-danger mr-1">Batal</a>
-								<button type="submit" class="btn btn-success">Simpan</button>
-							</div>
-					</form>
-					<!-- End Form -->
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- End Modal Tambah Data -->
-
-	<!-- Modal Edit Data -->
-	@foreach($roles as $role)
-		<div class="modal fade" id="editData{{ $role->id_role }}" tabindex="-1" role="dialog" aria-labelledby="editDataModalLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="tambahDataModalLabel">Edit Role</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<!-- Form Edit Data Kategori -->
-						<form action="{{ route('updateRole', ['id_role' => $role->id_role]) }}" method="post">
-						@csrf
-							<div class="form-group">
-								<label for="nama">Jabatan</label>
-								<input type="text" name="role" id="role" class="form-control" required="required" placeholder="Masukkan Nama Jabatan" value="{{$role->role}}">
-							</div>
-							<div class="text-right">
-								<a href="{{route('daftarRole')}}" class="btn btn-danger">Batal</a>
-								<button type="submit" class="btn btn-success">Simpan</button>
-							</div>
-						</form>
-						<!-- End Form -->
-					</div>
-				</div>
-			</div>
-		</div>
-	@endforeach
+	
 	<!-- End Modal Tambah Data -->
 
 		<!-- javascript -->

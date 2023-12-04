@@ -20,7 +20,6 @@ class CreateTblAnggaransTable extends Migration
             $table->bigInteger('id_divisi')->unsigned();
             $table->foreign('id_divisi')->references('id_divisi')->on('tbl_divisis');
             $table->string('rencana_anggaran',255);
-            $table->integer('jml_anggaran');
             $table->string('aktualisasi_anggaran',255);
             $table->date("tgl_anggaran");
             $table->timestamps();
