@@ -64,4 +64,8 @@ Route::prefix('direktur')->group(function () {
     Route::get('/dashboard', 'DirekturDashboardController@index');
 }); //rute direktur sementara
 
+Route::prefix('manajer')->group(function () {
+    
+})->middleware('manajer');
+
 Route::get('dashboards', 'DashboardController@index')->middleware('admin');
