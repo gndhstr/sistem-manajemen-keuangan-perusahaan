@@ -27,8 +27,8 @@ class DirekturDashboardController extends Controller
 
         //pemasukan 1 bulan terakhir
         $bulanan = $time->now()->subMonth(); //tanggal 1 bulan lalu
-        $pemasukanBulanans = tbl_pemasukan::whereDate('created_at', '>=', $bulanan)->get();
-        $pemasukanBulananTotal = $pemasukanBulanans->sum('jml_masuk');
+        $pemasukanBulanan = tbl_pemasukan::whereDate('created_at', '>=', $bulanan)->get();
+        $pemasukanBulananTotal = $pemasukanBulanan->sum('jml_masuk');
 
         //pemasukan Harian
         $pemasukanHarians = [];
@@ -48,14 +48,24 @@ class DirekturDashboardController extends Controller
 
         $totalPemasukan = tbl_pemasukan::all()->sum('jml_masuk');        
 
-        // tanggal sampai 6 bulan sebelumnya
+        /* ------------------------------------- PEMASUKAN DAN PENGELUARAN TIAP 6 BULAN TERAKHIR ------------------------------------- */
+        // data pemasukan dan pengeluaran sampai 6 bulan sebelumnya
         $tanggalBulanans = [];
-        $tanggalBulanansYMD = [];        
+        $tanggalBulanansYMD = [];    
+        $pemasukanBulanans = [];
+        $pengeluaranBulanans = [];
 
         // Loop untuk mendapatkan 6 bulan sebelumnya
         for ($i = 6; $i >= 0; $i--) {
-            $tanggalBulanans[$i] = strtoupper($time->now()->subMonth($i)->format('M'));
-            $tanggalBulanansYMD[$i] = strtoupper($time->now()->subMonth($i)->format('y-m-d'));
+            $tanggalAwal = $time->now()->subMonth($i)->startOfMonth();
+            $tanggalAkhir = $time->now()->subMonth($i)->endOfMonth();
+        
+            $tanggalBulanans[$i] = strtoupper($tanggalAwal->format('M'));
+            $tanggalBulanansYMD[$i] = strtoupper($tanggalAwal->format('Y-m-d'));
+        
+            // Ambil data untuk setiap bulan
+            $pemasukanBulanans[$i] = tbl_pemasukan::whereBetween('created_at', [$tanggalAwal, $tanggalAkhir])->get()->sum('jml_masuk');
+            $pengeluaranBulanans[$i] = tbl_pengeluaran::whereBetween('created_at', [$tanggalAwal, $tanggalAkhir])->get()->sum('jml_keluar');
         }
 
         /* ------------------------------------- PENGELUARAN MINGGUAN ------------------------------------- */
@@ -64,8 +74,8 @@ class DirekturDashboardController extends Controller
         $pengeluaranMingguanTotal = $pengeluaranMingguans->sum('jml_keluar');
 
         //pengeluaran 1 bulan terakhir
-        $pengeluaranBulanans = tbl_pengeluaran::whereDate('created_at', '>=', $bulanan)->get();
-        $pengeluaranBulananTotal = $pengeluaranBulanans->sum('jml_keluar');
+        $pengeluaranBulanan = tbl_pengeluaran::whereDate('created_at', '>=', $bulanan)->get();
+        $pengeluaranBulananTotal = $pengeluaranBulanan->sum('jml_keluar');
 
         $pengeluaranHarians = [];
         for ($i = 0; $i < 7; $i++) {
@@ -87,41 +97,22 @@ class DirekturDashboardController extends Controller
         } elseif ($totalpengeluaran == 0) {
             $perbandinganPemasukanPengeluaranMingguan = 100;
         } else {
-            $perbandinganPemasukanPengeluaranMingguan = (($totalPemasukan - $totalpengeluaran) / $totalPemasukan) * 100;
+            $perbandinganPemasukanPengeluaranMingguan = (($pemasukanMingguanTotal - $pengeluaranMingguanTotal) / $pemasukanMingguanTotal) * 100;
         }
 
         /* ------------------------------------- PERBANDINGAN PEMASUKAN DAN PENGELUARAN BULANAN ------------------------------------- */
-        
         if ($totalPemasukan == 0 && $totalpengeluaran == 0) {
             $perbandinganPemasukanPengeluaranBulanan = 0;
         } elseif ($totalpengeluaran == 0) {
             $perbandinganPemasukanPengeluaranBulanan = 100;
         } else {
-            $perbandinganPemasukanPengeluaranBulanan = (($totalPemasukan - $totalpengeluaran) / $totalPemasukan) * 100;
-        }
-        
-        /* ------------------------------------- PERBANDINGAN PEMASUKAN TIAP 6 BULAN TERAKHIR ------------------------------------- */
-        
-
-
-        /* ------------------------------------- PERBANDINGAN PEMASUKAN DENGAN MINGGU SEBELUMNYA ------------------------------------- */
-        //Pemasukan 2 minggu terakhir
-        $perbandinganMingguanTanggal =  $mingguan->copy()->addDays(-7);
-        $dataPerbandinganMingguan = tbl_pemasukan::whereBetween('created_at', [$perbandinganMingguanTanggal, $mingguan->addDays(-1)])->get();
-        $pemasukanPerbandinganMingguanTotal = $dataPerbandinganMingguan->sum('jml_masuk');
-
-        //Persentase perbandingan 2 minggu terakhir dengan 1 minggu terakhir
-        if ($pemasukanPerbandinganMingguanTotal != 0) {
-            $persentasePerbandingan = (($pemasukanMingguanTotal - $pemasukanPerbandinganMingguanTotal) / $pemasukanPerbandinganMingguanTotal) * 100;
-        } elseif ($pemasukanPerbandinganMingguanTotal == 0 && $pemasukanMingguanTotal == 0) {
-            $persentasePerbandingan = 0;
-        } else {
-            // Membuat persentase perbandingan 100% jika data 2 minggu terakhir hingga 1 minggu terakhir 0
-            $persentasePerbandingan = 100;
-        }
+            $perbandinganPemasukanPengeluaranBulanan = (($pemasukanBulananTotal - $pengeluaranBulananTotal) / $pemasukanBulananTotal) * 100;
+        }           
 
         return view('direktur.dashboard', [
             'pemasukanHarians' => $pemasukanHarians,
+            'pemasukanBulanans' => $pemasukanBulanans,
+            'pengeluaranBulanans' => $pengeluaranBulanans,
             'pemasukanMingguan' => $pemasukanMingguanTotal,
             'pemasukanBulanan' => $pemasukanBulananTotal,
             'totalPemasukan' => $totalPemasukan,
@@ -129,79 +120,13 @@ class DirekturDashboardController extends Controller
             'pengeluaranMingguan' => $pengeluaranMingguanTotal,
             'pengeluaranBulanan' => $pengeluaranBulananTotal,
             'totalPengeluaran' => $totalpengeluaran,
-            'tanggalMingguan' => $mingguan->addDays(1)->format('d-m-Y'),
+            'tanggalMingguan' => $mingguan->format('d-m-Y'),
             'tanggalBulanan' => $bulanan->format('d-m-Y'),
             'tanggalBulanans' => $tanggalBulanans,
             'tanggalHarians' => $tanggalHarians,
             'perbandinganPemasukanPengeluaranMingguan' => $perbandinganPemasukanPengeluaranMingguan,            
             'perbandinganPemasukanPengeluaranBulanan' => $perbandinganPemasukanPengeluaranBulanan,
-            'dump' => dd($tanggalBulanansYMD),
+            // 'dump' => dd($pemasukanBulanans),
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+    }    
 }

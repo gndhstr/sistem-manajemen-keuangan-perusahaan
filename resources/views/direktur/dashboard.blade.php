@@ -213,7 +213,21 @@
                 pengeluaranHarians.push(element);
             });
 
-            // var pemasukanBulanans = pemasukanBulanans;
+            var pemasukanBulanans = @json($pemasukanBulanans);
+            for (const key in pemasukanBulanans) {
+                if (pemasukanBulanans.hasOwnProperty(key)) {
+                    const element = pemasukanBulanans[key];
+                    console.log(element);
+                }
+            }
+
+            var pengeluaranBulanans = @json($pengeluaranBulanans);
+            for (const key in pengeluaranBulanans) {
+                if (pengeluaranBulanans.hasOwnProperty(key)) {
+                    const element = pengeluaranBulanans[key];
+                    console.log(element);
+                }
+            }
 
             var tanggalHarians = @json($tanggalHarians);            
             for (const key in tanggalHarians) {
@@ -324,12 +338,12 @@
                     datasets: [{
                             backgroundColor: '#007bff',
                             borderColor: '#007bff',
-                            data: [0, 0, 0, 0, 0, 0, 150000]
+                            data: [pemasukanBulanans[6], pemasukanBulanans[5], pemasukanBulanans[4], pemasukanBulanans[3], pemasukanBulanans[2], pemasukanBulanans[1], pemasukanBulanans[0]]
                         },
                         {
                             backgroundColor: '#ced4da',
                             borderColor: '#ced4da',
-                            data: [0, 0, 0, 0, 0, 0, 200000]
+                            data: [pengeluaranBulanans[6], pengeluaranBulanans[5], pengeluaranBulanans[4], pengeluaranBulanans[3], pengeluaranBulanans[2], pengeluaranBulanans[1], pengeluaranBulanans[0]]
                         }
                     ]
                 },
@@ -372,7 +386,7 @@
                         xAxes: [{
                             display: true,
                             gridLines: {
-                                display: false
+                                display: true
                             },
                             ticks: ticksStyle
                         }]
