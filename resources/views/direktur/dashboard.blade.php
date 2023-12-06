@@ -96,7 +96,7 @@
                                             <span class="{{ ($perbandinganPemasukanPengeluaranBulanan > 0) ? 'text-success' : 'text-danger' }}">
                                                 <i class="fa {{ ($perbandinganPemasukanPengeluaranBulanan > 0) ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i> {{ number_format($perbandinganPemasukanPengeluaranBulanan, 2) }}%
                                             </span>
-                                            <span class="text-muted">Sejak 1 bulan terakhir</span>
+                                            <span class="text-muted">Di Bulan ini</span>
                                             <span class="text-muted">{{ $tanggalBulanan }}</span>
                                         </p>
                                     </div>
@@ -131,8 +131,8 @@
                         <div class="col-sm-3 col-6">
                             <div class="description-block border-right">
                                 <span class="description-percentage text-success"><i class="fa fa-caret-up"></i>
-                                    17%</span>
-                                <h5 class="description-header">Rp. {{ $totalPemasukan }}</h5>
+                                    {{ number_format($perbandinganPemasukanPengeluaranTotal, 2) }}%</span>
+                                <h5 class="description-header">Rp. {{ number_format($totalPemasukan, 2, ',', '.') }}</h5>
                                 <span class="description-text">TOTAL PENDAPATAN</span>
                             </div>
                             <!-- /.description-block -->
@@ -141,8 +141,8 @@
                         <div class="col-sm-3 col-6">
                             <div class="description-block border-right">
                                 <span class="description-percentage text-warning"><i class="fa fa-caret-left"></i>
-                                    0%</span>
-                                <h5 class="description-header">Rp. {{ $totalPengeluaran }}</h5>
+                                    {{ 100 - number_format($perbandinganPemasukanPengeluaranTotal, 2) }}%</span>
+                                <h5 class="description-header">Rp. {{ number_format($totalPengeluaran, 2, ',', '.') }}</h5>
                                 <span class="description-text">TOTAL BIAYA</span>
                             </div>
                             <!-- /.description-block -->
@@ -151,8 +151,8 @@
                         <div class="col-sm-3 col-6">
                             <div class="description-block border-right">
                                 <span class="description-percentage text-success"><i class="fa fa-caret-up"></i>
-                                    20%</span>
-                                <h5 class="description-header">$24,813.53</h5>
+                                    {{ number_format($perbandinganPemasukanPengeluaranTotal, 2) }}%</span>
+                                <h5 class="description-header">{{ number_format($totalPemasukan-$totalPengeluaran, 2, ',', '.') }}</h5>
                                 <span class="description-text">TOTAL KEUNTUNGAN</span>
                             </div>
                             <!-- /.description-block -->
@@ -161,8 +161,8 @@
                         <div class="col-sm-3 col-6">
                             <div class="description-block">
                                 <span class="description-percentage text-danger"><i class="fa fa-caret-down"></i>
-                                    18%</span>
-                                <h5 class="description-header">1200</h5>
+                                    -%</span>
+                                <h5 class="description-header">NULL</h5>
                                 <span class="description-text">REALISASI ANGGARAN</span>
                             </div>
                             <!-- /.description-block -->

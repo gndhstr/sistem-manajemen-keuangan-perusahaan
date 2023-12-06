@@ -6,15 +6,16 @@ use App\tbl_pemasukan;
 use App\tbl_pengeluaran;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Symfony\Component\CssSelector\Node\FunctionNode;
 
-class DirekturDashboardController extends Controller
+class DirekturController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function dashboard()
     {
         $time = new Carbon();
         $time->setTimeZone('Asia/Jakarta');
@@ -25,8 +26,8 @@ class DirekturDashboardController extends Controller
         $pemasukanMingguans = tbl_pemasukan::whereDate('created_at', '>=', $mingguan)->get();
         $pemasukanMingguanTotal = $pemasukanMingguans->sum('jml_masuk');
 
-        //pemasukan 1 bulan terakhir
-        $bulanan = $time->now()->subMonth(); //tanggal 1 bulan lalu
+        //pemasukan 1 bulan ini
+        $bulanan = $time->now()->startOfMonth(); //Bulan ini
         $pemasukanBulanan = tbl_pemasukan::whereDate('created_at', '>=', $bulanan)->get();
         $pemasukanBulananTotal = $pemasukanBulanan->sum('jml_masuk');
 
@@ -50,8 +51,7 @@ class DirekturDashboardController extends Controller
 
         /* ------------------------------------- PEMASUKAN DAN PENGELUARAN TIAP 6 BULAN TERAKHIR ------------------------------------- */
         // data pemasukan dan pengeluaran sampai 6 bulan sebelumnya
-        $tanggalBulanans = [];
-        $tanggalBulanansYMD = [];    
+        $tanggalBulanans = [];        
         $pemasukanBulanans = [];
         $pengeluaranBulanans = [];
 
@@ -60,8 +60,7 @@ class DirekturDashboardController extends Controller
             $tanggalAwal = $time->now()->subMonth($i)->startOfMonth();
             $tanggalAkhir = $time->now()->subMonth($i)->endOfMonth();
         
-            $tanggalBulanans[$i] = strtoupper($tanggalAwal->format('M'));
-            $tanggalBulanansYMD[$i] = strtoupper($tanggalAwal->format('Y-m-d'));
+            $tanggalBulanans[$i] = strtoupper($tanggalAwal->format('M'));            
         
             // Ambil data untuk setiap bulan
             $pemasukanBulanans[$i] = tbl_pemasukan::whereBetween('created_at', [$tanggalAwal, $tanggalAkhir])->get()->sum('jml_masuk');
@@ -89,25 +88,34 @@ class DirekturDashboardController extends Controller
             $pengeluaranHarians[$i] = $pengeluaranHarian->sum('jml_keluar');
         }
 
-        $totalpengeluaran = tbl_pengeluaran::all()->sum('jml_keluar');
+        $totalPengeluaran = tbl_pengeluaran::all()->sum('jml_keluar');
 
         /* ------------------------------------- PERBANDINGAN PEMASUKAN DAN PENGELUARAN MINGGUAN ------------------------------------- */
-        if ($totalPemasukan == 0 && $totalpengeluaran == 0) {
+        if ($totalPemasukan == 0 && $totalPengeluaran == 0) {
             $perbandinganPemasukanPengeluaranMingguan = 0;
-        } elseif ($totalpengeluaran == 0) {
+        } elseif ($totalPengeluaran == 0) {
             $perbandinganPemasukanPengeluaranMingguan = 100;
         } else {
             $perbandinganPemasukanPengeluaranMingguan = (($pemasukanMingguanTotal - $pengeluaranMingguanTotal) / $pemasukanMingguanTotal) * 100;
         }
 
         /* ------------------------------------- PERBANDINGAN PEMASUKAN DAN PENGELUARAN BULANAN ------------------------------------- */
-        if ($totalPemasukan == 0 && $totalpengeluaran == 0) {
+        if ($totalPemasukan == 0 && $totalPengeluaran == 0) {
             $perbandinganPemasukanPengeluaranBulanan = 0;
-        } elseif ($totalpengeluaran == 0) {
+        } elseif ($totalPengeluaran == 0) {
             $perbandinganPemasukanPengeluaranBulanan = 100;
         } else {
             $perbandinganPemasukanPengeluaranBulanan = (($pemasukanBulananTotal - $pengeluaranBulananTotal) / $pemasukanBulananTotal) * 100;
-        }           
+        }
+
+        /* ------------------------------------- PERBANDINGAN PEMASUKAN DAN PENGELUARAN TOTAL ------------------------------------- */
+        if ($totalPemasukan == 0 && $totalPengeluaran == 0) {
+            $perbandinganPemasukanPengeluaranTotal = 0;
+        } elseif ($totalPengeluaran == 0) {
+            $perbandinganPemasukanPengeluaranTotal = 100;
+        } else {
+            $perbandinganPemasukanPengeluaranTotal = (($totalPemasukan - $totalPengeluaran) / $totalPemasukan) * 100;
+        }
 
         return view('direktur.dashboard', [
             'pemasukanHarians' => $pemasukanHarians,
@@ -119,14 +127,25 @@ class DirekturDashboardController extends Controller
             'pengeluaranHarians' => $pengeluaranHarians,
             'pengeluaranMingguan' => $pengeluaranMingguanTotal,
             'pengeluaranBulanan' => $pengeluaranBulananTotal,
-            'totalPengeluaran' => $totalpengeluaran,
+            'totalPengeluaran' => $totalPengeluaran,
             'tanggalMingguan' => $mingguan->format('d-m-Y'),
             'tanggalBulanan' => $bulanan->format('d-m-Y'),
             'tanggalBulanans' => $tanggalBulanans,
             'tanggalHarians' => $tanggalHarians,
             'perbandinganPemasukanPengeluaranMingguan' => $perbandinganPemasukanPengeluaranMingguan,            
             'perbandinganPemasukanPengeluaranBulanan' => $perbandinganPemasukanPengeluaranBulanan,
-            // 'dump' => dd($pemasukanBulanans),
+            'perbandinganPemasukanPengeluaranTotal' => $perbandinganPemasukanPengeluaranTotal,
+            // 'dump' => dd($bulanan),
         ]);
-    }    
+    }
+
+    public function cashflow(){
+        return view('direktur.cashflow');
+    }
+    public function anggaran(){
+        return view('direktur.anggaran');
+    }
+    public function karyawan(){
+        return view('direktur.karyawan');
+    }
 }

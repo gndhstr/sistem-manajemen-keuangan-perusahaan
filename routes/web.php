@@ -61,7 +61,10 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::prefix('direktur')->group(function () {
-    Route::get('/dashboard', 'DirekturDashboardController@index');
+    Route::get('/dashboard', 'DirekturController@dashboard');
+    Route::get('/cashflow', 'DirekturController@cashflow');
+    Route::get('/anggaran', 'DirekturController@anggaran');
+    Route::get('/karyawan', 'DirekturController@karyawan');
 }); //rute direktur sementara
 
 Route::prefix('manajer')->middleware(['manajer'])->group(function () {
