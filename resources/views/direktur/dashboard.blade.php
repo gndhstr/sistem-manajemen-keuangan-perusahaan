@@ -50,9 +50,9 @@
                                             <span>Pemasukan Seiring Waktu</span>
                                         </p>
                                         <p class="ml-auto d-flex flex-column text-right">
-                                            <span class="{{ ($persentasePerbandingan > 0) ? 'text-success' : 'text-danger' }}">
-                                                <i class="fa {{ ($persentasePerbandingan > 0) ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i>
-                                                {{ number_format($persentasePerbandingan, 2) }} %
+                                            <span class="{{ ($perbandinganPemasukanPengeluaranMingguan > 0) ? 'text-success' : 'text-danger' }}">
+                                                <i class="fa {{ ($perbandinganPemasukanPengeluaranMingguan > 0) ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i>
+                                                {{ number_format($perbandinganPemasukanPengeluaranMingguan, 2) }} %
                                             </span>
                                             <span class="text-muted">Sejak minggu terakhir</span>
                                             <span class="text-muted">{{ $tanggalMingguan }}</span>
@@ -93,8 +93,8 @@
                                             <span>Pemasukan Seiring Waktu</span>
                                         </p>
                                         <p class="ml-auto d-flex flex-column text-right">
-                                            <span class="text-success">
-                                                <i class="fa fa-arrow-up"></i> 33.1%
+                                            <span class="{{ ($perbandinganPemasukanPengeluaranBulanan > 0) ? 'text-success' : 'text-danger' }}">
+                                                <i class="fa {{ ($perbandinganPemasukanPengeluaranBulanan > 0) ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i> {{ number_format($perbandinganPemasukanPengeluaranBulanan, 2) }}%
                                             </span>
                                             <span class="text-muted">Sejak 1 bulan terakhir</span>
                                             <span class="text-muted">{{ $tanggalBulanan }}</span>
@@ -142,7 +142,7 @@
                             <div class="description-block border-right">
                                 <span class="description-percentage text-warning"><i class="fa fa-caret-left"></i>
                                     0%</span>
-                                <h5 class="description-header">$10,390.90</h5>
+                                <h5 class="description-header">Rp. {{ $totalPengeluaran }}</h5>
                                 <span class="description-text">TOTAL BIAYA</span>
                             </div>
                             <!-- /.description-block -->
@@ -206,13 +206,30 @@
             var pemasukanHarians = @json($pemasukanHarians);
             pemasukanHarians.forEach((element, index) => {
                 pemasukanHarians.push(element);
-                console.log(element);
             });
 
-            var tanggalHarians = @json($tanggalHarians);
-            tanggalHarians.forEach((element, index) => {
-                tanggalHarians.push(element);
+            var pengeluaranHarians = @json($pengeluaranHarians);
+            pengeluaranHarians.forEach((element, index) => {
+                pengeluaranHarians.push(element);
             });
+
+            // var pemasukanBulanans = pemasukanBulanans;
+
+            var tanggalHarians = @json($tanggalHarians);            
+            for (const key in tanggalHarians) {
+                if (tanggalHarians.hasOwnProperty(key)) {
+                    const element = tanggalHarians[key];
+                    // console.log(element);
+                }
+            }
+
+            var tanggalBulanans = @json($tanggalBulanans);
+            for (const key in tanggalBulanans) {
+                if (tanggalBulanans.hasOwnProperty(key)) {
+                    const element = tanggalBulanans[key];
+                    // console.log(element);
+                }
+            }
 
             var $visitorsChart = $('#visitors-chart')
             // eslint-disable-next-line no-unused-vars
@@ -237,7 +254,10 @@
                         },
                         {
                             type: 'line',
-                            data: [60, 80, 70, 67, 80, 77, 100],
+                            data: [pengeluaranHarians[0], pengeluaranHarians[1], pengeluaranHarians[2],
+                                pengeluaranHarians[3], pengeluaranHarians[4], pengeluaranHarians[5],
+                                pengeluaranHarians[6]
+                            ],
                             backgroundColor: 'tansparent',
                             borderColor: '#ced4da',
                             pointBorderColor: '#ced4da',
@@ -300,16 +320,16 @@
             var salesChart = new Chart($salesChart, {
                 type: 'bar',
                 data: {
-                    labels: ['JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+                    labels: [tanggalBulanans[6], tanggalBulanans[5], tanggalBulanans[4], tanggalBulanans[3], tanggalBulanans[2], tanggalBulanans[1], tanggalBulanans[0]],
                     datasets: [{
                             backgroundColor: '#007bff',
                             borderColor: '#007bff',
-                            data: [1000, 2000, 3000, 2500, 2700, 2500, 3000]
+                            data: [0, 0, 0, 0, 0, 0, 150000]
                         },
                         {
                             backgroundColor: '#ced4da',
                             borderColor: '#ced4da',
-                            data: [700, 1700, 2700, 2000, 1800, 1500, 2000]
+                            data: [0, 0, 0, 0, 0, 0, 200000]
                         }
                     ]
                 },
@@ -338,14 +358,14 @@
                             ticks: $.extend({
                                 beginAtZero: true,
 
-                                // Include a dollar sign in the ticks
                                 callback: function(value) {
                                     if (value >= 1000) {
-                                        value /= 1000
-                                        value += 'k'
+                                        value /= 1000;
+                                        value += 'k';
+                                        // value = value.toLocaleString("id-ID");
                                     }
 
-                                    return '$' + value
+                                    return 'Rp. ' + value
                                 }
                             }, ticksStyle)
                         }],
