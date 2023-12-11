@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class tbl_pemasukan extends Model
 {
-    protected $table ="tbl_pemasukans";
-    protected $fillable =[
+    protected $table = "tbl_pemasukans";
+    protected $fillable = [
         "id_kategori",
         "id_user",
         "id_user_create",
@@ -15,4 +15,14 @@ class tbl_pemasukan extends Model
         "tgl_pemasukan",
         "status",
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user');
+    }
+
+    public function kategori()
+    {
+        return $this->belongsTo(tbl_kategori::class, 'id_kategori', 'id_kategori');
+    }
 }
