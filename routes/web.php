@@ -13,15 +13,16 @@ use Illuminate\Support\Facades\Route; //class untuk auth
 | contains the "web" middleware group. Now create something great!
 |
 */
+route::get("/","LoginController@login" )->name("index");
+route::post("/","LoginController@authenticate")->name("authenticate");
+// Route::post('/login', 'App\Http\Controllers\LoginController@authenticate')->name("authenticate");
+route::get('/logout', 'LoginController@logout')->name('logout');
 
-Route::get('/', function () {
-    return redirect(route('login'));
-});
+// 
 Route::get('/starter', function () {
     return view('starter');
 });
-
-Auth::routes(['verify' => false, 'reset' => false]);
+Auth::routes();
 
 Route::prefix("admin")->middleware("auth", "role:1")->group(function(){
     Route::get('/', 'DashboardController@index')->name('dashboard');
@@ -89,4 +90,4 @@ Route::prefix('manajer')->middleware("auth", "role:3")->group(function () {
     Route::get("/kategori/{kategori}/delete", "KategoriController@destroy")->name("deleteKategori");
 });
 
-Route::get('dashboards', 'DashboardController@index')->middleware('admin');
+// Route::get('dashboards', 'DashboardController@index')->middleware('admin');
