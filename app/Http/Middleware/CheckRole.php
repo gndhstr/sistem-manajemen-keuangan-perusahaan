@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class Manajer
+class CheckRole
 {
     /**
      * Handle an incoming request.
@@ -14,11 +14,11 @@ class Manajer
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $role)
     {
-        if (Auth::check() && Auth::user()-> role == '3') {
+        if(Auth::check() && Auth::user()->role == $role){
             return $next($request);
         }
-        return redirect('/');
+        return redirect(route("index"))-> withErrors("Anda tidak memiliki akses");
     }
 }
