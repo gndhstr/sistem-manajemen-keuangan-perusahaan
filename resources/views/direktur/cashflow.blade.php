@@ -27,7 +27,8 @@
         <div class="container-fluid">
             <div class="row">
                 {{-- main content here --}}
-                <div class="card">
+                {{-- tabel divisi --}}
+                <div class="card col-lg-5">
                     <div class="card-header border-0">
                         <h3 class="card-title">Divisi</h3>
                         <div class="card-tools">
@@ -39,9 +40,9 @@
                             <thead>
                                 <tr>
                                     <th>Divisi</th>
-                                    <th>Jumlah Karyawan</th>
-                                    <th class="width-100">Pemasukan</th>
-                                    <th class="width-100">Pengeluaran</th>
+                                    <th>Karyawan</th>
+                                    <th>Pemasukan</th>
+                                    <th>Pengeluaran</th>
                                     <th>Lihat</th>
                                 </tr>
                             </thead>
@@ -52,19 +53,21 @@
                                             {{ $divisi->nama_divisi }}
                                         </td>
                                         <td class="text-center">
-                                            {{ $divisi->division }}
+                                            {{ $divisi->users_count }}
                                         </td>
                                         <td>
                                             <small class="text-success mr-1">
                                                 <i class="fa fa-arrow-up"></i>
                                             </small>
-                                            Rp. 300.000
+                                            Rp.
+                                            {{ number_format($divisi->pemasukans->sum('total_pemasukan'), 0, ',', '.') }}
                                         </td>
                                         <td>
                                             <small class="text-danger mr-1">
                                                 <i class="fa fa-arrow-down"></i>
                                             </small>
-                                            Rp. 100.000
+                                            Rp.
+                                            {{ number_format($divisi->pengeluarans->sum('total_pengeluaran'), 0, ',', '.') }}
                                         </td>
                                         <td class="text-center">
                                             <a href="#" class="text-muted">
@@ -77,9 +80,10 @@
                         </table>
                     </div>
                 </div>
-                <div class="card ml-lg-3">
+                {{-- tabel karyawan --}}
+                <div class="card ml-lg-3 col-lg-6">
                     <div class="card-header border-0">
-                        <h3 class="card-title">Riwayat</h3>
+                        <h3 class="card-title">Karyawan</h3>
                         <div class="card-tools">
                             {{-- tools --}}
                         </div>
@@ -89,6 +93,60 @@
                             <thead>
                                 <tr>
                                     <th>Nama</th>
+                                    <th>Divisi</th>
+                                    <th>Kategori</th>
+                                    <th>Jumlah</th>
+                                    <th>Tanggal</th>
+                                    <th>Lihat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($riwayatPemasukanPengeluaran as $riwayat)
+                                    <tr>
+                                        <td>
+                                            {{ $riwayat->user->nama }}
+                                        </td>
+                                        <td>
+                                            {{ $riwayat->user->division->nama_divisi }}
+                                        </td>
+                                        <td>
+                                            {{ $riwayat->kategori->nama_kategori }}
+                                        </td>
+                                        <td>
+                                            <small
+                                                class="{{ $riwayat->jenis_transaksi == 'pemasukan' ? 'text-success' : 'text-danger' }} mr-1">
+                                                <i
+                                                    class="fa {{ $riwayat->jenis_transaksi == 'pemasukan' ? 'fa-arrow-up' : 'fa-arrow-down' }} "></i>
+                                            </small>
+                                            Rp. {{ number_format($riwayat->jumlah, 0, ',', '.') }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ date_format(date_create($riwayat->created_at), 'd/m/Y') }}
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#" class="text-muted">
+                                                <i class="fa fa-file-text"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {{-- tabel riwayat --}}
+                <div class="card ml-lg-3">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">Riwayat</h3>
+                        <div class="card-tools">
+                            {{-- tools --}}
+                        </div>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table id="" class="table table-valign-middle">
+                            <thead>
+                                <tr>
+                                    <th>Karyawan</th>
                                     {{-- <th>Divisi</th>
                                     <th>Kategori</th> --}}
                                     <th>Jumlah</th>
@@ -132,7 +190,6 @@
                     </div>
                 </div>
             </div>
-
         </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->
@@ -151,19 +208,22 @@
                 order: [
                     [4]
                 ],
+                paging: true,
+                scrollCollapse: true,
+                scrollY: '350px',
             });
-            // $("#data-table-karyawan").DataTable({
-            //     order: [
-            //         [3]
-            //     ],
-            //     columnDefs: [{
-            //         orderable: false,
-            //         targets: [0, 1, 2, 3],
-            //     }],
-            //     bPaginate : false,
-            //     info: false,
-            //     scrollCollapse: false,
-            // });
+            $("#data-table-karyawan").DataTable({
+                order: [
+                    [3]
+                ],
+                columnDefs: [{
+                    orderable: false,
+                    targets: [0, 1, 2, 3],
+                }],
+                paging: true,
+                scrollCollapse: true,
+                scrollY: '350px',
+            });
         });
     </script>
     <script></script>

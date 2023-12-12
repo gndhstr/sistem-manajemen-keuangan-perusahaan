@@ -16,7 +16,7 @@
                     <img src="{{ asset('img/user-photo-default.png') }}" class="img-circle elevation-2" alt="User Image">
                 </div>
                 <div class="info">
-                    <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                    <a href="#" class="d-block">{{ Auth::user()->nama }}</a>
                 </div>
             </div>
         @endauth
@@ -34,7 +34,7 @@
                 <li class="nav-item">
                     <a href="/direktur/cashflow" class="nav-link">
                         <i class="nav-icon fa fa-file-text-o"></i>
-                        <p>Pengeluaran / Pemasukan</p>
+                        <p>Cashflow</p>
                     </a>
                 </li>
                 <li class="nav-item">

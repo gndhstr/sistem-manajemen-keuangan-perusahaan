@@ -153,7 +153,9 @@
                         <!-- /.col -->
                         <div class="col-sm-3 col-6">
                             <div class="description-block border-right">
-                                <span class="description-percentage text-success"><i class="fa fa-caret-up"></i>
+                                <span
+                                    class="description-percentage {{ $perbandinganPemasukanPengeluaranTotal > 0 ? 'text-success' : 'text-danger' }}"><i
+                                        class="fa {{ $perbandinganPemasukanPengeluaranTotal > 0 ? 'fa-caret-up' : 'fa-caret-down' }}"></i>
                                     {{ number_format($perbandinganPemasukanPengeluaranTotal, 2) }}%</span>
                                 <h5 class="description-header">
                                     {{ number_format($totalPemasukan - $totalPengeluaran, 2, ',', '.') }}</h5>
@@ -219,14 +221,14 @@
             var pemasukanBulanans = @json($pemasukanBulanans);
             for (const key in pemasukanBulanans) {
                 if (pemasukanBulanans.hasOwnProperty(key)) {
-                    const element = pemasukanBulanans[key];                    
+                    const element = pemasukanBulanans[key];
                 }
             }
 
             var pengeluaranBulanans = @json($pengeluaranBulanans);
             for (const key in pengeluaranBulanans) {
                 if (pengeluaranBulanans.hasOwnProperty(key)) {
-                    const element = pengeluaranBulanans[key];                    
+                    const element = pengeluaranBulanans[key];
                 }
             }
 
