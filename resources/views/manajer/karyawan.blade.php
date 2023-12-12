@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('manajer.layouts.master')
 <!-- css -->
 @section("addCss")
 	<link rel="stylesheet" href="{{asset('css/dataTables.bootstrap4.min.css')}}">
