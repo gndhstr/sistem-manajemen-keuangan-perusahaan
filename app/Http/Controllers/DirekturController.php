@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\tbl_anggaran;
 use App\tbl_divisi;
 use App\tbl_pemasukan;
 use App\tbl_pengeluaran;
+use App\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -166,18 +168,104 @@ class DirekturController extends Controller
 
         $riwayatPemasukanPengeluaran = $pemasukans->union($pengeluarans)->orderBy('created_at', 'desc')->get();
 
+        /////////
+        $divisi = tbl_divisi::findOrFail($id = 2);
+        $users = $divisi->users->pluck('id');
+        // dd($users);
+        foreach ($users as $key => $value) {
+            # code...
+        }
+        $tbl_pemasukan = tbl_pemasukan::where('id_user', [2,3])->get();
+
+        
+        // dd($tbl_pemasukan);
+        // $usersData = $users->map(function ($user) {
+        //     $time = now()->startOfMonth();
+
+        //     $totalPemasukanUser = $user->pemasukans()
+        //         ->whereDate('created_at', '>=', $time)
+        //         ->sum('jml_masuk');
+
+        //     $totalPengeluaranUser = DB::table('tbl_pengeluarans')
+        //         ->whereDate('created_at', '>=', $time)
+        //         ->sum('jml_keluar');
+
+        //     return [
+        //         'user' => $user,
+        //         'totalPemasukanUser' => $totalPemasukanUser,
+        //         'totalPengeluaranUser' => $totalPengeluaranUser,
+        //     ];
+        // });
+
+        // dd($usersData);
+
+        // return dd($users);
+
         return view('direktur.cashflow', [
             // 'dump' => dd($divisis),
             'riwayatPemasukanPengeluaran' => $riwayatPemasukanPengeluaran,
             'divisis' => $divisis,
         ]);
     }
+
+    public function cashflowDivisi(Request $request, $id)
+    {
+
+        $divisi = tbl_divisi::findOrFail($id);
+        $totalPemasukan = $divisi->pemasukans->sum('jml_masuk');
+        $totalPengeluaran = $divisi->pengeluarans->sum('jml_keluar');
+
+        $users = tbl_divisi::with('users', 'pemasukans', 'pengeluarans')->find($id)->users;
+
+        // $users = $divisi->users->map(function ($user) {
+        //     $time = new Carbon();
+        //     $time = now()->startOfMonth();
+
+        //     $totalPemasukanUser = DB::table('tbl_pemasukans')
+        //         ->where('id_user', $user->id)
+        //         ->whereDate('created_at', '=', $time)
+        //         ->sum('jml_masuk');
+
+        //     $totalPengeluaranUser = DB::table('tbl_pengeluarans')
+        //         ->where('id_user', $user->id)
+        //         ->whereDate('created_at', '=', $time)
+        //         ->sum('jml_keluar');
+
+        //     return [
+        //         'user' => $user,
+        //         'totalPemasukanUser' => $totalPemasukanUser,
+        //         'totalPengeluaranUser' => $totalPengeluaranUser,
+        //     ];
+        // });
+
+        $pemasukans = tbl_divisi::with('users', 'pemasukans', 'pengeluarans')->find($id)->pemasukans;
+        $pengeluarans = tbl_divisi::with('users', 'pemasukans', 'pengeluarans')->find($id)->pengeluarans;
+
+        return response()->json([
+            'divisi' => $divisi,
+            'users' => $users,
+            'pemasukans' => $pemasukans,
+            'pengeluarans' => $pengeluarans,
+            'totalPemasukan' => $totalPemasukan,
+            'totalPengeluaran' => $totalPengeluaran,
+        ]);
+    }
+
     public function anggaran()
     {
-        return view('direktur.anggaran');
+        $anggarans = tbl_anggaran::all();
+        return view('direktur.anggaran', [
+            'anggarans' => $anggarans,
+        ]);
     }
+
     public function karyawan()
     {
-        return view('direktur.karyawan');
+        $karyawans = User::all()->where('role', '=', '4');
+
+        return view('direktur.karyawan', [
+            // 'dump' => dd($karyawans),
+            'karyawans' => $karyawans,
+        ]);
     }
 }

@@ -10,7 +10,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Cashflow</h1>
+                    <h1 class="m-0 text-dark">Mutasi Keuangan Perusahaan</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -48,7 +48,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($divisis as $divisi)
-                                    <tr>
+                                    <tr class="">
                                         <td>
                                             {{ $divisi->nama_divisi }}
                                         </td>
@@ -70,8 +70,9 @@
                                             {{ number_format($divisi->pengeluarans->sum('total_pengeluaran'), 0, ',', '.') }}
                                         </td>
                                         <td class="text-center">
-                                            <a href="#" class="text-muted">
-                                                <i class="fa fa-eye"></i>
+                                            <a href="#" class="text-muted show-divisi"
+                                                data-id="{{ $divisi->id_divisi }}">
+                                                <i class="fa fa-eye button-eye" id="eye{{ $divisi->id_divisi }}"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -93,43 +94,12 @@
                             <thead>
                                 <tr>
                                     <th>Nama</th>
-                                    <th>Divisi</th>
-                                    <th>Kategori</th>
-                                    <th>Jumlah</th>
-                                    <th>Tanggal</th>
+                                    <th>Pemasukan</th>
+                                    <th>Pengeluaran</th>
                                     <th>Lihat</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                @foreach ($riwayatPemasukanPengeluaran as $riwayat)
-                                    <tr>
-                                        <td>
-                                            {{ $riwayat->user->nama }}
-                                        </td>
-                                        <td>
-                                            {{ $riwayat->user->division->nama_divisi }}
-                                        </td>
-                                        <td>
-                                            {{ $riwayat->kategori->nama_kategori }}
-                                        </td>
-                                        <td>
-                                            <small
-                                                class="{{ $riwayat->jenis_transaksi == 'pemasukan' ? 'text-success' : 'text-danger' }} mr-1">
-                                                <i
-                                                    class="fa {{ $riwayat->jenis_transaksi == 'pemasukan' ? 'fa-arrow-up' : 'fa-arrow-down' }} "></i>
-                                            </small>
-                                            Rp. {{ number_format($riwayat->jumlah, 0, ',', '.') }}
-                                        </td>
-                                        <td class="text-center">
-                                            {{ date_format(date_create($riwayat->created_at), 'd/m/Y') }}
-                                        </td>
-                                        <td class="text-center">
-                                            <a href="#" class="text-muted">
-                                                <i class="fa fa-file-text"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                @endforeach
+                            <tbody id="karyawan">
                             </tbody>
                         </table>
                     </div>
@@ -137,7 +107,7 @@
                 {{-- tabel riwayat --}}
                 <div class="card ml-lg-3">
                     <div class="card-header border-0">
-                        <h3 class="card-title">Riwayat</h3>
+                        <h3 class="card-title">Mutasi Terakhir</h3>
                         <div class="card-tools">
                             {{-- tools --}}
                         </div>
@@ -199,6 +169,63 @@
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
     <script>
+        $(document).ready(function() {
+            $('.show-divisi').click(function(e) {
+                e.preventDefault();
+                $('.button-eye').removeClass('text-primary');
+
+                var divisiId = $(this).data('id');
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'cashflow/' + divisiId + '/data',
+                    success: function(data) {
+                        console.log(data);
+                        $('#data-table-karyawan').DataTable().destroy();
+
+                        $('#eye' + divisiId).addClass('text-primary');
+
+                        let html = '';
+                        data.users.forEach(users => {
+                            html += `
+                                    <tr>
+                                        <td>${users.nama}</td>
+                                        <td>tampilkan total pemasukan berdasarkan ${users.id}</td>
+                                        <td>tampilkan total pengeluaran berdasarkan${users.id}</td>
+                                        <td>
+                                            <a href="#" class="text-muted show-divisi">
+                                                <i class="fa fa-eye button-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                `;
+                        });
+                        $('#karyawan').html(html);
+
+
+                        // $('#data-table-karyawan').empty();
+
+                        $("#data-table-karyawan").DataTable({
+                            order: [
+                                [3]
+                            ],
+                            columnDefs: [{
+                                orderable: false,
+                                targets: [0, 1, 2, 3],
+                            }],
+                            paging: true,
+                            scrollCollapse: true,
+                            scrollY: '350px',
+                        });
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
         $(function() {
             $("#data-table-divisi").DataTable({
                 columnDefs: [{
@@ -212,6 +239,7 @@
                 scrollCollapse: true,
                 scrollY: '350px',
             });
+
             $("#data-table-karyawan").DataTable({
                 order: [
                     [3]
@@ -226,5 +254,4 @@
             });
         });
     </script>
-    <script></script>
 @endsection
