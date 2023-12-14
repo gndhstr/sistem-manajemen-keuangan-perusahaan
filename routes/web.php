@@ -57,6 +57,14 @@ Route::prefix("admin")->middleware("auth", "role:1")->group(function(){
     Route::get("/user/{user}/edit","UserController@edit")->name("editUser");
     Route::post("/user/{user}/update", "UserController@update")->name("updateUser");
     Route::get("/user/{user}/delete", "UserController@destroy")->name("deleteUser");
+
+    //pemasukan
+    Route::get('/pemasukan', 'PemasukanController@index')->name('daftarPemasukan');
+    Route::get('/pemasukan/create', 'PemasukanController@create')->name('createPemasukan');
+    Route::post('/pemasukan/store', 'PemasukanController@store')->name('storePemasukan');
+    Route::get('/pemasukan/{pemasukan}/edit', 'PemasukanController@edit')->name('editPemasukan');
+    Route::post('/pemasukan/{pemasukan}/update', 'PemasukanController@update')->name('updatePemasukan');
+    Route::get('/pemasukan/{pemasukan}/delete', 'PemasukanController@destroy')->name('deletePemasukan');
     
 });
 
