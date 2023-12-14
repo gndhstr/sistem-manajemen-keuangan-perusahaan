@@ -24,11 +24,9 @@
             {{-- card grafik --}}
             <div class="card">
                 <div class="card-header border-0">
-                    <h3 class="card-title text-bold text-lg">Grafik Keuangan Perusahaan</h3>
+                    <h3 class="card-title text-bold text-lg text-center">Grafik Keuangan Perusahaan</h3>
                     <div class="card-tools">
-                        <!-- Buttons, labels, and many other things can be placed here! -->
-                        <!-- Here is a label for example -->
-                        <span class="badge badge-primary">Label</span>
+                        <span class="badge badge-info">{{ date('Y') }}</span>
                     </div>
                 </div>
                 <div class="card-body">
@@ -38,6 +36,8 @@
                                 <div class="card-header border-0 pb-0">
                                     <div class="d-flex justify-content-end">
                                         <a href="javascript:void(0);">View Report</a>
+                                    </div>
+                                    <div class="card-tools">
                                     </div>
                                 </div>
                                 <div class="card-body pt-3">
@@ -59,9 +59,6 @@
                                         </p>
                                     </div>
                                     <!-- /.d-flex -->
-
-
-
                                     <div class="position-relative mb-4">
                                         <canvas id="visitors-chart" height="200"></canvas>
                                     </div>
@@ -83,6 +80,8 @@
                                 <div class="card-header border-0 pb-0">
                                     <div class="d-flex justify-content-end">
                                         <a href="javascript:void(0);">View Report</a>
+                                    </div>
+                                    <div class="card-tools">
                                     </div>
                                 </div>
                                 <div class="card-body pt-3">

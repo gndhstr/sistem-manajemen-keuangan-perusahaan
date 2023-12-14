@@ -20,7 +20,7 @@
 	@yield('addCss')
 </head>
 
-<body class="hold-transition sidebar-mini sidebar-collapse">
+<body class="hold-transition sidebar-mini sidebar-collapse p-0">
 	<div class="wrapper">
 
 		@include('direktur.layouts.navbar')
