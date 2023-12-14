@@ -2,7 +2,6 @@
 
 @section('addCss')
     <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/bootstrap4.min.css') }}">
 @endsection
 
 @section('content')
@@ -67,40 +66,40 @@
                 <div class="col-lg-6">
                     <div class="card border-3">
                         <div class="card-header border-0 pb-0">
-                            <div class="d-flex justify-content-end">
-                                <a href="javascript:void(0);">View Report</a>
-                            </div>
                             <div class="card-tools">
+                                {{--  card Tools --}}
                             </div>
                         </div>
                         <div class="card-body pt-3">
                             <div class="d-flex">
                                 <p class="d-flex flex-column">
-                                    <span class="text-bold text-lg">Rp.
+                                    <span
+                                        class="text-bold text-lg {{ $aktualisasiBulanans[0] - $rencanaBulanans[0] >= 0 ? 'text-success' : ' text-danger' }}"><i
+                                            class="fa {{ $aktualisasiBulanans[0] - $rencanaBulanans[0] >= 0 ? 'fa-plus' : ' fa-minus' }} mr-lg-1"></i>Rp.
+                                        {{ number_format($aktualisasiBulanans[0] - $rencanaBulanans[0], 2, ',', '.') }}
                                     </span>
-                                    <span class="text-sm">Pemasukan Seiring Waktu</span>
+                                    <span class="text-sm">Dari rencana</span>
                                 </p>
                                 <p class="ml-auto d-flex flex-column text-right">
-                                    <span class="">
-                                        <i class="fa fa-arrow-up"></i>
-                                        {{ number_format(2000, 2) }} %
+                                    <span class="{{ ($perbandinganAnggaran >= 0) ? 'text-success' : 'text-danger' }}">
+                                        <i class="fa {{ ($perbandinganAnggaran >= 0) ? 'fa-arrow-up' : 'fa-arrow-down' }} "></i>
+                                        {{ number_format($perbandinganAnggaran, 2) }} %
                                     </span>
-                                    <span class="text-muted">Di Bulan ini</span>
-                                    <span class="text-muted">{{ date('D') }}</span>
+                                    <span class="text-muted">Keuntungan di bulan ini</span>
                                 </p>
                             </div>
                             <!-- /.d-flex -->
                             <div class="position-relative mb-4">
-                                <canvas id="visitors-chart" height="200"></canvas>
+                                <canvas id="visitors-chart" height="280"></canvas>
                             </div>
 
                             <div class="d-flex flex-row justify-content-end">
                                 <span class="mr-2">
-                                    <i class="fa fa-square text-primary"></i> Pemasukan
+                                    <i class="fa fa-square text-primary"></i> Aktualisasi
                                 </span>
 
                                 <span>
-                                    <i class="fa fa-square text-gray" style="opacity: 23%"></i> Pengeluaran
+                                    <i class="fa fa-square" style="color: #20c997"></i> Rencana
                                 </span>
                             </div>
                         </div>
@@ -134,6 +133,28 @@
     </script>
     <script>
         $(function() {
+            var tanggalBulanans = @json($tanggalBulanans);
+            for (const key in tanggalBulanans) {
+                if (tanggalBulanans.hasOwnProperty(key)) {
+                    const element = tanggalBulanans[key];
+                }
+            }
+
+            var rencanaBulanans = @json($rencanaBulanans);
+            for (const key in rencanaBulanans) {
+                if (rencanaBulanans.hasOwnProperty(key)) {
+                    const element = rencanaBulanans[key];
+                }
+            }
+
+            var aktualisasiBulanans = @json($aktualisasiBulanans);
+            for (const key in aktualisasiBulanans) {
+                if (aktualisasiBulanans.hasOwnProperty(key)) {
+                    const element = aktualisasiBulanans[key];
+                }
+            }
+
+            // Chart
             'use strict'
 
             var ticksStyle = {
@@ -145,16 +166,19 @@
 
             var $visitorsChart = $('#visitors-chart')
             // eslint-disable-next-line no-unused-vars
-            var visitorsChart = new Chart($visitorsChart, {
+            var salesChart = new Chart($visitorsChart, {
+                type: 'bar',
                 data: {
-                    labels: [20, 20, 20, 20,
-                        20, 20, 20
+                    labels: [tanggalBulanans[6], tanggalBulanans[5], tanggalBulanans[4], tanggalBulanans[3],
+                        tanggalBulanans[2], tanggalBulanans[1], tanggalBulanans[0]
                     ],
                     datasets: [{
                             type: 'line',
-                            data: [30, 30, 30,
-                                30, 30, 30,
-                                30
+                            data: [aktualisasiBulanans[6], aktualisasiBulanans[5], aktualisasiBulanans[
+                                    4],
+                                aktualisasiBulanans[3],
+                                aktualisasiBulanans[2], aktualisasiBulanans[1], aktualisasiBulanans[
+                                    0]
                             ],
                             backgroundColor: 'transparent',
                             borderColor: '#007bff',
@@ -165,23 +189,27 @@
                             // pointHoverBorderColor    : '#007bff'
                         },
                         {
-                            type: 'line',
-                            data: [30, 30, 30,
-                                30, 30, 30,
-                                30
+                            type: 'bar',
+                            data: [rencanaBulanans[6], rencanaBulanans[5], rencanaBulanans[
+                                    4],
+                                rencanaBulanans[3],
+                                rencanaBulanans[2], rencanaBulanans[1], rencanaBulanans[
+                                    0]
                             ],
-                            backgroundColor: 'tansparent',
+                            backgroundColor: '#20c997',
                             borderColor: '#ced4da',
                             pointBorderColor: '#ced4da',
                             pointBackgroundColor: '#ced4da',
-                            fill: false
+                            fill: false,
+                            barPercentage: 0.5,
                             // pointHoverBackgroundColor: '#ced4da',
                             // pointHoverBorderColor    : '#ced4da'
                         }
                     ]
                 },
                 options: {
-                    maintainAspectRatio: false,
+                    // responsive: true,
+                    maintainAspectRatio: false, // Set this to true to maintain aspect ratio                                        
                     tooltips: {
                         mode: mode,
                         intersect: intersect
@@ -198,34 +226,39 @@
                             // display: false,
                             gridLines: {
                                 display: true,
-                                lineWidth: '4px',
                                 color: 'rgba(0, 0, 0, .2)',
-                                zeroLineColor: 'transparent'
+                                zeroLineColor: '#c7c7c7',
                             },
                             ticks: $.extend({
                                 beginAtZero: true,
-                                suggestedMax: 200,
-                                callback: function(value) {
-                                    if (value >= 1000) {
-                                        value /= 1000;
-                                        value += 'k';
-                                        // value = value.toLocaleString("id-ID");
-                                    }
 
-                                    return 'Rp. ' + value
+                                // Include a dollar sign in the ticks
+                                callback: function(value) {
+                                    // if (value >= 1000) {
+                                    //     value /= 1000
+                                    //     value += 'k'
+                                    // }
+                                    value = new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR'
+                                    }).format(value);
+
+                                    return value;
                                 }
                             }, ticksStyle)
                         }],
                         xAxes: [{
                             display: true,
                             gridLines: {
-                                display: true
+                                display: false
                             },
-                            ticks: ticksStyle
+                            ticks: ticksStyle,
+                            // barPercentage: 0.5, // Deprecated
+                            // categoryPercentage: 0.5 // Deprecated
                         }]
                     }
                 }
-            });
+            })
         });
     </script>
 @endsection

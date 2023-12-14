@@ -127,7 +127,7 @@ class DirekturController extends Controller
         }
 
         return view('direktur.dashboard', [
-            // 'dump' => dd($pengeluaranBulananTotal),
+            // 'dump' => dd($pemasukanBulanans),
             'pemasukanHarians' => $pemasukanHarians,
             'pemasukanBulanans' => $pemasukanBulanans,
             'pengeluaranBulanans' => $pengeluaranBulanans,
@@ -198,9 +198,46 @@ class DirekturController extends Controller
 
     public function anggaran()
     {
-        $anggarans = tbl_anggaran::all();
+        $anggarans = tbl_anggaran::all()->where('status', '1');
+
+        $time = new Carbon();
+        $time->setTimeZone('Asia/Jakarta');
+
+        /* ------------------------------------- ANGGARAN SAMPAI 6 BULAN SEBELUMNYA ------------------------------------- */
+        $tanggalBulanans = [];
+        $rencanaBulanans = [];
+        $aktualisasiBulanans = [];
+
+        // Loop untuk mendapatkan 6 bulan sebelumnya
+        for ($i = 6; $i >= 0; $i--) {
+            $tanggalAwal = $time->now()->subMonth($i)->startOfMonth();
+            $tanggalAkhir = $time->now()->subMonth($i)->endOfMonth();
+
+            $tanggalBulanans[$i] = strtoupper($tanggalAwal->format('M'));
+
+            // Ambil data untuk setiap bulan
+            $rencanaBulanans[$i] = tbl_anggaran::whereBetween('tgl_anggaran', [$tanggalAwal, $tanggalAkhir])->where('status', '1')->get()->sum('rencana_anggaran');
+            $aktualisasiBulanans[$i] = tbl_anggaran::whereBetween('tgl_anggaran', [$tanggalAwal, $tanggalAkhir])->where('status', '1')->get()->sum('aktualisasi_anggaran');
+        }
+
+        /* ----------------------------- PERSENTASE PERBANDINGAN AKTUALISASI DAN RENCANA DI BULAN INI ----------------------------- */
+        if ($aktualisasiBulanans[0] == 0 && $rencanaBulanans[0] == 0) {
+            $perbandinganAnggaran = 0;
+        } elseif ($rencanaBulanans[0] == 0) {
+            $perbandinganAnggaran = 100;
+        } elseif ($aktualisasiBulanans[0] == 0) {
+            $perbandinganAnggaran = -100;
+        } else {
+            $perbandinganAnggaran = (($aktualisasiBulanans[0] - $rencanaBulanans[0]) / $aktualisasiBulanans[0]) * 100;
+        }
+
         return view('direktur.anggaran', [
+            // 'dump' => dd($aktualisasiBulanans),
+            'tanggalBulanans' => $tanggalBulanans,
             'anggarans' => $anggarans,
+            'rencanaBulanans' => $rencanaBulanans,
+            'aktualisasiBulanans' => $aktualisasiBulanans,
+            'perbandinganAnggaran' => $perbandinganAnggaran,
         ]);
     }
 

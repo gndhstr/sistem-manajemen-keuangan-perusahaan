@@ -74,6 +74,9 @@ Route::prefix('direktur')->middleware("auth", "role:2")->group(function () {
     Route::get('/cashflow', 'DirekturController@cashflow');
     Route::get('/anggaran', 'DirekturController@anggaran');
     Route::get('/karyawan', 'DirekturController@karyawan');
+
+    Route::get('/cashflow/{id}/data', 'DirekturController@cashflowDivisi')->name('cashflowDivisi');    
+    // Route::get('/karyawan/{id}', 'DirekturController@karyawan');
 });
 
 Route::prefix('manajer')->middleware("auth", "role:3")->group(function () {
