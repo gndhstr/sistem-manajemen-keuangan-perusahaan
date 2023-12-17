@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\tbl_pemasukan;
 use App\tbl_kategori;
 use Illuminate\Http\Request;
-use Symfony\Contracts\Service\Attribute\Required;
 
 class PemasukanController extends Controller
 {
@@ -16,10 +15,10 @@ class PemasukanController extends Controller
      */
     public function index()
     {
-        $pemasukan = tbl_pemasukan::with('kategori')->get();
+        $pemasukans = tbl_pemasukan::with('kategori')->get();
         $kategori = tbl_kategori::all();
 
-        return view('pemasukan.index', compact('pemasukan', 'kategori'));
+        return view('pemasukan.index', compact('pemasukans', 'kategori'));
     }
 
     /**
@@ -29,7 +28,7 @@ class PemasukanController extends Controller
      */
     public function create()
     {
-        $kategoris = tbl_kategori::all();
+        $kategori = tbl_kategori::all();
         return view('createPemasukan', compact('kategori'));
     }
 
@@ -42,12 +41,14 @@ class PemasukanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_user' => 'required',
             'id_kategori' => 'required',
+            'id_user' => 'required',
             'id_user_create' => 'required',
             'id_user_edit' => 'required',
             'jml_masuk' => 'required',
             'catatan' => 'nullable',
+            'bukti_pemasukan' => 'required',
+            'status' => 'nullable',
         ]);
 
         $pemasukan = new tbl_pemasukan();
@@ -64,14 +65,12 @@ class PemasukanController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\tbl_pemasukan  $tbl_pemasukan
+     * @param  \App\tbl_pemasukan  $pemasukan
      * @return \Illuminate\Http\Response
      */
-    public function edit(tbl_pemasukan $tbl_pemasukan)
+    public function edit(tbl_pemasukan $pemasukan)
     {
-        $pemasukan = tbl_pemasukan::findOrFail($tbl_pemasukan->id);
         $kategori = tbl_kategori::all();
-        
         return view('editPemasukan', compact('pemasukan', 'kategori'));
     }
 
@@ -79,22 +78,33 @@ class PemasukanController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\tbl_pemasukan  $tbl_pemasukan
+     * @param  \App\tbl_pemasukan  $pemasukan
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, tbl_pemasukan $tbl_pemasukan)
+    public function update(Request $request, tbl_pemasukan $pemasukan)
     {
-        $request->validate([
-            'id_kategori' => 'required',
-            'id_user' => 'required',
-            'id_user_edit' => 'required',
-            'tgl_pemasukan' => 'required',
-            'jml_masuk' => 'required',
-            'catatan' => 'nullable',
+        $validatedData = $request->validate([
+            'id_kategori' => 'required|integer',
+            'id_user' => 'required|integer',
+            'id_user_create' => 'required|integer',
+            'id_user_edit' => 'required|integer',
+            'tgl_pemasukan' => 'required|string',
+            'jml_masuk' => 'required|string|max:255',
+            'bukti_pemasukan' => 'required|string',
+            'catatan' => 'nullable|string',
             'status' => 'nullable',
         ]);
 
-        $tbl_pemasukan->update($request->all());
+        $pemasukan->id_kategori = $validatedData['id_kategori'];
+        $pemasukan->id_user = $validatedData['id_user'];
+        $pemasukan->id_user_create = $validatedData['id_user_create'];
+        $pemasukan->id_user_edit = $validatedData['id_user_edit'];
+        $pemasukan->tgl_pemasukan = $validatedData['tgl_pemasukan'];
+        $pemasukan->jml_masuk = $validatedData['jml_masuk'];
+        $pemasukan->bukti_pemasukan = $validatedData['bukti_pemasukan'];
+        $pemasukan->status = $validatedData['status'];
+        $pemasukan->catatan = $validatedData['catatan'];
+        $pemasukan->save();
 
         return redirect()->route('daftarPemasukan')->with('success', 'Data pemasukan berhasil diperbarui');
     }
@@ -102,13 +112,12 @@ class PemasukanController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\tbl_pemasukan  $tbl_pemasukan
+     * @param  \App\tbl_pemasukan  $pemasukan
      * @return \Illuminate\Http\Response
      */
-    public function destroy(tbl_pemasukan $tbl_pemasukan)
+    public function destroy(tbl_pemasukan $pemasukan)
     {
-        $tbl_pemasukan->delete();
-        return redirect(route("daftarPemasukan"))->with("success", "Data berhasil dihapus");
+        $pemasukan->delete();
+        return redirect(route("daftarPemasukan"))->with("success", "Data Berhasil dihapus");
     }
-
 }
