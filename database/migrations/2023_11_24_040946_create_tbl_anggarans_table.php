@@ -21,7 +21,8 @@ class CreateTblAnggaransTable extends Migration
             $table->foreign('id_divisi')->references('id_divisi')->on('tbl_divisis');
             $table->integer('rencana_anggaran');
             $table->integer('aktualisasi_anggaran');
-            $table->date("tgl_anggaran");            
+            $table->date("tgl_anggaran"); 
+            $table->string('status',20);
             $table->timestamps();
         });
     }

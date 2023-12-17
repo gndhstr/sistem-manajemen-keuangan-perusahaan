@@ -106,6 +106,8 @@ Route::prefix('manajer')->middleware("auth", "role:3")->group(function () {
 });
 
 Route::prefix('karyawan')->middleware("auth", "role:4")->group(function () {
+    Route::get("/","DashboardKaryawanController@index")->name("dashboardKaryawan");
+
     //pemasukan
     Route::get('/pemasukan', 'PemasukanController@index')->name('daftarPemasukan');
     Route::get('/pemasukan/create', 'PemasukanController@create')->name('createPemasukan');

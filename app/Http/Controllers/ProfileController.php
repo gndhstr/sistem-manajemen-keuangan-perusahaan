@@ -17,7 +17,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $userData = Session::get('userData');
+        $userData = Auth::user();
         $id = $userData->id;
         // Check if the profile exists
         $profile = profile::find($id);    

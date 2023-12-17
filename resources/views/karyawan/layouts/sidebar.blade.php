@@ -1,7 +1,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="{{route('dashboardManajer')}}" class="brand-link">
+    <a href="{{route('dashboardKaryawan')}}" class="brand-link">
         <img src="{{asset('img/app-logo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
             style="opacity: .8">
         <span class="brand-text font-weight-light">{{config('app.name')}}</span>
@@ -25,29 +25,18 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="{{route('dashboardManajer')}}" class="nav-link">
+                    <a href="{{route('dashboardKaryawan')}}" class="nav-link">
                         <i class="nav-icon fa fa-dashboard"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{route('karyawan')}}" class="nav-link">
+                    <a href="{{route('daftarPemasukan')}}" class="nav-link">
                         <i class="nav-icon fa fa-users"></i>
-                        <p>Karyawan</p>
+                        <p>Pemasukan</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{route('anggaran')}}" class="nav-link">
-                        <i class="nav-icon fa fa-briefcase"></i>
-                        <p>Anggaran</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('daftarMutasi')}}" class="nav-link">
-                        <i class="nav-icon fa fa-dollar"></i>
-                        <p>Mutasi Keuangan</p>
-                    </a>
-                </li>
+
                 <li class="nav-item">
                     <form id="logout-form" action="{{route('logout')}}" method="post">
                         @csrf

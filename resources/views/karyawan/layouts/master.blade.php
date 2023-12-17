@@ -21,8 +21,8 @@
 <body class="hold-transition sidebar-mini sidebar-collapse">
 	<div class="wrapper">
 
-		@include('manajer.layouts.navbar')
-		@include('manajer.layouts.sidebar')
+		@include('karyawan.layouts.navbar')
+		@include('karyawan.layouts.sidebar')
 
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
@@ -30,7 +30,7 @@
 		</div>
 		<!-- /.content-wrapper -->
 
-		@include('manajer.layouts.footer')
+		@include('karyawan.layouts.footer')
 	</div>
 	<!-- ./wrapper -->
 

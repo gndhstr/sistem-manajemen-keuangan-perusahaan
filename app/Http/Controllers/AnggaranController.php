@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\tbl_anggaran;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -19,9 +20,52 @@ class AnggaranController extends Controller
         $user = Auth::user();
 
         $divisi_login = $user->id_divisi;
-        $anggarans = tbl_anggaran::where('id_divisi', $divisi_login)->get();
 
-        return view("manajer.anggaran", ["anggarans" => $anggarans, "divisi_login" => $divisi_login]);
+        $anggarans = tbl_anggaran::all()->where('status', '1')
+                                        ->where('id_divisi', $divisi_login);
+
+
+        $time = new Carbon();
+        $time->setTimeZone('Asia/Jakarta');
+
+        /* ------------------------------------- ANGGARAN SAMPAI 6 BULAN SEBELUMNYA ------------------------------------- */
+        $tanggalBulanans = [];
+        $rencanaBulanans = [];
+        $aktualisasiBulanans = [];
+
+        // Loop untuk mendapatkan 6 bulan sebelumnya
+        for ($i = 6; $i >= 0; $i--) {
+            $tanggalAwal = $time->now()->subMonth($i)->startOfMonth();
+            $tanggalAkhir = $time->now()->subMonth($i)->endOfMonth();
+
+            $tanggalBulanans[$i] = strtoupper($tanggalAwal->format('M'));
+
+            // Ambil data untuk setiap bulan
+            $rencanaBulanans[$i] = tbl_anggaran::whereBetween('tgl_anggaran', [$tanggalAwal, $tanggalAkhir])->where('status', '1')->get()->sum('rencana_anggaran');
+            $aktualisasiBulanans[$i] = tbl_anggaran::whereBetween('tgl_anggaran', [$tanggalAwal, $tanggalAkhir])->where('status', '1')->get()->sum('aktualisasi_anggaran');
+        }
+
+        /* ----------------------------- PERSENTASE PERBANDINGAN AKTUALISASI DAN RENCANA DI BULAN INI ----------------------------- */
+        if ($aktualisasiBulanans[0] == 0 && $rencanaBulanans[0] == 0) {
+            $perbandinganAnggaran = 0;
+        } elseif ($rencanaBulanans[0] == 0) {
+            $perbandinganAnggaran = 100;
+        } elseif ($aktualisasiBulanans[0] == 0) {
+            $perbandinganAnggaran = -100;
+        } else {
+            $perbandinganAnggaran = (($aktualisasiBulanans[0] - $rencanaBulanans[0]) / $aktualisasiBulanans[0]) * 100;
+        }
+    
+        return view("manajer.anggaran", [
+            "divisi_login" => $divisi_login,
+            "divisi"=> $user->division->nama_divisi,
+            'tanggalBulanans' => $tanggalBulanans,
+            'anggarans' => $anggarans,
+            'rencanaBulanans' => $rencanaBulanans,
+            'aktualisasiBulanans' => $aktualisasiBulanans,
+            'perbandinganAnggaran' => $perbandinganAnggaran,
+        ]);
+
     }
     
 
@@ -63,6 +107,7 @@ class AnggaranController extends Controller
             'rencana_anggaran' => $request->rencana_anggaran,
             'aktualisasi_anggaran' => $request->aktualisasi_anggaran,
             'tgl_anggaran' => $request->tanggal,
+            'status' => '1',
         ]);
         $anggaran->save();
     
@@ -114,14 +159,12 @@ class AnggaranController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
     
-        // Perbarui data anggaran
+
         $anggaran->id_divisi = Auth::user()->id_divisi;
         $anggaran->id_kategori = $request->kategori;
         $anggaran->rencana_anggaran = $request->rencana_anggaran;
         $anggaran->aktualisasi_anggaran = $request->aktualisasi_anggaran;
         $anggaran->tgl_anggaran = $request->tanggal;
-        
-        // Anda mungkin perlu menyesuaikan bagian ini tergantung pada kebutuhan aplikasi Anda
     
         $anggaran->save();
     
@@ -137,7 +180,8 @@ class AnggaranController extends Controller
      */
     public function destroy(tbl_anggaran $anggaran)
     {
-        $anggaran->delete();
+        $anggaran->status = '0';
+        $anggaran->save();
         return redirect(route("anggaran"))->with("success","Anggaran berhasil dihapus");
     }
 }

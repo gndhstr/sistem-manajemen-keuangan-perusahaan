@@ -15,7 +15,7 @@ class PemasukanController extends Controller
      */
     public function index()
     {
-        $pemasukans = tbl_pemasukan::with('kategori')->get();
+        $pemasukans = tbl_pemasukan::with('kategori')->where('status', '1')->get();
         $kategori = tbl_kategori::all();
 
         return view('pemasukan.index', compact('pemasukans', 'kategori'));
@@ -56,7 +56,7 @@ class PemasukanController extends Controller
         $pemasukan->jml_masuk = $request->input('jml_masuk', 0);
         $pemasukan->catatan = $request->input('catatan', '');
         $pemasukan->bukti_pemasukan = $request->input('bukti_pemasukan', '');
-        $pemasukan->status = $request->input('status', '');
+        $pemasukan->status ='1';
         $pemasukan->save();
 
         return redirect()->route('daftarPemasukan')->with('success', 'Pemasukan berhasil ditambahkan');
@@ -117,7 +117,8 @@ class PemasukanController extends Controller
      */
     public function destroy(tbl_pemasukan $pemasukan)
     {
-        $pemasukan->delete();
+        $pemasukan->status = '0';
+        $pemasukan->save();
         return redirect()->route('daftarPemasukan')->with('success', 'Data Berhasil dihapus');
     }
 }

@@ -6,6 +6,8 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
 
 class KaryawanController extends Controller
 {
@@ -43,7 +45,7 @@ class KaryawanController extends Controller
      */
     public function create()
     {
-
+        return view("manajer.karyawan");
     }
 
     /**
@@ -97,7 +99,9 @@ class KaryawanController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return view("manajer.karyawan",[
+            "user"=>$user,
+        ]);
     }
 
     /**
@@ -109,13 +113,17 @@ class KaryawanController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:tbl_users,username,' . $user->id,
+            'username' => 'required|string|max:255',
             'jenis_kelamin' => 'required|string',
             'nomor_telepon' => 'required|string|max:15',
             'alamat' => 'required|string|max:255',
         ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $user->nama = $request->nama;
         $user->username = $request->username;
@@ -125,7 +133,7 @@ class KaryawanController extends Controller
 
         $user->save();
     
-        return redirect(route('karyawan'))->with('success', 'Data karyawan' . $request->nama . 'berhasil diperbarui');
+        return redirect(route('karyawan'))->with('success', 'Data karyawan ' . $request->nama . ' berhasil diperbarui');
     }
     
 
@@ -138,6 +146,6 @@ class KaryawanController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect(route("daftarKaryawan"))->with("success","Kategori $user->nama berhasil dihapus");
+        return redirect(route("karyawan"))->with("success","Karyawan $user->nama berhasil dihapus");
     }
 }

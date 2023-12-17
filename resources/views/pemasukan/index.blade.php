@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('karyawan.layouts.master')
 
 @section("addCss")
 <link rel="stylesheet" href="{{asset('css/dataTables.bootstrap4.min.css')}}">
@@ -42,7 +42,6 @@
                             <th>Tanggal Pemasukan</th>
                             <th>Catatan</th>
                             <th>Bukti Pemasukan</th>
-                            <th>status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -55,7 +54,6 @@
                             <td>{{ $pemasukan->tgl_pemasukan }}</td>
                             <td>{{ $pemasukan->catatan }}</td>
                             <td>{{ $pemasukan->bukti_pemasukan }}</td>
-                            <td>{{ $pemasukan->status }}</td>
                             <td>
                                 <a data-url="{{ route('editPemasukan', ['id_pemasukan'=>$pemasukan->id_pemasukan]) }}" class="btn btn-warning btn-sm edit-button" role="button" data-toggle="modal" data-target="#editPemasukanModal{{ $pemasukan->id_pemasukan }}">Edit</a>
                                 <a onclick="confirmDelete(this, '{{ $pemasukan->id_pemasukan }}')" href="{{ route('deletePemasukan', $pemasukan->id_pemasukan) }}" data-nama="{{ $pemasukan->kategori->nama_kategori }}" class="btn btn-danger btn-sm ml-1 text-white delete-button" role="button">Hapus</a>
@@ -110,11 +108,6 @@
                                     <div class="form-group">
                                         <label for="bukti_pemasukan">Bukti Pemasukan</label>
                                         <input type="text" class="form-control" id="bukti_pemasukan" name="bukti_pemasukan" value="{{ old('bukti_pemasukan', '') }}" required>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="status_edit">Status</label>
-                                        <input type="text" class="form-control" id="status_edit" name="status" value="{{ old('status', '') }}" required>
                                     </div>
 
                                     <div class="text-right">

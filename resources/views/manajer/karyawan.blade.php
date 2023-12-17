@@ -28,12 +28,12 @@
 	<div class="container-fluid">
 	<div class="card">
 			<div class="card-header text-right">
-				<a href="{{route('createRole')}}" class="btn btn-primary" role="button" data-toggle="modal" data-target="#tambahData">Daftarkan Karyawan</a>
+				<a href="{{route('createRole')}}" class="btn btn-primary" role="button" data-toggle="modal" data-target="#tambahData">Tambah Data</a>
 			</div>
 			<div class="card-body">
 				<table class="table table-hover mb-0" id="dataTable">
 					<thead>
-						<tr>
+                        <tr>
 							<th class="text-center">No</th>
 							<th class="text-center">Nama</th>
 							<th class="text-center">Divisi</th>
@@ -53,31 +53,31 @@
 							<td class="text-center">{{ $user->nomor_telepon}}</td>
 							<td class="text-center">{{ $user->alamat}}</td>
 							<td class="text-center">
-								<a data-url="{{route('editUser',['id'=>$user->id])}}" class="btn btn-warning btn-sm" role="button" data-toggle="modal" data-target="#editData{{$user->id}}">Edit</a>
-								<a onclick="confirmDelete(this)"  data-url="{{route('deleteUser',['id'=>$user->id])}}"data-nama="{{ $user->nama}}" class="btn btn-danger btn-sm ml-1 text-white" role="button">Hapus</a>
+								<a data-url="{{route('updateKaryawan',['id'=>$user->id])}}" class="btn btn-warning btn-sm" role="button" data-toggle="modal" data-target="#editData{{$user->id}}">Edit</a>
+								<button onclick="confirmDelete(this)"  data-url="{{route('deleteKaryawan',['id'=>$user->id])}}"data-nama="{{ $user->nama}}" class="btn btn-danger btn-sm ml-1 text-white" role="button">Hapus</button>
 							</td>
 						</tr>
 						@endforeach
+
 					</tbody>
 				</table>
 			</div>
 		</div>
 	</div><!-- /.container-fluid -->
-
+	
 	<!-- Modal Tambah Data -->
-	@foreach($users as $user)
-		<div class="modal fade" id="tambahData" tabindex="-1" role="dialog" aria-labelledby="tambahDataModalLabel" aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="tambahDataModalLabel">Tambah Karyawan</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<!-- Form Tambah Data Karyawan -->
-						<form action="{{route('storeKaryawan')}}" method="post">
+	<div class="modal fade" id="tambahData" tabindex="-1" role="dialog" aria-labelledby="tambahDataModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="tambahDataModalLabel">Tambah Data Karyawan</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<!-- Form Tambah Data Role -->
+					<form action="{{route('storeKaryawan')}}" method="post">
 							@csrf
 								<div class="form-group">
 									<label for="nama">Nama</label>
@@ -103,25 +103,25 @@
 									<input type="text" name="alamat" id="alamat" class="form-control" required placeholder="Masukkan Alamat">
 								</div>
 								<div class="text-right">
+									<a href="{{route('karyawan')}}" class="btn btn-danger mr-1">Batal</a>
 									<button type="submit" class="btn btn-success">Simpan</button>
 								</div>
 						</form>
-						<!-- End Form -->
-					</div>
+					<!-- End Form -->
 				</div>
 			</div>
 		</div>
-	@endforeach
+	</div>
 	<!-- End Modal Tambah Data -->
 
-
 	<!-- Modal Edit Data -->
-	@foreach($users as $user)
+	<!-- Modal Edit Data -->
+    @foreach($users as $user)
 		<div class="modal fade" id="editData{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="editDataModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="editDataModalLabel">Edit User</h5>
+						<h5 class="modal-title" id="editDataModalLabel">Edit Karyawan</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -130,6 +130,7 @@
 						<!-- Form Edit Data Role -->
 						<form action="{{ route('updateKaryawan', ['id' => $user->id]) }}" method="post">
 							@csrf
+							@method('POST') 
 							<div class="form-group">
 								<label for="nama">Nama</label>
 								<input type="text" name="nama" id="nama" class="form-control" required placeholder="Masukkan Nama" value="{{ $user->nama }}">
@@ -172,18 +173,24 @@
 		<script src="{{asset('js/dataTables.bootstrap4.min.js')}}"></script>
 		<script src="{{asset('js/sweetalert.min.js')}}"></script>
 		<script>
-			confirmDelete = function(button){
+			confirmDelete = function(button) {
 				var url = $(button).data("url");
 				swal({
-					"title" 	 : "Konfirmasi Hapus",
-					"text" 		 : "Apakah anda yakin menghapus data ini ?",
-					"dangermode" : true,
-					"buttons" 	 : true,
-				}).then(function(value){
-					if(value){
-						window.location = url;
+					"title": "Konfirmasi Hapus",
+					"text": "Apakah anda yakin menghapus data ini?",
+					"dangermode": true,
+					"buttons": true,
+				}).then(function(value) {
+					if (value) {
+						var form = document.createElement('form');
+						form.action = url;
+						form.method = 'POST';
+						form.innerHTML = '<input type="hidden" name="_method" value="POST">' +
+							'{{ csrf_field() }}';
+						document.body.appendChild(form);
+						form.submit();
 					}
-				})
+				});
 			}
 
 			// fungsi data table
