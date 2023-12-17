@@ -24,7 +24,7 @@
             {{-- card grafik --}}
             <div class="card">
                 <div class="card-header border-0">
-                    <h3 class="card-title text-bold text-lg text-center">Grafik Keuangan Perusahaan</h3>
+                    <h3 class="card-title text-bold text-lg text-center">Grafik Keuangan Karyawan</h3>
                     <div class="card-tools">
                         <span class="badge badge-info">{{ date('Y') }}</span>
                     </div>
@@ -35,7 +35,7 @@
                             <div class="card border-3">
                                 <div class="card-header border-0 pb-0">
                                     <div class="d-flex justify-content-end">
-                                        <a href="javascript:void(0);">View Report</a>
+                                        <a href="">View Report</a>
                                     </div>
                                     <div class="card-tools">
                                     </div>
@@ -45,7 +45,7 @@
                                         <p class="d-flex flex-column">
                                             <span class="text-bold text-lg">Rp.
                                                 {{ number_format($pemasukanMingguan, 2, ',', '.') }}</span>
-                                            <span class="text-sm">Pemasukan Seiring Waktu</span>
+                                            <span class="text-sm">Pemasukan Karyawan Seiring Waktu</span>
                                         </p>
                                         <p class="ml-auto d-flex flex-column text-right">
                                             <span
@@ -89,7 +89,7 @@
                                         <p class="d-flex flex-column">
                                             <span class="text-bold text-lg">Rp.
                                                 {{ number_format($pemasukanBulanan, 2, ',', '.') }}</span>
-                                            <span class="text-sm">Pemasukan Seiring Waktu</span>
+                                            <span class="text-sm">Pemasukan Karyawan Seiring Waktu</span>
                                         </p>
                                         <p class="ml-auto d-flex flex-column text-right">
                                             <span

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class tbl_pemasukan extends Model
 {
     protected $table = "tbl_pemasukans";
+    protected $primaryKey = 'id_pemasukan';
+
     protected $fillable = [
         "id_kategori",
         "id_user",
@@ -15,6 +17,11 @@ class tbl_pemasukan extends Model
         "tgl_pemasukan",
         "status",
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'id_pemasukan';
+    }
 
     public function user()
     {

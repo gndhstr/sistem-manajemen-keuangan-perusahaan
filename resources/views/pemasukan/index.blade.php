@@ -57,8 +57,8 @@
                             <td>{{ $pemasukan->bukti_pemasukan }}</td>
                             <td>{{ $pemasukan->status }}</td>
                             <td>
-                                <a data-url="{{ route('editPemasukan',['id_pemasukan'=>$pemasukan->id_pemasukan]) }}" class="btn btn-warning btn-sm edit-button" role="button" data-toggle="modal" data-target="#editPemasukanModal{{ $pemasukan->id_pemasukan }}">Edit</a>
-                                <a href="{{ route('deletePemasukan', ['tbl_pemasukan' => $pemasukan->id_pemasukan]) }}" data-nama="{{ $pemasukan->kategori->nama_kategori }}" class="btn btn-danger btn-sm ml-1 text-white delete-button" role="button" onclick="confirmDelete(this)">Hapus</a>
+                                <a data-url="{{ route('editPemasukan', ['id_pemasukan'=>$pemasukan->id_pemasukan]) }}" class="btn btn-warning btn-sm edit-button" role="button" data-toggle="modal" data-target="#editPemasukanModal{{ $pemasukan->id_pemasukan }}">Edit</a>
+                                <a onclick="confirmDelete(this, '{{ $pemasukan->id_pemasukan }}')" href="{{ route('deletePemasukan', $pemasukan->id_pemasukan) }}" data-nama="{{ $pemasukan->kategori->nama_kategori }}" class="btn btn-danger btn-sm ml-1 text-white delete-button" role="button">Hapus</a>
                             </td>
                         </tr>
                         @endforeach
@@ -147,7 +147,7 @@
                                 <!-- Formulir untuk mengedit catatan pemasukan -->
                                 <form action="{{ route('updatePemasukan', ['tbl_pemasukan' => $pemasukan->id_pemasukan]) }}" method="POST">
                                     @csrf
-                                    @method('PUT')
+                                    @method('POST')
                                     <!-- Pilih kategori menggunakan select -->
                                     <div class="form-group">
                                         <label for="nama_kategori_edit">Nama Kategori</label>
@@ -211,6 +211,7 @@
     <script src="{{ asset('js/sweetalert.min.js') }}"></script>
     <script>
         confirmDelete = function(button) {
+            event.preventDefault();
             var url = $(button).attr("href");
             var nama = $(button).data("nama");
 
