@@ -118,6 +118,6 @@ class PemasukanController extends Controller
     public function destroy(tbl_pemasukan $pemasukan)
     {
         $pemasukan->delete();
-        return redirect(route("daftarPemasukan"))->with("success", "Data Berhasil dihapus");
+        return redirect()->route('daftarPemasukan')->with('success', 'Data Berhasil dihapus');
     }
 }

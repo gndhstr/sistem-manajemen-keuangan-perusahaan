@@ -74,14 +74,14 @@
                             <div class="d-flex">
                                 <p class="d-flex flex-column">
                                     <span
-                                        class="text-bold text-lg {{ $aktualisasiBulanans[0] - $rencanaBulanans[0] >= 0 ? 'text-success' : ' text-danger' }}"><i
+                                        class="text-bold text-lg {{ $aktualisasiBulanans[0] - $rencanaBulanans[0] >= 0 ? 'text-danger' : ' text-success' }}"><i
                                             class="fa {{ $aktualisasiBulanans[0] - $rencanaBulanans[0] >= 0 ? 'fa-plus' : ' fa-minus' }} mr-lg-1"></i>Rp.
                                         {{ number_format($aktualisasiBulanans[0] - $rencanaBulanans[0], 2, ',', '.') }}
                                     </span>
                                     <span class="text-sm">Dari rencana</span>
                                 </p>
                                 <p class="ml-auto d-flex flex-column text-right">
-                                    <span class="{{ ($perbandinganAnggaran >= 0) ? 'text-success' : 'text-danger' }}">
+                                    <span class="{{ ($perbandinganAnggaran >= 0) ? 'text-danger' : 'text-success' }}">
                                         <i class="fa {{ ($perbandinganAnggaran >= 0) ? 'fa-arrow-up' : 'fa-arrow-down' }} "></i>
                                         {{ number_format($perbandinganAnggaran, 2) }} %
                                     </span>
