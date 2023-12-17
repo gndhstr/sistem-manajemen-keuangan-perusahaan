@@ -57,6 +57,15 @@ Route::prefix("admin")->middleware("auth", "role:1")->group(function(){
     Route::get("/user/{user}/edit","UserController@edit")->name("editUser");
     Route::post("/user/{user}/update", "UserController@update")->name("updateUser");
     Route::get("/user/{user}/delete", "UserController@destroy")->name("deleteUser");
+    Route::get("/user/cetak","UserController@cetak")->name("cetakUser");
+    
+
+    //Profile
+    Route::get("/profile","ProfileController@index")->name("Profile");
+    Route::get("/profile/{profile}/edit","ProfileController@edit")->name("editProfile");
+    Route::post("/profile/{profile}/update", "ProfileController@update")->name("updateProfile");
+    Route::get("/profile/password", "ProfileController@editPassword")->name("editPassword");
+    Route::post("/profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
 
     //pemasukan
     Route::get('/pemasukan', 'PemasukanController@index')->name('daftarPemasukan');

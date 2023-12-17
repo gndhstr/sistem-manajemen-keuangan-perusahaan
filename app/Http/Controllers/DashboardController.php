@@ -31,6 +31,23 @@ class DashboardController extends Controller
         $dataKategori = tbl_kategori::all()->count();
         $dataRole = tbl_role::all()->count();
         $dataUser = User::all()->count();
-        return view('dashboard', compact('dataDivisi', 'dataKategori', "dataRole", "dataUser"));
-}
+        $currentTime = now();
+        $greeting = $this->getGreeting($currentTime);
+
+        return view('admin.dashboard', compact('dataDivisi', 'dataKategori', "dataRole", "dataUser", "greeting"));
+    }
+    private function getGreeting($time)
+    {
+        $hour = $time->hour;
+    
+        if ($hour >= 5 && $hour < 12) {
+            return 'Selamat Pagi';
+        } elseif ($hour >= 12 && $hour < 15) {
+            return 'Selamat Siang';
+        } elseif ($hour >= 15 && $hour < 18) {
+            return 'Selamat Sore';
+        } else {
+            return 'Selamat Malam';
+        }
+    }
 }
