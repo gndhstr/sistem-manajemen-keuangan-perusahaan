@@ -63,7 +63,7 @@ Route::prefix("admin")->middleware("auth", "role:1")->group(function(){
     Route::get('/pemasukan/create', 'PemasukanController@create')->name('createPemasukan');
     Route::post('/pemasukan/store', 'PemasukanController@store')->name('storePemasukan');
     Route::get('/pemasukan/{pemasukan}/edit', 'PemasukanController@edit')->name('editPemasukan');
-    Route::post('/pemasukan/{pemasukan}/update', 'PemasukanController@update')->name('updatePemasukan');
+    Route::put('/pemasukan/{tbl_pemasukan}', 'PemasukanController@update')->name('updatePemasukan');
     Route::get('/pemasukan/{pemasukan}/delete', 'PemasukanController@destroy')->name('deletePemasukan');
     
 });
