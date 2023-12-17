@@ -70,14 +70,6 @@ Route::prefix("admin")->middleware("auth", "role:1")->group(function(){
     Route::post("/profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
 }); 
 
-    //pemasukan
-    Route::get('/pemasukan', 'PemasukanController@index')->name('daftarPemasukan');
-    Route::get('/pemasukan/create', 'PemasukanController@create')->name('createPemasukan');
-    Route::post('/pemasukan/store', 'PemasukanController@store')->name('storePemasukan');
-    Route::get('/pemasukan/{pemasukan}/edit', 'PemasukanController@edit')->name('editPemasukan');
-    Route::post('/pemasukan/{pemasukan}/edit', 'PemasukanController@update')->name('updatePemasukan');
-    Route::get('/pemasukan/{pemasukan}/delete', 'PemasukanController@destroy')->name('deletePemasukan');
-});
 
 Route::prefix('direktur')->middleware("auth", "role:2")->group(function () {
     Route::redirect('/', 'direktur/dashboard');
@@ -99,18 +91,28 @@ Route::prefix('manajer')->middleware("auth", "role:3")->group(function () {
     Route::post("/anggaran/store","AnggaranController@store")->name("storeAnggaran");
     Route::get("/anggaran/{anggaran}/edit","AnggaranController@edit")->name("editAnggaran");
     Route::post("/anggaran/{anggaran}/update", "AnggaranController@update")->name("updateAnggaran");
-    Route::get("/anggaran/{anggaran}/delete", "AnggaranController@destroy")->name("deleteAnggaran");
+    Route::post("/anggaran/{anggaran}/delete", "AnggaranController@destroy")->name("deleteAnggaran");
     
     // CRUD Karyawan
     Route::get("/karyawan","KaryawanController@index")->name("karyawan");
+    Route::get("/karyawan/create","KaryawanController@create")->name("createKaryawan");
     Route::post("/karyawan/store","KaryawanController@store")->name("storeKaryawan");
-    Route::post("/karyawan/update","KaryawanController@update")->name("updateKaryawan");
+    Route::post("/karyawan/{user}/edit","KaryawanController@edit")->name("editKaryawan");
+    Route::post("/karyawan/{user}/update","KaryawanController@update")->name("updateKaryawan");
+    Route::post("/karyawan/{user}/delete","KaryawanController@destroy")->name("deleteKaryawan");
 
-    //CRUD Kategori
-    Route::get("/kategori","KategoriController@index")->name("daftarKategori");
-    Route::post("/kategori/store","KategoriController@store")->name("storeKategori");
-    Route::post("/kategori/{kategori}/update", "KategoriController@update")->name("updateKategori");
-    Route::get("/kategori/{kategori}/delete", "KategoriController@destroy")->name("deleteKategori");
+    //CRUD Mutasi
+    Route::get("/mutasi","MutasiController@index")->name("daftarMutasi");
+});
+
+Route::prefix('karyawan')->middleware("auth", "role:4")->group(function () {
+    //pemasukan
+    Route::get('/pemasukan', 'PemasukanController@index')->name('daftarPemasukan');
+    Route::get('/pemasukan/create', 'PemasukanController@create')->name('createPemasukan');
+    Route::post('/pemasukan/store', 'PemasukanController@store')->name('storePemasukan');
+    Route::get('/pemasukan/{pemasukan}/edit', 'PemasukanController@edit')->name('editPemasukan');
+    Route::post('/pemasukan/{pemasukan}/edit', 'PemasukanController@update')->name('updatePemasukan');
+    Route::get('/pemasukan/{pemasukan}/delete', 'PemasukanController@destroy')->name('deletePemasukan');
 });
 
 // Route::get('dashboards', 'DashboardController@index')->middleware('admin');
