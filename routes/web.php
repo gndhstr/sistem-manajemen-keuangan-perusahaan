@@ -66,6 +66,9 @@ Route::prefix("admin")->middleware("auth", "role:1")->group(function(){
     Route::post("/profile/{profile}/update", "ProfileController@update")->name("updateProfile");
     Route::get("/profile/password", "ProfileController@editPassword")->name("editPassword");
     Route::post("/profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
+    Route::get("/profile/password", "ProfileController@editPassword")->name("editPassword");
+    Route::post("/profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
+}); 
 
     //pemasukan
     Route::get('/pemasukan', 'PemasukanController@index')->name('daftarPemasukan');
