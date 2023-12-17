@@ -98,8 +98,14 @@ class ProfileController extends Controller
             "nama"           => "string|max:255",
             "alamat"         => "string",
             "nomor_telepon"  => "string",
+            //foto
+            "foto_profil"    => "image|mimes:jpeg,png,jpg,gif|max:2000",
         ])->validate();
-
+        if ($request->hasFile('foto_profil')) {
+            $foto_profil = $request->file('foto_profil');
+            $path = $foto_profil->store('img', 'public');
+            $validasiData['foto_profil'] = $path;
+        }
         
         $profile->nama = $validasiData["nama"];
         $profile->alamat = $validasiData["alamat"];
