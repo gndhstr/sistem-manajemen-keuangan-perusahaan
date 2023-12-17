@@ -43,13 +43,17 @@
                   <div class="col-md-3 text-center">
                     <img src="{{ asset($profile->foto_profil) }}" alt="" class="d-block ui-w-80">
                   </div>
-                  <div class="col-md-6 d-flex align-items-center">
+                  <!-- <div class="col-md-6 d-flex align-items-center">
                     <label class="btn btn-outline-primary">
                       Upload Foto
                       <input type="file" name="foto_profil"class="account-settings-fileinput" style="display: none;">
                     </label>
                     <button type="button" class="btn btn-default md-btn-flat ml-2">Reset</button>
-                  </div>
+                  </div> -->
+                  <div class="mb-3">
+                    <label for="formFile" class="form-label">Upload File</label>
+                    <input class="form-control" type="file" id="formFile" name="foto_profil">
+                </div>
                     <div class="text-light small ml-3">Allowed JPG, GIF, or PNG. Max size of 800K</div>
                 </div>
               </form>
