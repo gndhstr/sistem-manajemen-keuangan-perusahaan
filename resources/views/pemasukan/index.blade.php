@@ -41,21 +41,26 @@
                             <th>Jumlah</th>
                             <th>Tanggal Pemasukan</th>
                             <th>Catatan</th>
+                            <th>Bukti Pemasukan</th>
+                            <th>status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($pemasukan as $pemasukanItem)
+                        @foreach($pemasukans as $pemasukan)
                         <tr>
                             <td>{{ $loop->index + 1 }}</td>
-                            <td>{{ $pemasukanItem->kategori->nama_kategori }}</td>
-                            <td>{{ $pemasukanItem->jml_masuk }}</td>
-                            <td>{{ $pemasukanItem->tgl_pemasukan }}</td>
-                            <td>{{ $pemasukanItem->catatan }}</td>
+                            <td>{{ $pemasukan->kategori->nama_kategori }}</td>
+                            <td>{{ $pemasukan->jml_masuk }}</td>
+                            <td>{{ $pemasukan->tgl_pemasukan }}</td>
+                            <td>{{ $pemasukan->catatan }}</td>
+                            <td>{{ $pemasukan->bukti_pemasukan }}</td>
+                            <td>{{ $pemasukan->status }}</td>
                             <td>
-                                <a data-url="{{route('editPemasukan',['id_pemasukan'=>$pemasukanItem->id_pemasukan])}}" class="btn btn-warning btn-sm" role="button" data-toggle="modal" data-target="#editData{{$pemasukanItem->id_pemasukan}}">Edit</a>
-                                <a onclick="confirmDelete(this)"  data-url="{{route('deletePemasukan',['id_pemasukan'=>$pemasukanItem->id_pemasukan])}}"data-nama="{{$pemasukanItem->nama}}" class="btn btn-danger btn-sm ml-1 text-white" role="button">Hapus</a>
+                                <a data-url="{{ route('editPemasukan',['id_pemasukan'=>$pemasukan->id_pemasukan]) }}" class="btn btn-warning btn-sm edit-button" role="button" data-toggle="modal" data-target="#editPemasukanModal{{ $pemasukan->id_pemasukan }}">Edit</a>
+                                <a href="{{ route('deletePemasukan', ['tbl_pemasukan' => $pemasukan->id_pemasukan]) }}" data-nama="{{ $pemasukan->kategori->nama_kategori }}" class="btn btn-danger btn-sm ml-1 text-white delete-button" role="button" onclick="confirmDelete(this)">Hapus</a>
                             </td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -76,14 +81,13 @@
                                     @csrf
 
                                     <!-- Pilih kategori menggunakan select -->
-                                    <div class="form-group">
-                                        <label for="nama_kategori">Nama Kategori</label>
-                                        <select class="form-control select" name="nama_kategori" id="nama_kategori" required>
-                                            @foreach ($kategori as $kategoris)
-                                            <option value="{{ $kategoris->nama_kategori }}">{{ $kategoris->nama_kategori }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                    <select class="form-control select" name="id_kategori" id="id_kategori" required>
+                                        @foreach ($kategori as $kategoris)
+                                        <option value="{{ $kategoris->id_kategori }}" {{ old('id_kategori') == $kategoris->id_kategori ? 'selected' : '' }}>
+                                            {{ $kategoris->nama_kategori }}
+                                        </option>
+                                        @endforeach
+                                    </select>
 
                                     <!-- Input untuk jumlah masuk -->
                                     <div class="form-group">
@@ -103,12 +107,22 @@
                                         <textarea class="form-control" id="catatan" name="catatan" rows="3" required>{{ old('catatan', '') }}</textarea>
                                     </div>
 
+                                    <div class="form-group">
+                                        <label for="bukti_pemasukan">Bukti Pemasukan</label>
+                                        <input type="text" class="form-control" id="bukti_pemasukan" name="bukti_pemasukan" value="{{ old('bukti_pemasukan', '') }}" required>
+                                    </div>
 
-                                    <!-- Tombol Simpan -->
-                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                    <div class="form-group">
+                                        <label for="status_edit">Status</label>
+                                        <input type="text" class="form-control" id="status_edit" name="status" value="{{ old('status', '') }}" required>
+                                    </div>
+
+                                    <div class="text-right">
+                                        <a href="{{route('daftarPemasukan')}}" class="btn btn-danger mr-1">Batal</a>
+                                        <button type="submit" class="btn btn-success">Simpan</button>
+                                    </div>
 
                                     <input type="hidden" name="id_user" value="{{ auth()->user()->id }}">
-                                    <input type="hidden" name="id_kategori" value="{{ $kategoris->id_kategori }}">
                                     <input type="hidden" name="id_user_create" value="{{ auth()->user()->id }}">
                                     <input type="hidden" name="id_user_edit" value="{{ auth()->user()->id }}">
                                 </form>
@@ -118,7 +132,9 @@
                 </div>
 
                 <!-- Modal untuk Edit Pemasukan -->
-                <div class="modal fade" id="editPemasukanModal" tabindex="-1" role="dialog" aria-labelledby="editPemasukanModalLabel" aria-hidden="true">
+                @foreach($pemasukans as $pemasukan)
+                <div class="modal fade" id="editPemasukanModal{{ $pemasukan->id_pemasukan }}" tabindex="-1" role="dialog" aria-labelledby="editPemasukanModalLabel" aria-hidden="true">
+                    <!-- Sisipkan modal edit pemasukan -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -129,16 +145,15 @@
                             </div>
                             <div class="modal-body">
                                 <!-- Formulir untuk mengedit catatan pemasukan -->
-                                <form action="{{ route('updatePemasukan', $pemasukanItem->id_pemasukan) }}" method="post">
+                                <form action="{{ route('updatePemasukan', ['tbl_pemasukan' => $pemasukan->id_pemasukan]) }}" method="POST">
                                     @csrf
-                                    @method('PATCH')
-
+                                    @method('PUT')
                                     <!-- Pilih kategori menggunakan select -->
                                     <div class="form-group">
                                         <label for="nama_kategori_edit">Nama Kategori</label>
-                                        <select class="form-control select" name="nama_kategori" id="nama_kategori_edit" required>
+                                        <select class="form-control select" name="id_kategori" id="nama_kategori_edit" required>
                                             @foreach ($kategori as $kategoris)
-                                                <option value="{{ $kategoris->nama_kategori }}" @if($kategoris->nama_kategori == $pemasukan->kategori->nama_kategori) selected @endif>{{ $kategoris->nama_kategori }}</option>
+                                            <option value="{{ $kategoris->id_kategori }}" @if($kategoris->id_kategori == $pemasukan->id_kategori) selected @endif>{{ $kategoris->nama_kategori }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -146,73 +161,86 @@
                                     <!-- Input untuk jumlah masuk -->
                                     <div class="form-group">
                                         <label for="jml_masuk_edit">Jumlah Masuk</label>
-                                        <input type="text" class="form-control" id="jml_masuk_edit" name="jml_masuk" value="{{ old('jml_masuk', $pemasukan->jml_masuk) }}" required>
+                                        <input type="text" class="form-control" id="jml_masuk_edit" name="jml_masuk" value="{{ $pemasukan->jml_masuk }}" required>
                                     </div>
 
                                     <!-- Input untuk tanggal pemasukan -->
                                     <div class="form-group">
                                         <label for="tgl_pemasukan_edit">Tanggal Pemasukan</label>
-                                        <input type="date" class="form-control" id="tgl_pemasukan_edit" name="tgl_pemasukan" value="{{ old('tgl_pemasukan', $pemasukan->tgl_pemasukan) }}" required>
+                                        <input type="date" class="form-control" id="tgl_pemasukan_edit" name="tgl_pemasukan" value="{{ $pemasukan->tgl_pemasukan }}" required>
                                     </div>
 
                                     <!-- Textarea untuk catatan -->
                                     <div class="form-group">
                                         <label for="catatan_edit">Catatan</label>
-                                        <textarea class="form-control" id="catatan_edit" name="catatan" rows="3" required>{{ old('catatan', $pemasukan->catatan) }}</textarea>
+                                        <textarea class="form-control" id="catatan_edit" name="catatan" rows="3" required>{{ $pemasukan->catatan }}</textarea>
                                     </div>
 
-                                    <!-- Tombol Simpan -->
-                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                    <!-- Input untuk bukti pemasukan -->
+                                    <div class="form-group">
+                                        <label for="bukti_pemasukan_edit">Bukti Pemasukan</label>
+                                        <input type="text" class="form-control" id="bukti_pemasukan_edit" name="bukti_pemasukan" value="{{ $pemasukan->bukti_pemasukan }}" required>
+                                    </div>
+
+                                    <!-- Input untuk status -->
+                                    <div class="form-group">
+                                        <label for="status_edit">Status</label>
+                                        <input type="text" class="form-control" id="status_edit" name="status" value="{{ $pemasukan->status }}" required>
+                                    </div>
+
+                                    <div class="text-right">
+                                        <a href="{{ route('daftarPemasukan') }}" class="btn btn-danger mr-1">Batal</a>
+                                        <button type="submit" class="btn btn-success">Simpan</button>
+                                    </div>
+
+                                    <input type="hidden" name="id_user" value="{{ auth()->user()->id }}">
+                                    <input type="hidden" name="id_user_create" value="{{ $pemasukan->id_user_create }}">
+                                    <input type="hidden" name="id_user_edit" value="{{ auth()->user()->id }}">
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
-
+                @endforeach
             </div>
         </div>
     </div>
     @section("addJavascript")
-        <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
-        <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
-        <script src="{{ asset('js/sweetalert.min.js') }}"></script>
-        <script>
-            confirmDelete = function(button) {
-                var url = $(button).attr("href");
-                var nama = $(button).data("nama");
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+    <script>
+        confirmDelete = function(button) {
+            var url = $(button).attr("href");
+            var nama = $(button).data("nama");
 
-                swal({
-                    title: "Konfirmasi Hapus",
-                    text: "Apakah Anda yakin menghapus data " + nama + "?",
-                    icon: "warning",
-                    dangerMode: true,
-                    buttons: {
-                        cancel: "Batal",
-                        confirm: {
-                            text: "Hapus",
-                            value: true,
-                            visible: true,
-                            className: "btn-danger",
-                            closeModal: true,
-                        }
+            swal({
+                title: "Konfirmasi Hapus",
+                text: "Apakah Anda yakin menghapus Pemasukan " + nama + "?",
+                icon: "warning",
+                dangerMode: true,
+                buttons: {
+                    cancel: "Batal",
+                    confirm: {
+                        text: "Hapus",
+                        value: true,
+                        visible: true,
+                        className: "btn-danger",
+                        closeModal: true,
                     }
-                }).then(function (value) {
-                    if (value) {
-                        window.location = url;
-                    }
-                });
-            }
-
-            $(function () {
-                $("#dataTable").DataTable();
+                }
+            }).then(function(value) {
+                if (value) {
+                    window.location = url;
+                }
             });
-        </script>
+        }
+
+        $(function() {
+            $("#dataTable").DataTable();
+        });
+    </script>
     @endsection
-
-            
-
 </div>
 <!-- /.content -->
-    
-
 @endsection
