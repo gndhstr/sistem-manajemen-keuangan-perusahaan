@@ -38,6 +38,13 @@
                 </li>
 
                 <li class="nav-item">
+                    <a href="{{route('daftarPengeluaran')}}" class="nav-link">
+                        <i class="nav-icon fa fa-arrow-circle-right"></i>
+                        <p>Pengeluaran</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     <form id="logout-form" action="{{route('logout')}}" method="post">
                         @csrf
                     </form>
