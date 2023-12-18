@@ -135,7 +135,7 @@
                                 <span class="description-percentage text-success"><i class="fa fa-caret-up"></i>
                                     {{ number_format($perbandinganPemasukanPengeluaranTotal, 2) }}%</span>
                                 <h5 class="description-header">Rp. {{ number_format($totalPemasukan, 2, ',', '.') }}</h5>
-                                <span class="description-text">TOTAL PENDAPATAN</span>
+                                <span class="description-text">TOTAL PEMASUKAN KARYAWAN</span>
                             </div>
                             <!-- /.description-block -->
                         </div>

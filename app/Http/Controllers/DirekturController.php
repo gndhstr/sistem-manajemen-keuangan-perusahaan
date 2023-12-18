@@ -243,7 +243,45 @@ class DirekturController extends Controller
 
     public function karyawan()
     {
-        $karyawans = User::all()->where('role', '=', '4');
+        // $karyawans = User::all()->where('role', '=', '4');
+        // $saldos = tbl_pemasukan::with('user')->get();
+        // $saldos = User::with('pemasukan')->find();
+
+        // $karyawans = User::with(['pemasukan' => function ($query) {
+        //     $query->select('id_user', DB::raw('SUM(jml_masuk) as total_pemasukan'))
+        //         ->groupBy('id_user');
+        // }])->where('role', '=', '4')->get();
+
+        // $pengeluarans = User::with(['pengeluaran' => function ($query) {
+        //     $query->select('id_user', DB::raw('SUM(jml_keluar) as total_pengeluaran'))
+        //         ->groupBy('id_user');
+        // }])->where('role', '=', '4')->get();
+
+        // $karyawans = User::with(
+        //     [
+        //         'pemasukan' => function ($query) {
+        //             $query->select('id_user', DB::raw('SUM(jml_masuk) as total_pemasukan'))->groupBy('id_user');
+        //         }
+        //     ],
+        //     [
+        //         'pengeluaran' => function ($query) {
+        //             $query->select('id_user', DB::raw('SUM(jml_keluar) as total_pengeluaran'))
+        //                 ->groupBy('id_user');
+        //         }
+        //     ]
+        // )->where('role', '=', '4')->get();
+
+        $karyawans = User::with(
+            [
+                'pemasukan' => function ($query) {
+                    $query->select('id_user', DB::raw('SUM(jml_masuk) as total_pemasukan'))->groupBy('id_user');
+                },
+                'pengeluaran' => function ($query) {
+                    $query->select('id_user', DB::raw('SUM(jml_keluar) as total_pengeluaran'))
+                        ->groupBy('id_user');
+                }
+            ]
+        )->where('role', '=', '4')->get();
 
         return view('direktur.karyawan', [
             // 'dump' => dd($karyawans),
