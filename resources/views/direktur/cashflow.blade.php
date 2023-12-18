@@ -181,6 +181,82 @@
                         </table>
                     </div>
                 </div>
+                {{-- Modal mutasi karyawan --}}
+                @foreach ($users as $user)
+                    <div class="modal fade" id="karyawan-{{ $user->id }}" tabindex="-1" role="dialog"
+                        aria-labelledby="karyawanModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="karyawanModalLabel">Mutasi Keuangan {{ $user->nama }}
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="card-body">
+                                        <table class="table table-hover mb-0" id="tabelModal">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">No</th>
+                                                    <th class="text-center">Tanggal</th>
+                                                    <th class="text-center">Pemasukan</th>
+                                                    <th class="text-center">Pengeluaran</th>
+                                                    <th class="text-center">Catatan</th>
+                                                    <th class="text-center">Bukti</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    $mutasis = $pemasukans
+                                                        ->concat($pengeluarans)
+                                                        ->where('id_user', $user->id)
+                                                        ->sortByDesc(function ($mutasi) {
+                                                            return isset($mutasi->tgl_pemasukan) ? $mutasi->tgl_pemasukan : $mutasi->tgl_pengeluaran;
+                                                        });
+                                                @endphp
+                                                @forelse ($mutasis as $mutasi)
+                                                    <tr>
+                                                        <td class="text-center">{{ $loop->index + 1 }}</td>
+                                                        <td class="text-center">
+                                                            {{ isset($mutasi->tgl_pemasukan) ? $mutasi->tgl_pemasukan : $mutasi->tgl_pengeluaran }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <small class="text-success mr-1">
+                                                                <i class="fa fa-arrow-up"></i>
+                                                            </small>
+                                                            Rp.
+                                                            {{ number_format(isset($mutasi->jml_masuk) ? floatval($mutasi->jml_masuk) : 0, 0, ',', '.') }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <small class="text-danger mr-1">
+                                                                <i class="fa fa-arrow-down"></i>
+                                                            </small>
+                                                            Rp.
+                                                            {{ number_format(isset($mutasi->jml_keluar) ? floatval($mutasi->jml_keluar) : 0, 0, ',', '.') }}
+                                                        </td>
+                                                        <td class="text-center">{{ $mutasi->catatan }}</td>
+                                                        <td class="text-center">
+                                                            <a data-url="{{ route('editUser', ['id' => $user->id]) }}"
+                                                                class="btn btn-warning btn-sm" role="button"
+                                                                data-toggle="modal"
+                                                                data-target="#editData{{ $user->id }}">Lihat</a>
+                                                        </td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="4" class="text-center">No data available</td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div><!-- /.container-fluid -->
     </div>
@@ -239,7 +315,7 @@
                             }).format(pengeluaran);
 
                             html += `
-                                    <tr>
+                                    <tr data-toggle="modal" data-target="#karyawan-${user.id}" class="selected">
                                         <td class="text-center">${num++}</td>
                                         <td>${user.nama}</td>
                                         <td class="text-right">

@@ -65,16 +65,12 @@
                                     <td class="text-center">{{ $karyawan->nama }}</td>
                                     <td class="text-center">{{ $karyawan->division->nama_divisi }}</td>
                                     <td class="text-center">{{ $karyawan->nomor_telepon }}</td>
-                                    <td class="text-right">Rp.
+                                    <td class="text-right">
+                                        <i class="fa fa-arrow-up mr-1 text-success"></i>Rp.
                                         {{ number_format($karyawan->pemasukan->isEmpty() ? 0 : $karyawan->pemasukan[0]->total_pemasukan, 2, ',', '.') }}
                                     </td>
-                                    <td class="text-right">Rp.
-                                        {{ number_format(
-                                            $karyawan->pengeluaran->isEmpty() ? 0 : $karyawan->pengeluaran[0]->total_pengeluaran,
-                                            2,
-                                            ',',
-                                            '.',
-                                        ) }}
+                                    <td class="text-right"><i class="fa fa-arrow-down mr-1 text-danger"></i>Rp.
+                                        {{ number_format($karyawan->pengeluaran->isEmpty() ? 0 : $karyawan->pengeluaran[0]->total_pengeluaran, 2, ',', '.') }}
                                     </td>
                                     <td class="text-right">Rp.
                                         {{ number_format(($karyawan->pemasukan->isEmpty() ? 0 : $karyawan->pemasukan[0]->total_pemasukan) - ($karyawan->pengeluaran->isEmpty() ? 0 : $karyawan->pengeluaran[0]->total_pengeluaran), 2, ',', '.') }}
@@ -84,7 +80,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div>            
+            </div>
 
             <!-- Modal -->
             @foreach ($karyawans as $karyawan)
@@ -96,8 +92,8 @@
                                 <img src="{{ asset('img/app-logo.png') }}" alt="" width="40px">
                                 <h5 class="modal-title" id="exampleModalLongTitle">{{ $karyawan->division->nama_divisi }}
                                 </h5>
-                                <button type="button" class="close align-self-baseline" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
+                                <button type="button" class="close align-self-baseline" data-dismiss="modal"
+                                    aria-label="Close"><span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body p-0">

@@ -35,7 +35,7 @@
                             <div class="card border-3">
                                 <div class="card-header border-0 pb-0">
                                     <div class="d-flex justify-content-end">
-                                        <a href="">View Report</a>
+                                        {{-- <a href="">View Report</a> --}}
                                     </div>
                                     <div class="card-tools">
                                     </div>
@@ -79,7 +79,7 @@
                             <div class="card">
                                 <div class="card-header border-0 pb-0">
                                     <div class="d-flex justify-content-end">
-                                        <a href="javascript:void(0);">View Report</a>
+                                        {{-- <a href="javascript:void(0);">View Report</a> --}}
                                     </div>
                                     <div class="card-tools">
                                     </div>
@@ -153,12 +153,13 @@
                         <div class="col-sm-3 col-6">
                             <div class="description-block border-right">
                                 <span
-                                    class="description-percentage {{ $perbandinganPemasukanPengeluaranTotal > 0 ? 'text-success' : 'text-danger' }}"><i
-                                        class="fa {{ $perbandinganPemasukanPengeluaranTotal > 0 ? 'fa-caret-up' : 'fa-caret-down' }}"></i>
+                                    class="description-percentage {{ $perbandinganPemasukanPengeluaranTotal > 0 ? 'text-success' : 'text-danger' }}">
+                                    {{-- <i class="fa {{ $perbandinganPemasukanPengeluaranTotal > 0 ? 'fa-caret-up' : 'fa-caret-down' }}"></i> --}}
+                                    <i class="fa fa-caret-up"></i>
                                     {{ number_format($perbandinganPemasukanPengeluaranTotal, 2) }}%</span>
                                 <h5 class="description-header">
                                     {{ number_format($totalPemasukan - $totalPengeluaran, 2, ',', '.') }}</h5>
-                                <span class="description-text">TOTAL KEUNTUNGAN</span>
+                                <span class="description-text">PERBANDINGAN</span>
                             </div>
                             <!-- /.description-block -->
                         </div>
