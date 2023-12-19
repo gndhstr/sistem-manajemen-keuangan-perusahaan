@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class tbl_pengeluaran extends Model
 {
     protected $table ="tbl_pengeluarans";
+    protected $primaryKey = 'id_pengeluaran';
     protected $fillable =[
         "id_kategori",
         "id_user",

@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ManajerController extends Controller
+class DashboardKaryawanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -43,7 +43,7 @@ class ManajerController extends Controller
             $totalKeluar += $JmlKeluar;
         }
     
-        return view("manajer.dashboard", [
+        return view("karyawan.dashboard", [
             "users" => $users,
             "pemasukans" => $pemasukans,
             "pengeluarans" => $pengeluarans,

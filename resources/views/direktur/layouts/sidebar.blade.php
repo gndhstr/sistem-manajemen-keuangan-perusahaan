@@ -34,7 +34,7 @@
                 <li class="nav-item">
                     <a href="/direktur/cashflow" class="nav-link">
                         <i class="nav-icon fa fa-file-text-o"></i>
-                        <p>Cashflow</p>
+                        <p>Mutasi Keuangan</p>
                     </a>
                 </li>
                 <li class="nav-item">

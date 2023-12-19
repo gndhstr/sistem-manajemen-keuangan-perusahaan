@@ -1,7 +1,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="{{route('dashboard')}}" class="brand-link">
+    <a href="{{route('dashboardKaryawan')}}" class="brand-link">
         <img src="{{asset('img/app-logo.png')}}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
             style="opacity: .8">
         <span class="brand-text font-weight-light">{{config('app.name')}}</span>
@@ -25,52 +25,25 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="{{route('dashboard')}}" class="nav-link">
+                    <a href="{{route('dashboardKaryawan')}}" class="nav-link">
                         <i class="nav-icon fa fa-dashboard"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{route('daftarDivisi')}}" class="nav-link">
+                    <a href="{{route('daftarPemasukan')}}" class="nav-link">
                         <i class="nav-icon fa fa-users"></i>
-                        <p>Divisi</p>
+                        <p>Pemasukan</p>
                     </a>
                 </li>
+
                 <li class="nav-item">
-                    <a href="{{route('daftarRole')}}" class="nav-link">
-                        <i class="nav-icon fa fa-briefcase"></i>
-                        <p>Role</p>
+                    <a href="{{route('daftarPengeluaran')}}" class="nav-link">
+                        <i class="nav-icon fa fa-arrow-circle-right"></i>
+                        <p>Pengeluaran</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{route('daftarUser')}}" class="nav-link">
-                        <i class="nav-icon fa fa-user"></i>
-                        <p>User</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{route('daftarKategori')}}" class="nav-link">
-                        <i class="nav-icon fa fa-money"></i>
-                        <p>Kategori</p>
-                    </a>
-                </li>
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fa fa-gear"></i>
-                        <p>
-                            Setting
-                            <i class="right fa fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{route('Profile')}}" class="nav-link">
-                                <i class="fa fa-sliders nav-icon"></i>
-                                <p>Edit Profil</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+
                 <li class="nav-item">
                     <form id="logout-form" action="{{route('logout')}}" method="post">
                         @csrf

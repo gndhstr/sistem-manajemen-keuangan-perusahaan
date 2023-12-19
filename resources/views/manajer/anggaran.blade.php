@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('manajer.layouts.master')
 <!-- css -->
 @section("addCss")
 	<link rel="stylesheet" href="{{asset('css/dataTables.bootstrap4.min.css')}}">
@@ -26,7 +26,7 @@
 <!-- Main content -->
 <div class="content">
 	<div class="container-fluid">
-	<div class="card">
+		<div class="card">
 			<div class="card-header text-right">
 				<a href="{{route('createRole')}}" class="btn btn-primary" role="button" data-toggle="modal" data-target="#tambahData">Tambah Data</a>
 			</div>
@@ -54,7 +54,7 @@
 							<td class="text-center">{{ $anggaran->tgl_anggaran}}</td>
 							<td class="text-center">
 								<a data-url="{{route('editAnggaran',['id_anggaran'=>$anggaran->id_anggaran])}}" class="btn btn-warning btn-sm" role="button" data-toggle="modal" data-target="#editData{{$anggaran->id_anggaran}}" >Edit</a>
-								<a onclick="confirmDelete(this)"  data-url="{{route('deleteAnggaran',['id_anggaran'=>$anggaran->id_anggaran])}}" class="btn btn-danger btn-sm ml-1 text-white" role="button">Hapus</a>
+								<button onclick="confirmDelete(this)"  data-url="{{route('deleteAnggaran',['id_anggaran'=>$anggaran->id_anggaran])}}" class="btn btn-danger btn-sm ml-1 text-white" role="button">Hapus</button>
 							</td>
 						</tr>
 						@endforeach
@@ -63,6 +63,33 @@
 				</table>
 			</div>
 		</div>
+		<div class="card border-3">
+                        <div class="card-header border-0 pb-0">
+                            <div class="card-tools">
+                                {{--  card Tools --}}
+                            </div>
+                        </div>
+                        <div class="card-body pt-3">
+                            <div class="mb-5 text-center">
+								<h3>Grafik Anggaran Tahunan</h3>
+                            </div>
+                            <!-- /.d-flex -->
+                            <div class="position-relative mb-4">
+                                <canvas id="visitors-chart" height="280"></canvas>
+                            </div>
+
+                            <div class="d-flex flex-row justify-content-end">
+                                <span class="mr-2">
+                                    <i class="fa fa-square text-primary"></i> Aktualisasi
+                                </span>
+
+                                <span>
+                                    <i class="fa fa-square" style="color: #20c997"></i> Rencana
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
 	</div><!-- /.container-fluid -->
 	
 	<!-- Modal Tambah Data -->
@@ -189,19 +216,26 @@
 		<script src="{{asset('js/jquery.dataTables.min.js')}}"></script>
 		<script src="{{asset('js/dataTables.bootstrap4.min.js')}}"></script>
 		<script src="{{asset('js/sweetalert.min.js')}}"></script>
+		<script src="{{ asset('js/Chart.js') }}"></script>
 		<script>
-			confirmDelete = function(button){
+			confirmDelete = function(button) {
 				var url = $(button).data("url");
 				swal({
-					"title" 	 : "Konfirmasi Hapus",
-					"text" 		 : "Apakah anda yakin menghapus data ini ?",
-					"dangermode" : true,
-					"buttons" 	 : true,
-				}).then(function(value){
-					if(value){
-						window.location = url;
+					"title": "Konfirmasi Hapus",
+					"text": "Apakah anda yakin menghapus data ini?",
+					"dangermode": true,
+					"buttons": true,
+				}).then(function(value) {
+					if (value) {
+						var form = document.createElement('form');
+						form.action = url;
+						form.method = 'POST';
+						form.innerHTML = '<input type="hidden" name="_method" value="POST">' +
+							'{{ csrf_field() }}';
+						document.body.appendChild(form);
+						form.submit();
 					}
-				})
+				});
 			}
 
 			// fungsi data table
@@ -209,6 +243,136 @@
 				$("#dataTable").DataTable();
 			});
 		</script>
+		 <script>
+        $(function() {
+            var tanggalBulanans = @json($tanggalBulanans);
+            for (const key in tanggalBulanans) {
+                if (tanggalBulanans.hasOwnProperty(key)) {
+                    const element = tanggalBulanans[key];
+                }
+            }
+
+            var rencanaBulanans = @json($rencanaBulanans);
+            for (const key in rencanaBulanans) {
+                if (rencanaBulanans.hasOwnProperty(key)) {
+                    const element = rencanaBulanans[key];
+                }
+            }
+
+            var aktualisasiBulanans = @json($aktualisasiBulanans);
+            for (const key in aktualisasiBulanans) {
+                if (aktualisasiBulanans.hasOwnProperty(key)) {
+                    const element = aktualisasiBulanans[key];
+                }
+            }
+
+            // Chart
+            'use strict'
+
+            var ticksStyle = {
+                fontColor: '#495057',
+                fontStyle: 'bold'
+            }
+            var mode = 'index'
+            var intersect = true
+
+            var $visitorsChart = $('#visitors-chart')
+            // eslint-disable-next-line no-unused-vars
+            var salesChart = new Chart($visitorsChart, {
+                type: 'bar',
+                data: {
+                    labels: [tanggalBulanans[6], tanggalBulanans[5], tanggalBulanans[4], tanggalBulanans[3],
+                        tanggalBulanans[2], tanggalBulanans[1], tanggalBulanans[0]
+                    ],
+                    datasets: [{
+                            type: 'line',
+                            data: [aktualisasiBulanans[6], aktualisasiBulanans[5], aktualisasiBulanans[
+                                    4],
+                                aktualisasiBulanans[3],
+                                aktualisasiBulanans[2], aktualisasiBulanans[1], aktualisasiBulanans[
+                                    0]
+                            ],
+                            backgroundColor: 'transparent',
+                            borderColor: '#007bff',
+                            pointBorderColor: '#007bff',
+                            pointBackgroundColor: '#007bff',
+                            fill: false
+                            // pointHoverBackgroundColor: '#007bff',
+                            // pointHoverBorderColor    : '#007bff'
+                        },
+                        {
+                            type: 'bar',
+                            data: [rencanaBulanans[6], rencanaBulanans[5], rencanaBulanans[
+                                    4],
+                                rencanaBulanans[3],
+                                rencanaBulanans[2], rencanaBulanans[1], rencanaBulanans[
+                                    0]
+                            ],
+                            backgroundColor: '#20c997',
+                            borderColor: '#ced4da',
+                            pointBorderColor: '#ced4da',
+                            pointBackgroundColor: '#ced4da',
+                            fill: false,
+                            barPercentage: 0.5,
+                            // pointHoverBackgroundColor: '#ced4da',
+                            // pointHoverBorderColor    : '#ced4da'
+                        }
+                    ]
+                },
+                options: {
+                    // responsive: true,
+                    maintainAspectRatio: false, // Set this to true to maintain aspect ratio                                        
+                    tooltips: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    hover: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            // display: false,
+                            gridLines: {
+                                display: true,
+                                color: 'rgba(0, 0, 0, .2)',
+                                zeroLineColor: '#c7c7c7',
+                            },
+                            ticks: $.extend({
+                                beginAtZero: true,
+
+                                // Include a dollar sign in the ticks
+                                callback: function(value) {
+                                    // if (value >= 1000) {
+                                    //     value /= 1000
+                                    //     value += 'k'
+                                    // }
+                                    value = new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR'
+                                    }).format(value);
+
+                                    return value;
+                                }
+                            }, ticksStyle)
+                        }],
+                        xAxes: [{
+                            display: true,
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: ticksStyle,
+                            // barPercentage: 0.5, // Deprecated
+                            // categoryPercentage: 0.5 // Deprecated
+                        }]
+                    }
+                }
+            })
+        });
+    </script>
 	@endsection
 </div>
 <!-- /.content -->

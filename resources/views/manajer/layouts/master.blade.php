@@ -14,17 +14,15 @@
 	<link rel="stylesheet" href="{{asset('css/adminlte.min.css')}}">
 	<!-- Google Font: Source Sans Pro -->
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-	<!-- dashboard3 AdminLTE chart-->
-	<link rel="stylesheet" href="{{asset('css/Chart.css')}}">
 
 	@yield('addCss')
 </head>
 
-<body class="hold-transition sidebar-mini sidebar-collapse p-0">
+<body class="hold-transition sidebar-mini sidebar-collapse">
 	<div class="wrapper">
 
-		@include('direktur.layouts.navbar')
-		@include('direktur.layouts.sidebar')
+		@include('manajer.layouts.navbar')
+		@include('manajer.layouts.sidebar')
 
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">
@@ -32,11 +30,12 @@
 		</div>
 		<!-- /.content-wrapper -->
 
-		@include('layouts.footer')
+		@include('manajer.layouts.footer')
 	</div>
 	<!-- ./wrapper -->
 
 	<!-- REQUIRED SCRIPTS -->
+	@include('sweetalert::alert')
 	<!-- jQuery -->
 	<script src="{{asset('js/jquery.min.js')}}"></script>
 	<!-- Bootstrap 4 -->

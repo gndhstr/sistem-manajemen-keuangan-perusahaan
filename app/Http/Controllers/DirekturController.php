@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\tbl_anggaran;
 use App\tbl_divisi;
 use App\tbl_pemasukan;
 use App\tbl_pengeluaran;
+use App\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -125,7 +127,7 @@ class DirekturController extends Controller
         }
 
         return view('direktur.dashboard', [
-            // 'dump' => dd($pengeluaranBulananTotal),
+            // 'dump' => dd($pemasukanBulanans),
             'pemasukanHarians' => $pemasukanHarians,
             'pemasukanBulanans' => $pemasukanBulanans,
             'pengeluaranBulanans' => $pengeluaranBulanans,
@@ -164,20 +166,139 @@ class DirekturController extends Controller
         $pengeluarans = tbl_pengeluaran::select('id_pengeluaran as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_keluar as jumlah', 'tgl_pengeluaran as tanggal', 'catatan', 'bukti_pengeluaran as bukti', 'status', 'created_at')->where('status', '1')
             ->addSelect(DB::raw("'pengeluaran' as jenis_transaksi"));
 
-        $riwayatPemasukanPengeluaran = $pemasukans->union($pengeluarans)->orderBy('created_at', 'desc')->get();
+        $riwayatPemasukanPengeluaran = $pemasukans->union($pengeluarans)->orderBy('created_at', 'desc')->take(10)->get();
+
+        $users = User::where('role', 4)->get();
+
+        $pemasukans2 = tbl_pemasukan::where('status', "1")->get();
+        $pengeluarans2 = tbl_pengeluaran::where('status', "1")->get();
 
         return view('direktur.cashflow', [
-            // 'dump' => dd($divisis),
+            // 'dump' => dd($users),
             'riwayatPemasukanPengeluaran' => $riwayatPemasukanPengeluaran,
             'divisis' => $divisis,
+            'users' => $users,
+            "pemasukans" => $pemasukans2,
+            "pengeluarans" => $pengeluarans2,
         ]);
     }
+
+    public function cashflowDivisi(Request $request, $id)
+    {
+        $divisi = tbl_divisi::findOrFail($id);
+        $totalPemasukan = $divisi->pemasukans->sum('jml_masuk');
+        $totalPengeluaran = $divisi->pengeluarans->sum('jml_keluar');
+
+        // $users = tbl_divisi::with('users', 'pemasukans', 'pengeluarans')->find($id)->users;
+        $users = tbl_divisi::with(['users' => function ($query) {
+            $query->where('role', 4);
+        }, 'pemasukans', 'pengeluarans'])->find($id)->users;
+
+        $pemasukans = tbl_divisi::with('users', 'pemasukans', 'pengeluarans')->find($id)->pemasukans;
+        $pengeluarans = tbl_divisi::with('users', 'pemasukans', 'pengeluarans')->find($id)->pengeluarans;
+
+        return response()->json([
+            'divisi' => $divisi,
+            'users' => $users,
+            'pemasukans' => $pemasukans,
+            'pengeluarans' => $pengeluarans,
+            'totalPemasukan' => $totalPemasukan,
+            'totalPengeluaran' => $totalPengeluaran,
+        ]);
+    }
+
     public function anggaran()
     {
-        return view('direktur.anggaran');
+        $anggarans = tbl_anggaran::all()->where('status', '1');
+
+        $time = new Carbon();
+        $time->setTimeZone('Asia/Jakarta');
+
+        /* ------------------------------------- ANGGARAN SAMPAI 6 BULAN SEBELUMNYA ------------------------------------- */
+        $tanggalBulanans = [];
+        $rencanaBulanans = [];
+        $aktualisasiBulanans = [];
+
+        // Loop untuk mendapatkan 6 bulan sebelumnya
+        for ($i = 6; $i >= 0; $i--) {
+            $tanggalAwal = $time->now()->subMonth($i)->startOfMonth();
+            $tanggalAkhir = $time->now()->subMonth($i)->endOfMonth();
+
+            $tanggalBulanans[$i] = strtoupper($tanggalAwal->format('M'));
+
+            // Ambil data untuk setiap bulan
+            $rencanaBulanans[$i] = tbl_anggaran::whereBetween('tgl_anggaran', [$tanggalAwal, $tanggalAkhir])->where('status', '1')->get()->sum('rencana_anggaran');
+            $aktualisasiBulanans[$i] = tbl_anggaran::whereBetween('tgl_anggaran', [$tanggalAwal, $tanggalAkhir])->where('status', '1')->get()->sum('aktualisasi_anggaran');
+
+            // $aktualisasiBulanans[$i] = tbl_pengeluaran::whereBetween('tgl_pengeluaran', [$tanggalAwal, $tanggalAkhir])->where('status', '1')->get()->sum('jml_keluar');
+        }
+
+        /* ----------------------------- PERSENTASE PERBANDINGAN AKTUALISASI DAN RENCANA DI BULAN INI ----------------------------- */
+        if ($aktualisasiBulanans[0] == 0 && $rencanaBulanans[0] == 0) {
+            $perbandinganAnggaran = 0;
+        } elseif ($rencanaBulanans[0] == 0) {
+            $perbandinganAnggaran = 100;
+        } elseif ($aktualisasiBulanans[0] == 0) {
+            $perbandinganAnggaran = -100;
+        } else {
+            $perbandinganAnggaran = (($aktualisasiBulanans[0] - $rencanaBulanans[0]) / $aktualisasiBulanans[0]) * 100;
+        }
+
+        return view('direktur.anggaran', [
+            // 'dump' => dd($aktualisasiBulanans),
+            'tanggalBulanans' => $tanggalBulanans,
+            'anggarans' => $anggarans,
+            'rencanaBulanans' => $rencanaBulanans,
+            'aktualisasiBulanans' => $aktualisasiBulanans,
+            'perbandinganAnggaran' => $perbandinganAnggaran,
+        ]);
     }
+
     public function karyawan()
     {
-        return view('direktur.karyawan');
+        // $karyawans = User::all()->where('role', '=', '4');
+        // $saldos = tbl_pemasukan::with('user')->get();
+        // $saldos = User::with('pemasukan')->find();
+
+        // $karyawans = User::with(['pemasukan' => function ($query) {
+        //     $query->select('id_user', DB::raw('SUM(jml_masuk) as total_pemasukan'))
+        //         ->groupBy('id_user');
+        // }])->where('role', '=', '4')->get();
+
+        // $pengeluarans = User::with(['pengeluaran' => function ($query) {
+        //     $query->select('id_user', DB::raw('SUM(jml_keluar) as total_pengeluaran'))
+        //         ->groupBy('id_user');
+        // }])->where('role', '=', '4')->get();
+
+        // $karyawans = User::with(
+        //     [
+        //         'pemasukan' => function ($query) {
+        //             $query->select('id_user', DB::raw('SUM(jml_masuk) as total_pemasukan'))->groupBy('id_user');
+        //         }
+        //     ],
+        //     [
+        //         'pengeluaran' => function ($query) {
+        //             $query->select('id_user', DB::raw('SUM(jml_keluar) as total_pengeluaran'))
+        //                 ->groupBy('id_user');
+        //         }
+        //     ]
+        // )->where('role', '=', '4')->get();
+
+        $karyawans = User::with(
+            [
+                'pemasukan' => function ($query) {
+                    $query->select('id_user', DB::raw('SUM(jml_masuk) as total_pemasukan'))->groupBy('id_user');
+                },
+                'pengeluaran' => function ($query) {
+                    $query->select('id_user', DB::raw('SUM(jml_keluar) as total_pengeluaran'))
+                        ->groupBy('id_user');
+                }
+            ]
+        )->where('role', '=', '4')->get();
+
+        return view('direktur.karyawan', [
+            // 'dump' => dd($karyawans),
+            'karyawans' => $karyawans,
+        ]);
     }
 }

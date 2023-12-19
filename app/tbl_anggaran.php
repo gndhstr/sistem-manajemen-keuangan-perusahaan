@@ -15,6 +15,7 @@ class tbl_anggaran extends Model
         "rencana_anggaran",
         "aktualisasi_anggaran",
         "tgl_anggaran",
+        "status",
     ];
 
     public function kategori()
