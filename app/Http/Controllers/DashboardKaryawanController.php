@@ -1,22 +1,3 @@
-<?php
-
-namespace App\Http\Controllers;
-
-use App\User;
-use App\tbl_pemasukan;
-use App\tbl_pengeluaran;
-use App\tbl_anggaran;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
-class DashboardKaryawanController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(){
         $user = Auth::user();
         $role_user = 4;
@@ -41,10 +22,6 @@ class DashboardKaryawanController extends Controller
             $totalKeluar += $JmlKeluar;
         }
     
-        $totalMasukFormatted = "Rp " . number_format($totalMasuk, 0, ',', '.');
-        $totalKeluarFormatted = "Rp " . number_format($totalKeluar, 0, ',', '.');
-        $saldoFormatted = "Rp " . number_format($saldo, 0, ',', '.');
-
         $perbandinganPemasukanPengeluaran = 0;
         if ($totalMasuk > 0) {
             $perbandinganPemasukanPengeluaran = (($totalMasuk - $totalKeluar) / $totalMasuk) * 100;
@@ -54,11 +31,11 @@ class DashboardKaryawanController extends Controller
             "users" => $users,
             "pemasukans" => $pemasukans,
             "pengeluarans" => $pengeluarans,
-            "totalMasuk" => $totalMasukFormatted,
-            "totalKeluar" => $totalKeluarFormatted,
+            "totalMasuk" => $totalMasuk,
+            "totalKeluar" => $totalKeluar,
             "perbandinganPemasukanPengeluaran" => $perbandinganPemasukanPengeluaran,
             "divisi"=> $user->division->nama_divisi,
-            "saldo" => $saldoFormatted,
+            "saldo" => $saldo,
         ]);
     }
     
