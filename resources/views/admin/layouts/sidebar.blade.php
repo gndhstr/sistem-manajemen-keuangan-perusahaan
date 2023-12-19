@@ -13,7 +13,7 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{asset('img/user-photo-default.png')}}" class="img-circle elevation-2" alt="User Image">
+                <img src="{{ asset('storage/' . Auth()->user()->foto_profil) }}"class="img-circle "alt="User Image" id="foto_profil_preview">
             </div>
             <div class="info">
                 <a href="#" class="d-block">{{Auth::user()->nama}}</a>
@@ -64,7 +64,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{route('Profile')}}" class="nav-link">
+                            <a href="{{route('index')}}" class="nav-link">
                                 <i class="fa fa-sliders nav-icon"></i>
                                 <p>Edit Profil</p>
                             </a>

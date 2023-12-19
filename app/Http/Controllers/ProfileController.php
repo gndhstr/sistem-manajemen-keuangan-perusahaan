@@ -50,6 +50,8 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
+        return ($request)->file("foto_profil")->store("upload");
+        dd($request);
         $validasiData = validator($request->all(),[
             "nama"     =>"string|max:255",  
             "alamat"  => "string",  
@@ -92,26 +94,22 @@ class ProfileController extends Controller
      * @param  \App\profile  $profile
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, profile $profile)
+    public function update(Request $request, Profile $profile)
     {
-        $validasiData = validator($request->all(), [
+        $validatedData = $request->validate([
             "nama"           => "string|max:255",
             "alamat"         => "string",
             "nomor_telepon"  => "string",
-            //foto
-            "foto_profil"    => "image|mimes:jpeg,png,jpg,gif|max:2000",
-        ])->validate();
+            "foto_profil"    => "mimes:jpeg,png,jpg|max:2000",
+        ]);
         if ($request->hasFile('foto_profil')) {
             $foto_profil = $request->file('foto_profil');
             $path = $foto_profil->store('img', 'public');
-            $validasiData['foto_profil'] = $path;
+            $validatedData['foto_profil'] = $path ;
+            // dd($validatedData);
         }
-        
-        $profile->nama = $validasiData["nama"];
-        $profile->alamat = $validasiData["alamat"];
-        $profile->nomor_telepon = $validasiData["nomor_telepon"];
-        $profile->save();
-        session()->flash('success', 'Data berhasil diperbarui');
+        $profile->update($validatedData);
+        session()->flash('success', 'Profil berhasil diperbarui');
         return redirect(route("Profile"));
     }
 

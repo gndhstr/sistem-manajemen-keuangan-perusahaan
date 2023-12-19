@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\tbl_pemasukan;
 use App\tbl_kategori;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 
 class PemasukanController extends Controller
 {
@@ -20,6 +23,25 @@ class PemasukanController extends Controller
 
         return view('pemasukan.index', compact('pemasukans', 'kategori'));
     }
+
+    //cetak
+        public function cetak()
+        {
+            $pemasukans = tbl_pemasukan::with('kategori')->where('status', '1')->get();
+            $kategori = tbl_kategori::all();
+            // inisialisasi
+            $options = new Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isPhpEnabled', true);
+            $pdf = new Dompdf($options);
+            
+            $view = View::make('pemasukan.cetak', compact('pemasukans', 'kategori'))->render();
+            $pdf->loadHtml($view);
+
+            $pdf->render();
+            return $pdf->stream('Pemasukan.pdf');
+        }
+        // 
 
     /**
      * Show the form for creating a new resource.
