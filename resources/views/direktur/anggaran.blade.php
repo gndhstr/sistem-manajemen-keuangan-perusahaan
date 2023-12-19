@@ -27,7 +27,8 @@
         <div class="container-fluid">
             <div class="row">
                 {{-- main content here --}}
-                <div class="card col-lg-6" style="height: 300px">
+                {{-- table --}}
+                <div class="card col-lg-6">
                     <div class="card-header border-0">
                         <h3 class="card-title">Anggaran</h3>
                         <div class="card-tools">
@@ -35,7 +36,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <table class="table table-hover mb-0" id="data-table-divisi">
+                        <table class="table table-hover" id="data-table-divisi">
                             <thead>
                                 <tr class="text-center">
                                     <th class="col-1">No</th>
@@ -63,6 +64,7 @@
                         </table>
                     </div>
                 </div>
+                {{-- chart --}}
                 <div class="col-lg-6">
                     <div class="card border-3">
                         <div class="card-header border-0 pb-0">
@@ -85,7 +87,7 @@
                                         <i class="fa {{ ($perbandinganAnggaran >= 0) ? 'fa-arrow-up' : 'fa-arrow-down' }} "></i>
                                         {{ number_format($perbandinganAnggaran, 2) }} %
                                     </span>
-                                    <span class="text-muted">Keuntungan di bulan ini</span>
+                                    <span class="text-muted">Di bulan ini</span>
                                 </p>
                             </div>
                             <!-- /.d-flex -->
