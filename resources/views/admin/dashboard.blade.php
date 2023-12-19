@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('admin.layouts.master')
 
 @section("addCss")
 <link rel="stylesheet" href="{{asset('css/card.css')}}">

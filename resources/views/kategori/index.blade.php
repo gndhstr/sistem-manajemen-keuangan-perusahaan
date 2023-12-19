@@ -1,4 +1,4 @@
-@extends((Auth::user()->role == 3) ? 'manajer.layouts.master' : 'layouts.master')
+@extends((Auth::user()->role == 3) ? 'manajer.layouts.master' : 'admin.layouts.master')
 <!-- css -->
 @section("addCss")
 	<link rel="stylesheet" href="{{asset('css/dataTables.bootstrap4.min.css')}}">

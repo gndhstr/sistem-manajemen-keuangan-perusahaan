@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('admin.layouts.master')
 <!-- css -->
 @section("addCss")
 <link rel="stylesheet" href="{{asset('css/dataTables.bootstrap4.min.css')}}">
@@ -48,8 +48,8 @@
 							<td class="text-center">{{ $user->role_user ? $user->role_user->role : "-"}}</td>
 							<td class="text-center">{{ $user->division ? $user->division->nama_divisi : "-"}}</td>
 							<td class="text-center">
-								<a data-url="{{route('editUser',['id'=>$user->id])}}" class="btn btn-warning btn-sm" role="button" data-toggle="modal" data-target="#editData{{$user->id}}"><i class="fa fa-pen"></i></a>
-								<a onclick="confirmDelete(this)" data-url="{{route('deleteUser',['id'=>$user->id])}}" data-nama="{{ $user->nama}}" class="btn btn-danger btn-sm ml-1 text-white" role="button"><i class="fa fa-trash"></i></a>
+								<a data-url="{{route('editUser',['id'=>$user->id])}}" class="btn btn-warning btn-sm" role="button" data-toggle="modal" data-target="#editData{{$user->id}}">Edit</a>
+								<a onclick="confirmDelete(this)" data-url="{{route('deleteUser',['id'=>$user->id])}}" data-nama="{{ $user->nama}}" class="btn btn-danger btn-sm ml-1 text-white" role="button">Hapus</a>
 							</td>
 						</tr>
 						@endforeach

@@ -30,6 +30,7 @@
         <div class="card">
             <div class="card-header text-right">
                 <a href="{{ route('createPemasukan') }}" class="btn btn-primary" role="button" data-toggle="modal" data-target="#tambahPemasukanModal">Tambah Data</a>
+                <a href="{{route('cetakPemasukan')}}" class="btn btn-success mx-1" role="button" >Export PDF <i class="fa fa-file-pdf"></i></a>
             </div>
             <div class="card-body">
                 <!-- Tabel -->
@@ -202,6 +203,7 @@
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+    <script src="https://kit.fontawesome.com/e2b0e4079e.js" crossorigin="anonymous"></script>
     <script>
         confirmDelete = function(button) {
             event.preventDefault();

@@ -61,13 +61,14 @@ Route::prefix("admin")->middleware("auth", "role:1")->group(function(){
     
 
     //Profile
-    Route::get("/profile","ProfileController@index")->name("Profile");
-    Route::get("/profile/{profile}/edit","ProfileController@edit")->name("editProfile");
-    Route::post("/profile/{profile}/update", "ProfileController@update")->name("updateProfile");
-    Route::get("/profile/password", "ProfileController@editPassword")->name("editPassword");
-    Route::post("/profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
-    Route::get("/profile/password", "ProfileController@editPassword")->name("editPassword");
-    Route::post("/profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
+    Route::get("/profile","IndexProfileController@index")->name("index");
+    Route::get("/edit-profile","ProfileController@index")->name("Profile");
+    Route::get("/edit-profile/{profile}/edit","ProfileController@edit")->name("editProfile");
+    Route::post("/edit-profile/{profile}/update", "ProfileController@update")->name("updateProfile");
+    Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
+    Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
+    Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
+    Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
 }); 
 
 
@@ -115,6 +116,7 @@ Route::prefix('karyawan')->middleware("auth", "role:4")->group(function () {
     Route::get('/pemasukan/{pemasukan}/edit', 'PemasukanController@edit')->name('editPemasukan');
     Route::post('/pemasukan/{pemasukan}/edit', 'PemasukanController@update')->name('updatePemasukan');
     Route::get('/pemasukan/{pemasukan}/delete', 'PemasukanController@destroy')->name('deletePemasukan');
+    Route::get("/pemasukan/cetak","PemasukanController@cetak")->name("cetakPemasukan");
 });
 
 // Route::get('dashboards', 'DashboardController@index')->middleware('admin');

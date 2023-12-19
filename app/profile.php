@@ -14,5 +14,10 @@ class profile extends Model
         "alamat",
         "foto_profil",
         "nomor_telepon",
+        "id_divisi",
     ];
+    public function division()
+    {
+        return $this->belongsTo(tbl_divisi::class, 'id_divisi');
+    } 
 }

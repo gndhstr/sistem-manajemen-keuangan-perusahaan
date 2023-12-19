@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('karyawan.layouts.master')
 
 @section('content')
 <!-- Content Header (Page header) -->
