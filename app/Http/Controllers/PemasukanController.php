@@ -69,16 +69,20 @@ class PemasukanController extends Controller
             'id_user_edit' => 'required',
             'jml_masuk' => 'required',
             'catatan' => 'nullable',
-            'bukti_pemasukan' => 'required',
+            'bukti_pemasukan' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'nullable',
         ]);
+    
+        $file = $request->file('bukti_pemasukan');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $filePath = $file->storeAs('bukti_pemasukan', $fileName, 'public');    
 
         $pemasukan = new tbl_pemasukan();
         $pemasukan->fill($request->all());
         $pemasukan->jml_masuk = $request->input('jml_masuk', 0);
         $pemasukan->catatan = $request->input('catatan', '');
-        $pemasukan->bukti_pemasukan = $request->input('bukti_pemasukan', '');
-        $pemasukan->status ='1';
+        $pemasukan->bukti_pemasukan = $fileName;
+        $pemasukan->status = '1';
         $pemasukan->save();
 
         return redirect()->route('daftarPemasukan')->with('success', 'Pemasukan berhasil ditambahkan');
