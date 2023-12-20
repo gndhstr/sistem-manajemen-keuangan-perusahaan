@@ -17,7 +17,7 @@ Sistem Manajemen Keuangan Perusahaan
 You can clone this repository & rename it to your project
 
 ````
-git clone https://github.com/rpahlevy/laravel-adminlte3 your-project-name
+git clone https://github.com/gndhstr/sistem-manajemen-keuangan-perusahaan your-project-name
 ````
 
 #### Without Git
