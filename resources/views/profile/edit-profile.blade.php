@@ -15,7 +15,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{route('index')}}">Profil</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('indexProfile')}}">Profil</a></li>
                     <li class="breadcrumb-item active">Edit Profil</li>
                 </ol>
             </div>
@@ -79,7 +79,7 @@
                                     </div>
                                     <div class="text-right mb-5 mt-3">
                                         <button type="submit" class="btn btn-primary">Simpan</button>&nbsp;
-                                        <a href="{{ route('index') }}" class="btn btn-default">Batal</a>
+                                        <a href="{{ route('indexProfile') }}" class="btn btn-default">Batal</a>
                                     </div>
                             </form>
                         </div>
