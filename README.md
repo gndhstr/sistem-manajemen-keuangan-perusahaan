@@ -1,3 +1,4 @@
+<center>
 <img src="https://cdn.discordapp.com/attachments/875383813411311627/1186903941825437726/SIMAKEUP.png?ex=6594f16f&is=65827c6f&hm=f7439e637dac6e5f2a6e0fef52eed277a0b0218b77b35afc8d167551bae03590&" alt="logo">
 
 # SIMAKEUP
@@ -5,6 +6,7 @@
 Sistem Manajemen Keuangan Perusahaan
 
 ## Kelompok 3 - MSIB Gamelab.ID
+</center>
 
 ## Setup
 
