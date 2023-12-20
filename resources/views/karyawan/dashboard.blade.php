@@ -20,7 +20,7 @@
         </div>
     </div>
 </div>
-
+<!-- Main content -->
 <div class="content">
     <div class="container-fluid">
         <div class="card p-3">
@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-</div>
+</div><!-- /.content -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Set your data for the chart
@@ -97,11 +97,6 @@
             scales: {
                 y: {
                     beginAtZero: true
-                    ticks: {
-                        callback: function (value, index, values) {
-                            return 'Rp ' + value.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
-                        }
-                    }
                 }
             },
             maintainAspectRatio: true, // Setel ke false untuk mengaktifkan penyesuaian aspek rasio
