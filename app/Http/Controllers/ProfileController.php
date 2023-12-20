@@ -111,6 +111,7 @@ class ProfileController extends Controller
         $profile->update($validatedData);
         session()->flash('success', 'Profil berhasil diperbarui');
         return redirect(route("Profile"));
+        // return redirect(route("Profile"))->with('success', 'Profil berhasil diperbarui');
     }
 
     //password

@@ -29,7 +29,7 @@
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
                             <img src="{{ asset('storage/' . Auth()->user()->foto_profil) }}" alt="Admin"
-                                class="rounded-circle p-1 " width="110">
+                                class="rounded-circle p-1 " width="110" height="110">
                             <div class="mt-3">
                                 <div class="row">
                                     <h4>{{$profile->nama}} </h4>
@@ -39,17 +39,7 @@
                                         </a>
                                     </h6> 
                                 </div>
-                                <p class="text-secondary mb-1">
-                                @if($profile->role == 1)
-                                        Admin
-                                        @elseif($profile->role == 2)
-                                        Direktur
-                                        @elseif($profile->role == 3)
-                                        Manager
-                                        @else
-                                        Karyawan
-                                        @endif
-                                </p>
+                                <p class="text-secondary mb-1"> {{$profile->role_user->role}}</p>
 
                                 <p class="text-muted font-size-sm"> {{$profile->division->nama_divisi}}</p>
                                 </p>

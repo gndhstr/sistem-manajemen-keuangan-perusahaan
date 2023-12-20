@@ -116,9 +116,7 @@ Route::prefix('karyawan')->middleware("auth", "role:4")->group(function () {
     Route::get('/pemasukan/{pemasukan}/edit', 'PemasukanController@edit')->name('editPemasukan');
     Route::post('/pemasukan/{pemasukan}/edit', 'PemasukanController@update')->name('updatePemasukan');
     Route::get('/pemasukan/{pemasukan}/delete', 'PemasukanController@destroy')->name('deletePemasukan');
-<<<<<<< HEAD
     Route::get("/pemasukan/cetak","PemasukanController@cetak")->name("cetakPemasukan");
-=======
 
     //pengeluaran
     Route::get('/pengeluaran', 'PengeluaranController@index')->name('daftarPengeluaran');
@@ -127,7 +125,7 @@ Route::prefix('karyawan')->middleware("auth", "role:4")->group(function () {
     Route::get('/pengeluaran/{pengeluaran}/edit', 'PengeluaranController@edit')->name('editPengeluaran');
     Route::post('/pengeluaran/{pengeluaran}/edit', 'PengeluaranController@update')->name('updatePengeluaran');
     Route::get('/pengeluaran/{pengeluaran}/delete', 'PengeluaranController@destroy')->name('deletePengeluaran');
->>>>>>> e28a0110504290d08100c1fb04840acfc2a28009
+
 });
 
 // Route::get('dashboards', 'DashboardController@index')->middleware('admin');
