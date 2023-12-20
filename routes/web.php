@@ -24,6 +24,17 @@ Route::get('/starter', function () {
 });
 Auth::routes();
 
+Route::prefix("user")->middleware("auth")->group(function(){
+    Route::get("/profile","IndexProfileController@index")->name("indexProfile");
+    Route::get("/edit-profile","ProfileController@index")->name("Profile");
+    Route::get("/edit-profile/{profile}/edit","ProfileController@edit")->name("editProfile");
+    Route::post("/edit-profile/{profile}/update", "ProfileController@update")->name("updateProfile");
+    Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
+    Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
+    Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
+    Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
+});
+
 Route::prefix("admin")->middleware("auth", "role:1")->group(function(){
     Route::get('/', 'DashboardController@index')->name('dashboard');
     // divisi
