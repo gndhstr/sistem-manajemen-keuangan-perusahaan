@@ -113,9 +113,15 @@ Route::prefix('manajer')->middleware("auth", "role:3")->group(function () {
     Route::post("/karyawan/{user}/update","KaryawanController@update")->name("updateKaryawan");
     Route::post("/karyawan/{user}/delete","KaryawanController@destroy")->name("deleteKaryawan");
 
+    
     //CRUD Mutasi
     Route::get("/mutasi","MutasiController@index")->name("daftarMutasi");
     Route::post("/mutasi/tambah","MutasiController@store")->name("storeSaldo");
+    Route::post("/mutasi/{pemasukan}/update","MutasiController@updatePemasukan")->name("mutasiPemasukan");
+    Route::post("/mutasi/{pengeluaran}/update","MutasiController@updatePengeluaran")->name("mutasiPengeluaran");
+    Route::post("/mutasi/{pengeluaran}/deletePengeluaran","MutasiController@destroyPengeluaran")->name("deleteMutasiPengeluaran");
+    Route::post("/mutasi/{pemasukan}/deletePemasukan","MutasiController@destroyPemasukan")->name("deleteMutasiPemasukan");
+    Route::get('/view-bukti/{id}', 'MutasiController@viewBukti')->name('viewBukti');
 });
 
 Route::prefix('karyawan')->middleware("auth", "role:4")->group(function () {

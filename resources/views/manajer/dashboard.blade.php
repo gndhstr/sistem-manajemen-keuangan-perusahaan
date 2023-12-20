@@ -33,7 +33,7 @@
                         <div class="d-flex justify-content-between">
                             <div class="d-flex flex-row align-items-center">
                                 <div class="ms-2 c-details">
-                                    <h4 class="mb-0">Total Pemasukan</h4>
+                                    <h4 class="mb-0">Total Pemasukan ({{ $tahun }})</h4>
                                 </div>
                             </div>
                             <div class="badge"><i class="fa fa-arrow-down"></i></div>
@@ -48,7 +48,7 @@
                         <div class="d-flex justify-content-between">
                             <div class="d-flex flex-row align-items-center">
                                 <div class="ms-2 c-details">
-                                    <h4 class="mb-0">Total Pengeluaran</h4>
+                                    <h4 class="mb-0">Total Pengeluaran ({{ $tahun }})</h4>
                                 </div>
                             </div>
                             <div class="badge"><i class="fa fa-arrow-up"></i></div>
@@ -63,7 +63,7 @@
             {{-- card grafik --}}
             <div class="card">
                 <div class="card-header border-0">
-                    <h3 class="card-title text-bold text-lg text-center">Grafik Keuangan Karyawan</h3>
+                    <h3 class="card-title text-bold text-lg text-center">Grafik Keuangan Karyawan ({{ $tahun }})</h3>
                     <div class="card-tools">
                         <span class="badge badge-info">{{ date('Y') }}</span>
                     </div>
