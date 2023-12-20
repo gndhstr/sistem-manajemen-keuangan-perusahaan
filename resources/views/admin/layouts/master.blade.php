@@ -21,8 +21,18 @@
 <body class="hold-transition sidebar-mini sidebar-collapse">
 	<div class="wrapper">
 
+		@if (Auth::user()->role == '1')
+			@include('admin.layouts.sidebar')
+		@elseif (Auth::user()->role == '2')
+			@include('direktur.layouts.sidebar')
+		@elseif (Auth::user()->role == '3')
+			@include('manajer.layouts.sidebar')
+		@elseif (Auth::user()->role == '4')
+			@include('karyawan.layouts.sidebar')
+		@endif
+		
 		@include('admin.layouts.navbar')
-		@include('admin.layouts.sidebar')
+		{{-- @include('admin.layouts.sidebar') --}}
 
 		<!-- Content Wrapper. Contains page content -->
 		<div class="content-wrapper">

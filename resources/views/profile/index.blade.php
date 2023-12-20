@@ -1,12 +1,4 @@
-@if (Auth::user()->role == '1')
-    @extends('admin.layouts.master')
-@elseif (Auth::user()->role == '2')
-    @extends('direktur.layouts.master')
-@elseif (Auth::user()->role == '3')
-    @extends('admin.layouts.master')
-@elseif (Auth::user()->role == '4')
-    @extends('admin.layouts.master')
-@endif
+@extends('admin.layouts.master')
 
 @section("addCss")
 <link rel="stylesheet" href="{{asset('css/index-profil.css')}}">

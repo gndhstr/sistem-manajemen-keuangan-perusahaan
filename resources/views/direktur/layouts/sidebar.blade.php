@@ -13,7 +13,7 @@
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
-                    <img src="{{ asset('img/user-photo-default.png') }}" class="img-circle elevation-2" alt="User Image">
+                    <img src="{{ asset('storage/' . Auth()->user()->foto_profil) }}" class="img-circle elevation-2" alt="User Image">
                 </div>
                 <div class="info">
                     <a href="{{ route('editProfile', ['profile' => Auth::user()->id]) }}" class="d-block">{{ Auth::user()->nama }}</a>

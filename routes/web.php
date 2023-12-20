@@ -72,14 +72,14 @@ Route::prefix("admin")->middleware("auth", "role:1")->group(function(){
     
 
     //Profile
-    Route::get("/profile","IndexProfileController@index")->name("indexProfile");
-    Route::get("/edit-profile","ProfileController@index")->name("Profile");
-    Route::get("/edit-profile/{profile}/edit","ProfileController@edit")->name("editProfile");
-    Route::post("/edit-profile/{profile}/update", "ProfileController@update")->name("updateProfile");
-    Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
-    Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
-    Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
-    Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
+    // Route::get("/profile","IndexProfileController@index")->name("indexProfile");
+    // Route::get("/edit-profile","ProfileController@index")->name("Profile");
+    // Route::get("/edit-profile/{profile}/edit","ProfileController@edit")->name("editProfile");
+    // Route::post("/edit-profile/{profile}/update", "ProfileController@update")->name("updateProfile");
+    // Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
+    // Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
+    // Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
+    // Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
 }); 
 
 
