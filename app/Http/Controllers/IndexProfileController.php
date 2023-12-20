@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\profile;
-use App\tbl_role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,16 +17,13 @@ class IndexProfileController extends Controller
     {
         $userData = Auth::user();
         $id = $userData->id;
-        // Check if the profile exists
-        $profile = profile::find($id); 
-        $role = tbl_role::all();   
+        $profile = profile::find($id);   
         if (!$profile) {
             return redirect(route('index'))->withErrors('Profile not found.');
         }
     
         return view("profile.index", [
             "profile" => $profile,
-            "roles"=> $role
         ]);
     }
 

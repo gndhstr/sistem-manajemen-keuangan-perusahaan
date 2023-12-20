@@ -81,7 +81,7 @@
 						<div class="form-group">
 							<label for="nama">Jenis</label>
 							<select name="jenis_kategori" id="jenis_kategori" class="form-control" required="required">
-							@foreach(['Pengeluaran', 'Pemasukkan'] as $option)
+							@foreach(['Pengeluaran', 'Pemasukan'] as $option)
 								<option value="{{ $option }}">{{ $option }}</option>
 							@endforeach
 							</select>
@@ -120,7 +120,7 @@
 							<div class="form-group">
 								<label for="jenis_kategori">Jenis</label>
 								<select name="jenis_kategori" id="jenis_kategori" class="form-control" required="required">
-									@foreach(['Pengeluaran', 'Pemasukkan'] as $option)
+									@foreach(['Pengeluaran', 'Pemasukan'] as $option)
 										<option value="{{ $option }}" {{ $kategori->jenis_kategori == $option ? 'selected' : '' }}>
 											{{ $option }}
 										</option>
@@ -153,6 +153,7 @@
 			swal({
 				"title" 	 : "Konfirmasi Hapus",
 				"text" 		 : "Apakah anda yakin menghapus Divisi "+ nama + "?",
+				"icon"		 : "warning",
 				"dangerMode" : true,
 				"buttons" 	 : true,
 			}).then(function(value){

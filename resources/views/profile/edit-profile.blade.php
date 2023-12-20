@@ -14,9 +14,9 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                  <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
-                  <li class="breadcrumb-item"><a href="{{route('index')}}">Profil</a></li>
-                  <li class="breadcrumb-item active">Edit Profil</li>
+                    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('index')}}">Profil</a></li>
+                    <li class="breadcrumb-item active">Edit Profil</li>
                 </ol>
             </div>
         </div>
@@ -28,9 +28,9 @@
             <div class="col-md-3 pt-0">
                 <div class="list-group list-group-flush account-settings-links">
                     <a class="list-group-item list-group-item-action active" data-toggle="list"
-                        href="#account-general">General</a>
+                        href="#account-general"><i class="fa fa-user  mx-1"></i>Akun</a>
                     <a class="list-group-item list-group-item-action" data-toggle="list"
-                        href="#account-change-password">Change password</a>
+                        href="#account-change-password"><i class="fa fa-lock mx-1"></i>Keamanan Sandi</a>
                 </div>
             </div>
             <div class="col-md-9">
@@ -43,7 +43,7 @@
                                 <div class="row">
                                     <div class="col-md-3 text-center">
                                         <img src="{{ asset('storage/' . Auth()->user()->foto_profil) }}" alt=""
-                                            class="d-block ui-w-80">
+                                            class="d-block ui-w-80" height="80">
                                     </div>
                                     <div class="col-md-6 d-flex align-items-center">
                                         <label class="btn btn-outline-primary">
@@ -139,4 +139,7 @@
 
 </div>
 
+@endsection
+@section("addJavascript")
+<script src="https://kit.fontawesome.com/e2b0e4079e.js" crossorigin="anonymous"></script>
 @endsection

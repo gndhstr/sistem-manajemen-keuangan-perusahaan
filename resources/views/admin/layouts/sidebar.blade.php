@@ -13,7 +13,7 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{ asset('storage/' . Auth()->user()->foto_profil) }}"class="img-circle "alt="User Image" id="foto_profil_preview">
+                <img src="{{ asset('storage/' . Auth()->user()->foto_profil) }}"class="img-circle rounded-circle "alt="User Image" id="foto_profil_preview" width="110" height="110">
             </div>
             <div class="info">
                 <a href="#" class="d-block">{{Auth::user()->nama}}</a>

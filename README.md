@@ -1,20 +1,12 @@
-# Laravel AdminLTE
+<center>
+<img src="https://cdn.discordapp.com/attachments/875383813411311627/1186903941825437726/SIMAKEUP.png?ex=6594f16f&is=65827c6f&hm=f7439e637dac6e5f2a6e0fef52eed277a0b0218b77b35afc8d167551bae03590&" alt="logo" width="250px">
 
-This is a ready to use AdminLTE template for Laravel 5.8
+# SIMAKEUP
 
-## What's Inside
+Sistem Manajemen Keuangan Perusahaan
 
-1. AdminLTE v3.0.0-beta
-
-    Only /dist folder is included. You can find the templates in view/layouts and view/auth.
-
-2. Laravel 5.8
-
-    Default from laravel, with changes:
-
-    - route /starter -> to preview how the dashboard looks like (disable it when in productions)
-    - disabled Auth route /verify & /reset and no blade template applied for them
-    - change /home to /dashboard (the controller too)
+## Kelompok 3 - MSIB Gamelab.ID
+</center>
 
 ## Setup
 
@@ -25,7 +17,7 @@ This is a ready to use AdminLTE template for Laravel 5.8
 You can clone this repository & rename it to your project
 
 ````
-git clone https://github.com/rpahlevy/laravel-adminlte3 your-project-name
+git clone https://github.com/gndhstr/sistem-manajemen-keuangan-perusahaan your-project-name
 ````
 
 #### Without Git

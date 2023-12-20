@@ -41,8 +41,8 @@ class AnggaranController extends Controller
             $tanggalBulanans[$i] = strtoupper($tanggalAwal->format('M'));
 
             // Ambil data untuk setiap bulan
-            $rencanaBulanans[$i] = tbl_anggaran::whereBetween('tgl_anggaran', [$tanggalAwal, $tanggalAkhir])->where('status', '1')->get()->sum('rencana_anggaran');
-            $aktualisasiBulanans[$i] = tbl_anggaran::whereBetween('tgl_anggaran', [$tanggalAwal, $tanggalAkhir])->where('status', '1')->get()->sum('aktualisasi_anggaran');
+            $rencanaBulanans[$i] = tbl_anggaran::whereBetween('tgl_anggaran', [$tanggalAwal, $tanggalAkhir])->where('id_divisi', $divisi_login)->where('status', '1')->get()->sum('rencana_anggaran');
+            $aktualisasiBulanans[$i] = tbl_anggaran::whereBetween('tgl_anggaran', [$tanggalAwal, $tanggalAkhir])->where('id_divisi', $divisi_login)->where('status', '1')->get()->sum('aktualisasi_anggaran');
         }
 
         /* ----------------------------- PERSENTASE PERBANDINGAN AKTUALISASI DAN RENCANA DI BULAN INI ----------------------------- */

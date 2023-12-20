@@ -1,3 +1,22 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\User;
+use App\tbl_pemasukan;
+use App\tbl_pengeluaran;
+use App\tbl_anggaran;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class DashboardKaryawanController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index(){
         $user = Auth::user();
         $role_user = 4;

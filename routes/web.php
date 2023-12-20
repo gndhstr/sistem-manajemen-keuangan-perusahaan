@@ -104,6 +104,7 @@ Route::prefix('manajer')->middleware("auth", "role:3")->group(function () {
 
     //CRUD Mutasi
     Route::get("/mutasi","MutasiController@index")->name("daftarMutasi");
+    Route::post("/mutasi/tambah","MutasiController@store")->name("storeSaldo");
 });
 
 Route::prefix('karyawan')->middleware("auth", "role:4")->group(function () {
@@ -116,9 +117,11 @@ Route::prefix('karyawan')->middleware("auth", "role:4")->group(function () {
     Route::get('/pemasukan/{pemasukan}/edit', 'PemasukanController@edit')->name('editPemasukan');
     Route::post('/pemasukan/{pemasukan}/edit', 'PemasukanController@update')->name('updatePemasukan');
     Route::get('/pemasukan/{pemasukan}/delete', 'PemasukanController@destroy')->name('deletePemasukan');
-<<<<<<< HEAD
     Route::get("/pemasukan/cetak","PemasukanController@cetak")->name("cetakPemasukan");
+<<<<<<< HEAD
 =======
+
+>>>>>>> ed15e9206a603efe8734bb642ad68ce976602688
 
     //pengeluaran
     Route::get('/pengeluaran', 'PengeluaranController@index')->name('daftarPengeluaran');
@@ -127,7 +130,10 @@ Route::prefix('karyawan')->middleware("auth", "role:4")->group(function () {
     Route::get('/pengeluaran/{pengeluaran}/edit', 'PengeluaranController@edit')->name('editPengeluaran');
     Route::post('/pengeluaran/{pengeluaran}/edit', 'PengeluaranController@update')->name('updatePengeluaran');
     Route::get('/pengeluaran/{pengeluaran}/delete', 'PengeluaranController@destroy')->name('deletePengeluaran');
->>>>>>> e28a0110504290d08100c1fb04840acfc2a28009
+<<<<<<< HEAD
+
+=======
+>>>>>>> ed15e9206a603efe8734bb642ad68ce976602688
 });
 
 // Route::get('dashboards', 'DashboardController@index')->middleware('admin');

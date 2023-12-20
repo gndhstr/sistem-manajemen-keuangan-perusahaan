@@ -20,4 +20,8 @@ class profile extends Model
     {
         return $this->belongsTo(tbl_divisi::class, 'id_divisi');
     } 
+    public function role_user()
+    {
+        return $this->belongsTo(tbl_role::class, 'role');
+    }
 }

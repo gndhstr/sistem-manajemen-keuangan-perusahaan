@@ -130,6 +130,7 @@
 				swal({
 					"title" 	 : "Konfirmasi Hapus",
 					"text" 		 : "Apakah anda yakin menghapus "+ nama + "?",
+					"icon"		 : "warning",
 					"dangermode" : true,
 					"buttons" 	 : true,
 				}).then(function(value){

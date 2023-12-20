@@ -15,9 +15,20 @@
 
         .spinner-container {
             position: absolute;
-            top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+        }
+
+        @media screen and (max-width: 700px) {
+            .spinner-container {
+                top: 75%;
+            }
+        }
+
+        @media screen and (min-width: 701px) {
+            .spinner-container {
+                top: 45%;
+            }
         }
     </style>
 @endsection
