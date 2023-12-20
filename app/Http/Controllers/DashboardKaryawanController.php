@@ -17,10 +17,8 @@ class DashboardKaryawanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(){
         $user = Auth::user();
-    
         $role_user = 4;
         $divisi_user = $user->id_divisi;
     
@@ -43,13 +41,20 @@ class DashboardKaryawanController extends Controller
             $totalKeluar += $JmlKeluar;
         }
     
+        $perbandinganPemasukanPengeluaran = 0;
+        if ($totalMasuk > 0) {
+            $perbandinganPemasukanPengeluaran = (($totalMasuk - $totalKeluar) / $totalMasuk) * 100;
+        }
+
         return view("karyawan.dashboard", [
             "users" => $users,
             "pemasukans" => $pemasukans,
             "pengeluarans" => $pengeluarans,
             "totalMasuk" => $totalMasuk,
             "totalKeluar" => $totalKeluar,
+            "perbandinganPemasukanPengeluaran" => $perbandinganPemasukanPengeluaran,
             "divisi"=> $user->division->nama_divisi,
+            "saldo" => $saldo,
         ]);
     }
     

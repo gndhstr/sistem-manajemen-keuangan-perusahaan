@@ -126,8 +126,24 @@ class DirekturController extends Controller
             $perbandinganPemasukanPengeluaranTotal = (($totalPemasukan - $totalPengeluaran) / $totalPemasukan) * 100;
         }
 
+        /* ------------------------------------- REALISASI ANGGARAN ------------------------------------- */
+        // $rencanaAnggaran
+        $aktualisasiAnggaran = tbl_anggaran::all()->where('status', '1')->whereBetween('tgl_anggaran', [$time->now()->startOfMonth()->subDay(), $time->now()->endOfMonth()])->sum('aktualisasi_anggaran');
+        $rencanaAnggaran = tbl_anggaran::all()->where('status', '1')->whereBetween('tgl_anggaran', [$time->now()->startOfMonth()->subDay(), $time->now()->endOfMonth()])->sum('rencana_anggaran');
+
+        $realisasiAnggaran = $rencanaAnggaran - $aktualisasiAnggaran;
+
+        $realisasiAnggaranFormatted = number_format($realisasiAnggaran, 2, ',', '.');
+        if ($realisasiAnggaran < 0) {
+            $realisasiAnggaranFormatted = '- Rp. ' . abs($realisasiAnggaranFormatted);
+        } else {
+            $realisasiAnggaranFormatted = 'Rp. ' . $realisasiAnggaranFormatted;
+        }
+
+        $persentasePerbandinganAnggaran = ($aktualisasiAnggaran / $rencanaAnggaran) * 100;
+
         return view('direktur.dashboard', [
-            // 'dump' => dd($pemasukanBulanans),
+            // 'dump' => dd($rencanaAnggaran),
             'pemasukanHarians' => $pemasukanHarians,
             'pemasukanBulanans' => $pemasukanBulanans,
             'pengeluaranBulanans' => $pengeluaranBulanans,
@@ -145,6 +161,8 @@ class DirekturController extends Controller
             'perbandinganPemasukanPengeluaranMingguan' => $perbandinganPemasukanPengeluaranMingguan,
             'perbandinganPemasukanPengeluaranBulanan' => $perbandinganPemasukanPengeluaranBulanan,
             'perbandinganPemasukanPengeluaranTotal' => $perbandinganPemasukanPengeluaranTotal,
+            'perbandinganAnggaran' => $persentasePerbandinganAnggaran,
+            'realisasiAnggaran' => $realisasiAnggaranFormatted,
         ]);
     }
 

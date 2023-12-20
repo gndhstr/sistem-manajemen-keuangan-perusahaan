@@ -145,7 +145,7 @@
                                 <span class="description-percentage text-warning"><i class="fa fa-caret-left"></i>
                                     {{ 100 - number_format($perbandinganPemasukanPengeluaranTotal, 2) }}%</span>
                                 <h5 class="description-header">Rp. {{ number_format($totalPengeluaran, 2, ',', '.') }}</h5>
-                                <span class="description-text">TOTAL BIAYA</span>
+                                <span class="description-text">TOTAL BIAYA KARYAWAN</span>
                             </div>
                             <!-- /.description-block -->
                         </div>
@@ -157,18 +157,18 @@
                                     {{-- <i class="fa {{ $perbandinganPemasukanPengeluaranTotal > 0 ? 'fa-caret-up' : 'fa-caret-down' }}"></i> --}}
                                     <i class="fa fa-caret-up"></i>
                                     {{ number_format($perbandinganPemasukanPengeluaranTotal, 2) }}%</span>
-                                <h5 class="description-header">
+                                <h5 class="description-header">Rp. 
                                     {{ number_format($totalPemasukan - $totalPengeluaran, 2, ',', '.') }}</h5>
-                                <span class="description-text">PERBANDINGAN</span>
+                                <span class="description-text">SELISIH</span>
                             </div>
                             <!-- /.description-block -->
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-3 col-6">
                             <div class="description-block">
-                                <span class="description-percentage text-danger"><i class="fa fa-caret-down"></i>
-                                    -%</span>
-                                <h5 class="description-header">NULL</h5>
+                                <span class="description-percentage {{ $perbandinganAnggaran > 100 ? 'text-danger' : 'text-success' }}"><i class="fa {{ $perbandinganAnggaran > 100 ? 'fa-caret-down' : 'fa-caret-up' }}"></i> {{ number_format($perbandinganAnggaran, 2) }}
+                                    %</span>
+                                <h5 class="description-header">{{ $realisasiAnggaran }}</h5>
                                 <span class="description-text">REALISASI ANGGARAN</span>
                             </div>
                             <!-- /.description-block -->

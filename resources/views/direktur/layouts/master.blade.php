@@ -32,7 +32,7 @@
 		</div>
 		<!-- /.content-wrapper -->
 
-		@include('layouts.footer')
+		@include('direktur.layouts.footer')
 	</div>
 	<!-- ./wrapper -->
 
