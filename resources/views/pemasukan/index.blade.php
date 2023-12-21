@@ -29,43 +29,92 @@
     <div class="container-fluid">
         <div class="card">
             <div class="card-header text-right">
-                <a href="{{ route('createPemasukan') }}" class="btn btn-primary" role="button" data-toggle="modal" data-target="#tambahPemasukanModal">Tambah Data</a>
-                <a href="{{route('cetakPemasukan')}}" class="btn btn-success mx-1" role="button" >Export PDF <i class="fa fa-file-pdf"></i></a>
+                <a href="{{ route('createPemasukan')}}" class="btn btn-primary" role="button" data-toggle="modal"
+                    data-target="#tambahPemasukanModal">Tambah Data</a>
+                    <a href="{{ route('cetakPemasukan', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" class="btn btn-success mx-1" role="button">Export PDF <i class="fa fa-file-pdf"></i></a>
+
             </div>
             <div class="card-body">
+                <form method="get" action="{{ route('daftarPemasukan') }}" class="mb-3">
+                    <div class="form-row">
+                        <div class="col">
+                            <label for="start_date">Start Date:</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control"
+                                value="{{ request('start_date') }}">
+                        </div>
+                        <div class="col">
+                            <label for="end_date">End Date:</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control"
+                                value="{{ request('end_date') }}">
+                        </div>
+                        <div class="col">
+                            <button type="submit" class="btn btn-primary mt-4">Filter</button>
+                        </div>
+                    </div>
+                </form>
                 <!-- Tabel -->
                 <table id="dataTable" class="table table-hover mb-0">
                     <thead>
                         <tr>
                             <th>NO</th>
-                            <th>Nama Kategori</th>
-                            <th>Jumlah</th>
                             <th>Tanggal Pemasukan</th>
+                            <th>Kategori</th>
+                            <th>Nominal</th>
                             <th>Catatan</th>
-                            <th>Bukti Pemasukan</th>
-                            <th>Aksi</th>
+                            <th class="text-center">Keterangan</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($pemasukans as $pemasukan)
                         <tr>
                             <td>{{ $loop->index + 1 }}</td>
+                            <td>{{ $pemasukan->tgl_pemasukan }}</td>
                             <td>{{ $pemasukan->kategori->nama_kategori }}</td>
                             <td>{{ $pemasukan->jml_masuk }}</td>
-                            <td>{{ $pemasukan->tgl_pemasukan }}</td>
                             <td>{{ $pemasukan->catatan }}</td>
-                            <td>{{ $pemasukan->bukti_pemasukan }}</td>
-                            <td>
-                                <a data-url="{{ route('editPemasukan', ['id_pemasukan'=>$pemasukan->id_pemasukan]) }}" class="btn btn-warning btn-sm edit-button" role="button" data-toggle="modal" data-target="#editPemasukanModal{{ $pemasukan->id_pemasukan }}">Edit</a>
-                                <a onclick="confirmDelete(this, '{{ $pemasukan->id_pemasukan }}')" href="{{ route('deletePemasukan', $pemasukan->id_pemasukan) }}" data-nama="{{ $pemasukan->kategori->nama_kategori }}" class="btn btn-danger btn-sm ml-1 text-white delete-button" role="button">Hapus</a>
+                            <td class="text-center">
+                                <button class="btn btn-primary btn-sm view-button"
+                                    data-url="{{ route('viewPemasukan', ['id_pemasukan'=>$pemasukan->id_pemasukan]) }}"
+                                    data-toggle="modal" data-target="#viewPemasukanModal{{ $pemasukan->id_pemasukan }}">
+                                    <i class="fa fa-eye"></i> Lihat
+                                </button>
+                                <a data-url="{{ route('editPemasukan', ['id_pemasukan'=>$pemasukan->id_pemasukan]) }}"
+                                    class="btn btn-warning btn-sm edit-button" role="button" data-toggle="modal"
+                                    data-target="#editPemasukanModal{{ $pemasukan->id_pemasukan }}">Edit</a>
+                                <a onclick="confirmDelete(this, '{{ $pemasukan->id_pemasukan }}')"
+                                    href="{{ route('deletePemasukan', $pemasukan->id_pemasukan) }}"
+                                    data-nama="{{ $pemasukan->kategori->nama_kategori }}"
+                                    class="btn btn-danger btn-sm ml-1 text-white delete-button" role="button">Hapus</a>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
 
+                <!-- Modal untuk Menampilkan Bukti Pemasukan -->
+                @foreach($pemasukans as $pemasukan)
+                <div class="modal fade" id="viewPemasukanModal{{ $pemasukan->id_pemasukan }}" tabindex="-1"
+                    role="dialog" aria-labelledby="viewPemasukanModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="viewPemasukanModalLabel">Bukti Pemasukan</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ asset('storage/bukti_pemasukan/' . $pemasukan->bukti_pemasukan) }}"
+                                    alt="Bukti Pemasukan" style="max-width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+
                 <!-- Modal untuk Menambahkan Pemasukan -->
-                <div class="modal fade" id="tambahPemasukanModal" tabindex="-1" role="dialog" aria-labelledby="tambahPemasukanModalLabel" aria-hidden="true">
+                <div class="modal fade" id="tambahPemasukanModal" tabindex="-1" role="dialog"
+                    aria-labelledby="tambahPemasukanModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -76,39 +125,50 @@
                             </div>
                             <div class="modal-body">
                                 <!-- Formulir untuk menambahkan catatan pemasukan -->
-                                <form action="{{ route('storePemasukan') }}" method="post">
+                                <form action="{{ route('storePemasukan') }}" method="post"
+                                    enctype="multipart/form-data">
                                     @csrf
-
-                                    <!-- Pilih kategori menggunakan select -->
-                                    <select class="form-control select" name="id_kategori" id="id_kategori" required>
-                                        @foreach ($kategori as $kategoris)
-                                        <option value="{{ $kategoris->id_kategori }}" {{ old('id_kategori') == $kategoris->id_kategori ? 'selected' : '' }}>
-                                            {{ $kategoris->nama_kategori }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-
-                                    <!-- Input untuk jumlah masuk -->
-                                    <div class="form-group">
-                                        <label for="jml_masuk">Jumlah Masuk</label>
-                                        <input type="text" class="form-control" id="jml_masuk" name="jml_masuk" value="{{ old('jml_masuk', 0) }}" required>
-                                    </div>
 
                                     <!-- Input untuk tanggal pemasukan -->
                                     <div class="form-group">
                                         <label for="tgl_pemasukan">Tanggal Pemasukan</label>
-                                        <input type="date" class="form-control" id="tgl_pemasukan" name="tgl_pemasukan" required>
+                                        <input type="date" class="form-control" id="tgl_pemasukan" name="tgl_pemasukan"
+                                            required>
                                     </div>
+
+                                    <!-- Pilih kategori menggunakan select -->
+                                    <div class="form-group">
+                                        <label for="nama_kategori">Nama Kategori</label>
+                                        <select class="form-control select" name="id_kategori" id="nama_kategori"
+                                            required>
+                                            @foreach ($kategori as $kategoris)
+                                            <option value="{{ $kategoris->id_kategori }}"
+                                                {{ old('id_kategori') == $kategoris->id_kategori ? 'selected' : '' }}>
+                                                {{ $kategoris->nama_kategori }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Input untuk jumlah masuk -->
+                                    <div class="form-group">
+                                        <label for="jml_masuk">Nominal</label>
+                                        <input type="text" class="form-control" id="jml_masuk" name="jml_masuk"
+                                            value="{{ old('jml_masuk', 0) }}" required>
+                                    </div>
+
 
                                     <!-- Textarea untuk catatan -->
                                     <div class="form-group">
                                         <label for="catatan">Catatan</label>
-                                        <textarea class="form-control" id="catatan" name="catatan" rows="3" required>{{ old('catatan', '') }}</textarea>
+                                        <textarea class="form-control" id="catatan" name="catatan" rows="3"
+                                            required>{{ old('catatan', '') }}</textarea>
                                     </div>
 
+                                    <!-- Textarea untuk Bukti Pemasukan -->
                                     <div class="form-group">
                                         <label for="bukti_pemasukan">Bukti Pemasukan</label>
-                                        <input type="text" class="form-control" id="bukti_pemasukan" name="bukti_pemasukan" value="{{ old('bukti_pemasukan', '') }}" required>
+                                        <input type="file" name="bukti_pemasukan" accept="image/*" required>
                                     </div>
 
                                     <div class="text-right">
@@ -127,7 +187,8 @@
 
                 <!-- Modal untuk Edit Pemasukan -->
                 @foreach($pemasukans as $pemasukan)
-                <div class="modal fade" id="editPemasukanModal{{ $pemasukan->id_pemasukan }}" tabindex="-1" role="dialog" aria-labelledby="editPemasukanModalLabel" aria-hidden="true">
+                <div class="modal fade" id="editPemasukanModal{{ $pemasukan->id_pemasukan }}" tabindex="-1"
+                    role="dialog" aria-labelledby="editPemasukanModalLabel" aria-hidden="true">
                     <!-- Sisipkan modal edit pemasukan -->
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -139,47 +200,51 @@
                             </div>
                             <div class="modal-body">
                                 <!-- Formulir untuk mengedit catatan pemasukan -->
-                                <form action="{{ route('updatePemasukan', ['tbl_pemasukan' => $pemasukan->id_pemasukan]) }}" method="POST">
+                                <form
+                                    action="{{ route('updatePemasukan', ['tbl_pemasukan' => $pemasukan->id_pemasukan]) }}"
+                                    method="POST">
                                     @csrf
                                     @method('POST')
+
+                                    <!-- Input untuk tanggal pemasukan -->
+                                    <div class="form-group">
+                                        <label for="tgl_pemasukan_edit">Tanggal Pemasukan</label>
+                                        <input type="date" class="form-control" id="tgl_pemasukan_edit"
+                                            name="tgl_pemasukan" value="{{ $pemasukan->tgl_pemasukan }}" required>
+                                    </div>
+
                                     <!-- Pilih kategori menggunakan select -->
                                     <div class="form-group">
                                         <label for="nama_kategori_edit">Nama Kategori</label>
-                                        <select class="form-control select" name="id_kategori" id="nama_kategori_edit" required>
+                                        <select class="form-control select" name="id_kategori" id="nama_kategori_edit"
+                                            required>
                                             @foreach ($kategori as $kategoris)
-                                            <option value="{{ $kategoris->id_kategori }}" @if($kategoris->id_kategori == $pemasukan->id_kategori) selected @endif>{{ $kategoris->nama_kategori }}</option>
+                                            <option value="{{ $kategoris->id_kategori }}" @if($kategoris->id_kategori ==
+                                                $pemasukan->id_kategori) selected @endif>{{ $kategoris->nama_kategori }}
+                                            </option>
                                             @endforeach
                                         </select>
                                     </div>
 
                                     <!-- Input untuk jumlah masuk -->
                                     <div class="form-group">
-                                        <label for="jml_masuk_edit">Jumlah Masuk</label>
-                                        <input type="text" class="form-control" id="jml_masuk_edit" name="jml_masuk" value="{{ $pemasukan->jml_masuk }}" required>
-                                    </div>
-
-                                    <!-- Input untuk tanggal pemasukan -->
-                                    <div class="form-group">
-                                        <label for="tgl_pemasukan_edit">Tanggal Pemasukan</label>
-                                        <input type="date" class="form-control" id="tgl_pemasukan_edit" name="tgl_pemasukan" value="{{ $pemasukan->tgl_pemasukan }}" required>
+                                        <label for="jml_masuk_edit">Nominal</label>
+                                        <input type="text" class="form-control" id="jml_masuk_edit" name="jml_masuk"
+                                            value="{{ $pemasukan->jml_masuk }}" required>
                                     </div>
 
                                     <!-- Textarea untuk catatan -->
                                     <div class="form-group">
                                         <label for="catatan_edit">Catatan</label>
-                                        <textarea class="form-control" id="catatan_edit" name="catatan" rows="3" required>{{ $pemasukan->catatan }}</textarea>
+                                        <textarea class="form-control" id="catatan_edit" name="catatan" rows="3"
+                                            required>{{ $pemasukan->catatan }}</textarea>
                                     </div>
 
-                                    <!-- Input untuk bukti pemasukan -->
+                                    <!-- Input untuk bukti edit pemasukan -->
                                     <div class="form-group">
                                         <label for="bukti_pemasukan_edit">Bukti Pemasukan</label>
-                                        <input type="text" class="form-control" id="bukti_pemasukan_edit" name="bukti_pemasukan" value="{{ $pemasukan->bukti_pemasukan }}" required>
-                                    </div>
-
-                                    <!-- Input untuk status -->
-                                    <div class="form-group">
-                                        <label for="status_edit">Status</label>
-                                        <input type="text" class="form-control" id="status_edit" name="status" value="{{ $pemasukan->status }}" required>
+                                        <input type="file" class="form-control" id="bukti_pemasukan_edit"
+                                            name="bukti_pemasukan" required>
                                     </div>
 
                                     <div class="text-right">
@@ -203,9 +268,8 @@
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert.min.js') }}"></script>
-    <script src="https://kit.fontawesome.com/e2b0e4079e.js" crossorigin="anonymous"></script>
     <script>
-        confirmDelete = function(button) {
+        confirmDelete = function (button) {
             event.preventDefault();
             var url = $(button).attr("href");
             var nama = $(button).data("nama");
@@ -225,16 +289,22 @@
                         closeModal: true,
                     }
                 }
-            }).then(function(value) {
+            }).then(function (value) {
                 if (value) {
                     window.location = url;
                 }
             });
         }
 
-        $(function() {
+        $(function () {
             $("#dataTable").DataTable();
+            // Script untuk menangani klik tombol "Lihat"
+            $(".view-button").on("click", function () {
+                var url = $(this).data("url");
+                $("#viewPemasukanModal").modal("show");
+            });
         });
+
     </script>
     @endsection
 </div>

@@ -72,7 +72,7 @@
 						@csrf
 							<div class="form-group">
 								<label for="nama">Jabatan</label>
-								<input type="text" name="role" id="role" class="form-control" required placeholder="Masukkan Nama Divisi">
+								<input type="text" name="role" id="role" class="form-control" required placeholder="Masukkan Nama Jabatan">
 							</div>
 							<div class="text-right">
 							<a href="{{route('daftarRole')}}" class="btn btn-danger mr-1">Batal</a>

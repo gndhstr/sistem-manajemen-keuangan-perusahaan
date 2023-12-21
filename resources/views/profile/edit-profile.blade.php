@@ -1,4 +1,5 @@
 @extends('admin.layouts.master')
+
 @section("addCss")
 <link rel="stylesheet" href="{{asset('css/profile.css')}}">
 @endsection
@@ -15,7 +16,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
-                    <li class="breadcrumb-item"><a href="{{route('index')}}">Profil</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('indexProfile')}}">Profil</a></li>
                     <li class="breadcrumb-item active">Edit Profil</li>
                 </ol>
             </div>
@@ -79,7 +80,7 @@
                                     </div>
                                     <div class="text-right mb-5 mt-3">
                                         <button type="submit" class="btn btn-primary">Simpan</button>&nbsp;
-                                        <a href="{{ route('index') }}" class="btn btn-default">Batal</a>
+                                        <a href="{{ route('indexProfile') }}" class="btn btn-default">Batal</a>
                                     </div>
                             </form>
                         </div>
@@ -142,4 +143,17 @@
 @endsection
 @section("addJavascript")
 <script src="https://kit.fontawesome.com/e2b0e4079e.js" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+        $(".toggle-password").click(function () {
+            var target = $("#" + $(this).data("target"));
+            var type = target.attr("type") === "password" ? "text" : "password";
+            target.attr("type", type);
+
+            // Ubah ikon mata sesuai dengan tipe password saat ini
+            $(this).find("i").toggleClass("fa-eye fa-eye-slash");
+        });
+    });
+</script>
+
 @endsection

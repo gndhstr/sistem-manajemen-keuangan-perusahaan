@@ -8,6 +8,8 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Carbon;
+
 
 class PemasukanController extends Controller
 {
@@ -16,30 +18,48 @@ class PemasukanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $tampil)
     {
-        $pemasukans = tbl_pemasukan::with('kategori')->where('status', '1')->get();
+        // $pemasukans = tbl_pemasukan::with('kategori')->where('status', '1')->get();
         $kategori = tbl_kategori::all();
-
+        //filter tanggal
+        $startDate = $tampil->input('start_date', now()->subMonth()->startOfDay());
+        $endDate = $tampil->input('end_date', now()->endOfDay());
+    
+        $pemasukans = tbl_pemasukan::with('kategori')
+            ->where('status', '1')
+            ->whereBetween('tgl_pemasukan', [$startDate, $endDate])
+            ->get();
+            // dd($startDate, $endDate);
         return view('pemasukan.index', compact('pemasukans', 'kategori'));
     }
 
     //cetak
-        public function cetak()
+        public function cetak(Request $cetak)
         {
-            $pemasukans = tbl_pemasukan::with('kategori')->where('status', '1')->get();
+            // $pemasukans = tbl_pemasukan::with('kategori')->where('status', '1')->get();
             $kategori = tbl_kategori::all();
+            //filter tanggal
+            $startDate = $cetak->input('start_date', now()->subMonth()->startOfDay());
+            $endDate = $cetak->input('end_date', now()->endOfDay());
+        
+            $pemasukans = tbl_pemasukan::with('kategori')
+                ->where('status', '1')
+                ->whereBetween('tgl_pemasukan', [$startDate, $endDate])
+                ->orderBy('tgl_pemasukan')
+                ->get();
+            
             // inisialisasi
             $options = new Options();
             $options->set('isHtml5ParserEnabled', true);
             $options->set('isPhpEnabled', true);
             $pdf = new Dompdf($options);
             
-            $view = View::make('pemasukan.cetak', compact('pemasukans', 'kategori'))->render();
+            $view = View::make('pemasukan.cetak', compact('pemasukans', 'kategori','startDate', 'endDate'))->render();
             $pdf->loadHtml($view);
 
             $pdf->render();
-            return $pdf->stream('Pemasukan.pdf');
+            return $pdf->stream('Data Pemasukan.pdf');
         }
         // 
 
@@ -69,16 +89,20 @@ class PemasukanController extends Controller
             'id_user_edit' => 'required',
             'jml_masuk' => 'required',
             'catatan' => 'nullable',
-            'bukti_pemasukan' => 'required',
+            'bukti_pemasukan' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'nullable',
         ]);
+    
+        $file = $request->file('bukti_pemasukan');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $filePath = $file->storeAs('bukti_pemasukan', $fileName, 'public');    
 
         $pemasukan = new tbl_pemasukan();
         $pemasukan->fill($request->all());
         $pemasukan->jml_masuk = $request->input('jml_masuk', 0);
         $pemasukan->catatan = $request->input('catatan', '');
-        $pemasukan->bukti_pemasukan = $request->input('bukti_pemasukan', '');
-        $pemasukan->status ='1';
+        $pemasukan->bukti_pemasukan = $fileName;
+        $pemasukan->status = '1';
         $pemasukan->save();
 
         return redirect()->route('daftarPemasukan')->with('success', 'Pemasukan berhasil ditambahkan');

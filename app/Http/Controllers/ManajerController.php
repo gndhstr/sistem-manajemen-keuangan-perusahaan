@@ -23,6 +23,7 @@ class ManajerController extends Controller
         $time = new Carbon();
         $time->setTimeZone('Asia/Jakarta');
         $user = Auth::user();
+        $year = date('Y');
        
         $divisiUser = $user->id ? $user->division->id_divisi : '-' ;
         
@@ -60,6 +61,7 @@ class ManajerController extends Controller
         $totalPemasukan = tbl_pemasukan::join('tbl_users', 'tbl_pemasukans.id_user', '=', 'tbl_users.id')
             ->where('tbl_users.id_divisi', $divisiUser)
             ->where('tbl_pemasukans.status', '1')
+            ->whereYear('tbl_pemasukans.tgl_pemasukan', $year) 
             ->sum('jml_masuk');
 
 
@@ -102,12 +104,13 @@ class ManajerController extends Controller
             $pemasukanHarians[$i] = $pemasukanHarian->sum('jml_masuk');
         }
 
+        
+
         $totalPengeluaran = tbl_pengeluaran::join('tbl_users', 'tbl_pengeluarans.id_user', '=', 'tbl_users.id')
-        ->where('tbl_users.id_divisi', $divisiUser)
-        ->where('tbl_pengeluarans.status', '1')
-        ->select('tbl_pengeluarans.*') // Pilih kolom yang Anda butuhkan
-        ->get()
-        ->sum('jml_keluar');
+            ->where('tbl_users.id_divisi', $divisiUser)
+            ->where('tbl_pengeluarans.status', '1')
+            ->whereYear('tbl_pengeluarans.tgl_pengeluaran', $year) 
+            ->sum('jml_keluar');
     
     
         /* ------------------------------------- PERBANDINGAN PEMASUKAN DAN PENGELUARAN MINGGUAN ------------------------------------- */
@@ -167,6 +170,7 @@ class ManajerController extends Controller
             'perbandinganPemasukanPengeluaranBulanan' => $perbandinganPemasukanPengeluaranBulanan,
             'perbandinganPemasukanPengeluaranTotal' => $perbandinganPemasukanPengeluaranTotal,
             'greeting' => $greeting,
+            'tahun' => $year,
         ]);
     }
     
@@ -246,6 +250,6 @@ class ManajerController extends Controller
      */
     public function destroy(tbl_pemasukan $tbl_pemasukan)
     {
-        //
+
     }
 }

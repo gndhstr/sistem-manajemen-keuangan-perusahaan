@@ -105,7 +105,7 @@
 						<!-- password -->
 						<div class="form-group">
 							<label for="password">Password</label>
-							<input type="text" name="password" id="password" class="form-control" required placeholder="Masukkan Username">
+							<input type="text" name="password" id="password" class="form-control" required placeholder="Masukkan Password">
 						</div>
 						<div class="text-right">
 							<button type="submit" class="btn btn-success">Simpan</button>

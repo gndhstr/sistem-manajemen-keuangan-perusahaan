@@ -35,7 +35,10 @@
 	</style>
 </head>
 <body>
-    <h3>DATA PEMASUKAN BULAN DESEMBER</h3>
+<h3>DATA PEMASUKAN KARYAWAN <br>BULAN {{ strtoupper(\Carbon\Carbon::parse($startDate)->formatLocalized('%B')) }} - {{ strtoupper(\Carbon\Carbon::parse($endDate)->formatLocalized('%B')) }} <br>2023</h3>
+
+
+        
     <table>
         <thead>
             <tr>

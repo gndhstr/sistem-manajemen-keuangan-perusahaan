@@ -64,7 +64,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{route('index')}}" class="nav-link">
+                            <a href="{{route('indexProfile')}}" class="nav-link">
                                 <i class="fa fa-sliders nav-icon"></i>
                                 <p>Edit Profil</p>
                             </a>
