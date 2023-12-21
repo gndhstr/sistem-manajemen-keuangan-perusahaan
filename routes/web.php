@@ -24,6 +24,17 @@ Route::get('/starter', function () {
 });
 Auth::routes();
 
+Route::prefix("user")->middleware("auth")->group(function(){
+    Route::get("/profile","IndexProfileController@index")->name("indexProfile");
+    Route::get("/edit-profile","ProfileController@index")->name("Profile");
+    Route::get("/edit-profile/{profile}/edit","ProfileController@edit")->name("editProfile");
+    Route::post("/edit-profile/{profile}/update", "ProfileController@update")->name("updateProfile");
+    Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
+    Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
+    Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
+    Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
+});
+
 Route::prefix("admin")->middleware("auth", "role:1")->group(function(){
     Route::get('/', 'DashboardController@index')->name('dashboard');
     // divisi
@@ -61,14 +72,14 @@ Route::prefix("admin")->middleware("auth", "role:1")->group(function(){
     
 
     //Profile
-    Route::get("/profile","IndexProfileController@index")->name("index");
-    Route::get("/edit-profile","ProfileController@index")->name("Profile");
-    Route::get("/edit-profile/{profile}/edit","ProfileController@edit")->name("editProfile");
-    Route::post("/edit-profile/{profile}/update", "ProfileController@update")->name("updateProfile");
-    Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
-    Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
-    Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
-    Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
+    // Route::get("/profile","IndexProfileController@index")->name("indexProfile");
+    // Route::get("/edit-profile","ProfileController@index")->name("Profile");
+    // Route::get("/edit-profile/{profile}/edit","ProfileController@edit")->name("editProfile");
+    // Route::post("/edit-profile/{profile}/update", "ProfileController@update")->name("updateProfile");
+    // Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
+    // Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
+    // Route::get("/edit-profile/password", "ProfileController@editPassword")->name("editPassword");
+    // Route::post("/edit-profile/edit-password", "ProfileController@updatePassword")->name("updatePassword");
 }); 
 
 
@@ -118,10 +129,7 @@ Route::prefix('karyawan')->middleware("auth", "role:4")->group(function () {
     Route::post('/pemasukan/{pemasukan}/edit', 'PemasukanController@update')->name('updatePemasukan');
     Route::get('/pemasukan/{pemasukan}/delete', 'PemasukanController@destroy')->name('deletePemasukan');
     Route::get("/pemasukan/cetak","PemasukanController@cetak")->name("cetakPemasukan");
-<<<<<<< HEAD
-=======
-
->>>>>>> ed15e9206a603efe8734bb642ad68ce976602688
+    Route::get('/view-pemasukan/{id}', 'PemasukanController@viewPemasukan')->name('viewPemasukan');
 
     //pengeluaran
     Route::get('/pengeluaran', 'PengeluaranController@index')->name('daftarPengeluaran');
@@ -130,10 +138,6 @@ Route::prefix('karyawan')->middleware("auth", "role:4")->group(function () {
     Route::get('/pengeluaran/{pengeluaran}/edit', 'PengeluaranController@edit')->name('editPengeluaran');
     Route::post('/pengeluaran/{pengeluaran}/edit', 'PengeluaranController@update')->name('updatePengeluaran');
     Route::get('/pengeluaran/{pengeluaran}/delete', 'PengeluaranController@destroy')->name('deletePengeluaran');
-<<<<<<< HEAD
-
-=======
->>>>>>> ed15e9206a603efe8734bb642ad68ce976602688
 });
 
 // Route::get('dashboards', 'DashboardController@index')->middleware('admin');

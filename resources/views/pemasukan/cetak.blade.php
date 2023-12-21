@@ -35,7 +35,8 @@
 	</style>
 </head>
 <body>
-    <h3>DATA PEMASUKAN BULAN DESEMBER</h3>
+    <h3>DATA PEMASUKAN KARYAWAN </h3>
+        
     <table>
         <thead>
             <tr>

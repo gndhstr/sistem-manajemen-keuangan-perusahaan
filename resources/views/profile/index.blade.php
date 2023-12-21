@@ -1,4 +1,5 @@
 @extends('admin.layouts.master')
+
 @section("addCss")
 <link rel="stylesheet" href="{{asset('css/index-profil.css')}}">
 @endsection
