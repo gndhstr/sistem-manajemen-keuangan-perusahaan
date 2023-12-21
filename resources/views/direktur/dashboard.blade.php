@@ -45,7 +45,7 @@
                                         <p class="d-flex flex-column">
                                             <span class="text-bold text-lg">Rp.
                                                 {{ number_format($pemasukanMingguan, 2, ',', '.') }}</span>
-                                            <span class="text-sm">Pemasukan Karyawan Seiring Waktu</span>
+                                            <span class="text-sm">Pemasukan Karyawan di minggu ini</span>
                                         </p>
                                         <p class="ml-auto d-flex flex-column text-right">
                                             <span

@@ -42,7 +42,11 @@
                                 </div>
                                 <p class="text-secondary mb-1"> {{$profile->role_user->role}}</p>
 
-                                <p class="text-muted font-size-sm"> {{$profile->division->nama_divisi}}</p>
+                                @if ($profile->role == '3' || $profile->role == '4')
+                                    <p class="text-muted font-size-sm">{{$profile->division->nama_divisi}}</p>
+                                @else
+                                <p class="text-muted font-size-sm"></p>
+                                @endif
                                 </p>
                                 <!-- <a href="{{ route('Profile') }}" class="btn btn-default mb-3">Edit</a> -->
                             </div>
