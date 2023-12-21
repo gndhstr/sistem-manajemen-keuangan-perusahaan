@@ -29,10 +29,15 @@
     <div class="container-fluid">
         <div class="card">
             <div class="card-header text-right">
+<<<<<<< HEAD
+                <a href="{{ route('createPemasukan') }}" class="btn btn-primary" role="button" data-toggle="modal" data-target="#tambahPemasukanModal">Tambah Data</a>
+                <a href="{{ route('cetakPemasukan', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" class="btn btn-success mx-1" role="button">Export PDF <i class="fa fa-file-pdf"></i></a>
+=======
                 <a href="{{ route('createPemasukan')}}" class="btn btn-primary" role="button" data-toggle="modal"
                     data-target="#tambahPemasukanModal">Tambah Data</a>
                     <a href="{{ route('cetakPemasukan', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" class="btn btn-success mx-1" role="button">Export PDF <i class="fa fa-file-pdf"></i></a>
 
+>>>>>>> 6ed59650893f65d76ec368094126b767f270629a
             </div>
             <div class="card-body">
                 <form method="get" action="{{ route('daftarPemasukan') }}" class="mb-3">
@@ -138,9 +143,14 @@
 
                                     <!-- Pilih kategori menggunakan select -->
                                     <div class="form-group">
+<<<<<<< HEAD
+                                        <label for="nama_kategori">Kategori</label>
+                                        <select class="form-control select" name="id_kategori" id="nama_kategori" required>
+=======
                                         <label for="nama_kategori">Nama Kategori</label>
                                         <select class="form-control select" name="id_kategori" id="nama_kategori"
                                             required>
+>>>>>>> 6ed59650893f65d76ec368094126b767f270629a
                                             @foreach ($kategori as $kategoris)
                                             <option value="{{ $kategoris->id_kategori }}"
                                                 {{ old('id_kategori') == $kategoris->id_kategori ? 'selected' : '' }}>
@@ -200,9 +210,13 @@
                             </div>
                             <div class="modal-body">
                                 <!-- Formulir untuk mengedit catatan pemasukan -->
+<<<<<<< HEAD
+                                <form action="{{ route('updatePemasukan', ['tbl_pemasukan' => $pemasukan->id_pemasukan]) }}" method="POST"enctype="multipart/form-data">
+=======
                                 <form
                                     action="{{ route('updatePemasukan', ['tbl_pemasukan' => $pemasukan->id_pemasukan]) }}"
                                     method="POST">
+>>>>>>> 6ed59650893f65d76ec368094126b767f270629a
                                     @csrf
                                     @method('POST')
 
@@ -215,9 +229,14 @@
 
                                     <!-- Pilih kategori menggunakan select -->
                                     <div class="form-group">
+<<<<<<< HEAD
+                                        <label for="nama_kategori_edit">Kategori</label>
+                                        <select class="form-control select" name="id_kategori" id="nama_kategori_edit" required>
+=======
                                         <label for="nama_kategori_edit">Nama Kategori</label>
                                         <select class="form-control select" name="id_kategori" id="nama_kategori_edit"
                                             required>
+>>>>>>> 6ed59650893f65d76ec368094126b767f270629a
                                             @foreach ($kategori as $kategoris)
                                             <option value="{{ $kategoris->id_kategori }}" @if($kategoris->id_kategori ==
                                                 $pemasukan->id_kategori) selected @endif>{{ $kategoris->nama_kategori }}
