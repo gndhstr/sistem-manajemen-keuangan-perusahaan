@@ -178,13 +178,25 @@
                                             Rp. {{ number_format($riwayat->jumlah, 2, ',', '.') }}
                                         </td>
                                         <td class="text-center">
-                                            {{ date_format(date_create($riwayat->created_at), 'd/m/Y') }}
+                                            {{ date_format(date_create($riwayat->tanggal), 'd/m/Y') }}
                                             {{-- {{ $riwayat->created_at }} --}}
                                         </td>
                                         <td class="text-center">
-                                            <a href="#" class="text-muted">
-                                                <i class="fa fa-file-text"></i>
-                                            </a>
+                                            @if ($riwayat->jenis_transaksi == 'pemasukan')
+                                                <button class="btn btn-primary btn-sm view-button"
+                                                    data-url="{{ route('viewBukti', ['id_pemasukan' => $riwayat->id]) }}"
+                                                    data-dismiss="modal" data-toggle="modal"
+                                                    data-target="#viewPemasukanModal{{ $riwayat->id }}">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+                                            @else
+                                                <button class="btn btn-primary btn-sm view-button"
+                                                    data-url="{{ route('viewBukti', ['id_pengeluaran' => $riwayat->id]) }}"
+                                                    data-dismiss="modal" data-toggle="modal"
+                                                    data-target="#viewPengeluaranModal{{ $riwayat->id }}">
+                                                    <i class="fa fa-eye"></i>
+                                                </button>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -249,10 +261,12 @@
                                                         </td>
                                                         <td class="text-center">{{ $mutasi->catatan }}</td>
                                                         <td class="text-center">
-                                                            <a data-url="{{ route('editUser', ['id' => $user->id]) }}"
-                                                                class="btn btn-warning btn-sm" role="button"
-                                                                data-toggle="modal"
-                                                                data-target="#editData{{ $user->id }}">Lihat</a>
+                                                            <button class="btn btn-primary btn-sm view-button"
+                                                                data-url="{{ route('viewBukti', ['id_pemasukan' => $mutasi->id_pemasukan]) }}"
+                                                                data-dismiss="modal" data-toggle="modal"
+                                                                data-target="#viewPemasukanModal{{ $mutasi->id_pemasukan }}">
+                                                                <i class="fa fa-eye"></i>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 @empty
@@ -263,6 +277,27 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+
+                {{-- modal lihat pemasukan --}}
+                @foreach ($pemasukans as $pemasukan)
+                    <div class="modal fade" id="viewPemasukanModal{{ $pemasukan->id_pemasukan }}" tabindex="-1"
+                        role="dialog" aria-labelledby="viewPemasukanModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="viewPemasukanModalLabel">Bukti Pemasukan</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="{{ asset('storage/bukti_pemasukan/' . $pemasukan->bukti_pemasukan) }}"
+                                        alt="Bukti Pemasukan" style="max-width: 100%;">
                                 </div>
                             </div>
                         </div>

@@ -41,8 +41,8 @@
                 <div class="card-header border-0">
                     <h3 class="card-title">Karyawan</h3>
                     <div class="card-tools">
-                        <p class="text-muted">*data di bulan ini</p>
                         {{-- tools --}}
+                        <span class="badge badge-info">{{ date('F') }}</span>
                     </div>
                 </div>
                 <div class="card-body table-responsive">
@@ -123,7 +123,7 @@
                                                 <li class="text-sm d-flex justify-content-between">Pengeluaran:<b>Rp.
                                                         {{ number_format($karyawan->pengeluaran->isEmpty() ? 0 : $karyawan->pengeluaran[0]->total_pengeluaran, 2, ',', '.') }}</b>
                                                 </li>
-                                                <li class="text-sm text-success d-flex justify-content-between">
+                                                <li class="text-sm d-flex justify-content-between {{ (($karyawan->pemasukan->isEmpty() ? 0 : $karyawan->pemasukan[0]->total_pemasukan) - ($karyawan->pengeluaran->isEmpty() ? 0 : $karyawan->pengeluaran[0]->total_pengeluaran)) > 0 ? 'text-success' : 'text-danger' }}">
                                                     Saldo:<b>Rp.
                                                         {{ number_format(($karyawan->pemasukan->isEmpty() ? 0 : $karyawan->pemasukan[0]->total_pemasukan) - ($karyawan->pengeluaran->isEmpty() ? 0 : $karyawan->pengeluaran[0]->total_pengeluaran), 2, ',', '.') }}</b>
                                                 </li>
@@ -134,7 +134,7 @@
                                             </div> --}}
                                         </div>
                                         <div class="col-5 text-center">
-                                            <img src="{{ $karyawan->foto_profil }}" alt="user-avatar"
+                                            <img src="{{ asset('storage/' . $karyawan->foto_profil) }}" alt="user-avatar"
                                                 class="img-circle img-fluid" width="200px">
                                         </div>
                                     </div>
