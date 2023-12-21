@@ -29,10 +29,10 @@
     <div class="container-fluid">
         <div class="card">
             <div class="card-header text-right">
-                <a href="{{ route('createPemasukan') }}" class="btn btn-primary" role="button" data-toggle="modal"
+                <a href="{{ route('createPemasukan')}}" class="btn btn-primary" role="button" data-toggle="modal"
                     data-target="#tambahPemasukanModal">Tambah Data</a>
-                <a href="{{route('cetakPemasukan', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }})}}" class="btn btn-success mx-1" role="button">Export PDF <i
-                        class="fa fa-file-pdf"></i></a>
+                    <a href="{{ route('cetakPemasukan', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" class="btn btn-success mx-1" role="button">Export PDF <i class="fa fa-file-pdf"></i></a>
+
             </div>
             <div class="card-body">
                 <form method="get" action="{{ route('daftarPemasukan') }}" class="mb-3">
@@ -243,8 +243,8 @@
                                     <!-- Input untuk bukti edit pemasukan -->
                                     <div class="form-group">
                                         <label for="bukti_pemasukan_edit">Bukti Pemasukan</label>
-                                        <input type="text" class="form-control" id="bukti_pemasukan_edit"
-                                            name="bukti_pemasukan" value="{{ $pemasukan->bukti_pemasukan }}" required>
+                                        <input type="file" class="form-control" id="bukti_pemasukan_edit"
+                                            name="bukti_pemasukan" required>
                                     </div>
 
                                     <div class="text-right">

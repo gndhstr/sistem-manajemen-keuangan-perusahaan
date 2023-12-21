@@ -35,7 +35,13 @@
 	</style>
 </head>
 <body>
-    <h3>DATA PEMASUKAN KARYAWAN </h3>
+    <h3>DATA PEMASUKAN KARYAWAN 
+        <br>
+        BULAN  {{ strtoupper(\Carbon\Carbon::parse($startDate)->translatedFormat('F')) }} -  {{ strtoupper(\Carbon\Carbon::parse($endDate)->translatedFormat('F')) }} 
+        <br>
+        2023
+    </h3>
+
         
     <table>
         <thead>

@@ -8,6 +8,8 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Carbon;
+
 
 class PemasukanController extends Controller
 {
@@ -28,7 +30,7 @@ class PemasukanController extends Controller
             ->where('status', '1')
             ->whereBetween('tgl_pemasukan', [$startDate, $endDate])
             ->get();
-
+            // dd($startDate, $endDate);
         return view('pemasukan.index', compact('pemasukans', 'kategori'));
     }
 
