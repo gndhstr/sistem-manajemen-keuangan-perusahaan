@@ -137,13 +137,25 @@ class DirekturController extends Controller
         if ($realisasiAnggaran < 0) {
             $realisasiAnggaranFormatted = '- Rp. ' . abs($realisasiAnggaranFormatted);
         } else {
-            $realisasiAnggaranFormatted = 'Rp. ' . $realisasiAnggaranFormatted;
+            $realisasiAnggaranFormatted = '- Rp. ' . $realisasiAnggaranFormatted;
         }
 
-        $persentasePerbandinganAnggaran = ($aktualisasiAnggaran / $rencanaAnggaran) * 100;
+        if ($aktualisasiAnggaran == 0 && $rencanaAnggaran == 0) {
+            $persentasePerbandinganAnggaran = 0;
+        } elseif ($aktualisasiAnggaran == 0) {
+            $persentasePerbandinganAnggaran = 100;
+        } elseif ($rencanaAnggaran == 0) {
+            $persentasePerbandinganAnggaran = -100;
+        } else {
+            $persentasePerbandinganAnggaran = ($aktualisasiAnggaran / $rencanaAnggaran) * 100;
+        }
+
+
+        $currentTime = now();
+        $greeting = $this->getGreeting($currentTime);
 
         return view('direktur.dashboard', [
-            // 'dump' => dd($rencanaAnggaran),
+            // 'dump' => dd($realisasiAnggaran),
             'pemasukanHarians' => $pemasukanHarians,
             'pemasukanBulanans' => $pemasukanBulanans,
             'pengeluaranBulanans' => $pengeluaranBulanans,
@@ -163,6 +175,7 @@ class DirekturController extends Controller
             'perbandinganPemasukanPengeluaranTotal' => $perbandinganPemasukanPengeluaranTotal,
             'perbandinganAnggaran' => $persentasePerbandinganAnggaran,
             'realisasiAnggaran' => $realisasiAnggaranFormatted,
+            'greeting' => $greeting,
         ]);
     }
 
@@ -318,5 +331,20 @@ class DirekturController extends Controller
             // 'dump' => dd($karyawans),
             'karyawans' => $karyawans,
         ]);
+    }
+
+    private function getGreeting($time)
+    {
+        $hour = $time->hour;
+    
+        if ($hour >= 5 && $hour < 12) {
+            return 'Selamat Pagi';
+        } elseif ($hour >= 12 && $hour < 15) {
+            return 'Selamat Siang';
+        } elseif ($hour >= 15 && $hour < 18) {
+            return 'Selamat Sore';
+        } else {
+            return 'Selamat Malam';
+        }
     }
 }
