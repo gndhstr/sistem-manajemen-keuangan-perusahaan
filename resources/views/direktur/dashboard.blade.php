@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0 text-dark">Dashboard Direktur</h1>
+                    <h1 class="m-0 text-dark">{{$greeting}}, {{ Auth::user()->nama }}</h1>
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -166,7 +166,7 @@
                         <!-- /.col -->
                         <div class="col-sm-3 col-6">
                             <div class="description-block">
-                                <span class="description-percentage {{ $perbandinganAnggaran > 100 ? 'text-danger' : 'text-success' }}"><i class="fa {{ $perbandinganAnggaran > 100 ? 'fa-caret-down' : 'fa-caret-up' }}"></i> {{ number_format($perbandinganAnggaran, 2) }}
+                                <span class="description-percentage {{ $perbandinganAnggaran > 100 ? 'text-danger' : 'text-success' }}">{{ number_format($perbandinganAnggaran, 2) }}
                                     %</span>
                                 <h5 class="description-header">{{ $realisasiAnggaran }}</h5>
                                 <span class="description-text">REALISASI ANGGARAN</span>

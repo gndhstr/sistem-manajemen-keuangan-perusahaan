@@ -26,12 +26,12 @@ class DirekturController extends Controller
         /* ------------------------------------- PEMASUKAN MINGGUAN------------------------------------- */
         //pemasukan 1 minggu terakhir
         $mingguan = $time->now()->subWeek()->addDays(1); //tanggal 1 minggu lalu
-        $pemasukanMingguans = tbl_pemasukan::whereDate('created_at', '>=', $mingguan)->where('status', '1')->get();
+        $pemasukanMingguans = tbl_pemasukan::whereDate('tgl_pemasukan', '>=', $mingguan)->where('status', '1')->get();
         $pemasukanMingguanTotal = $pemasukanMingguans->sum('jml_masuk');
 
         //pemasukan 1 bulan ini
         $bulanan = $time->now()->startOfMonth(); //Bulan ini
-        $pemasukanBulanan = tbl_pemasukan::whereDate('created_at', '>=', $bulanan)->where('status', '1')->get();
+        $pemasukanBulanan = tbl_pemasukan::whereDate('tgl_pemasukan', '>=', $bulanan)->where('status', '1')->get();
         $pemasukanBulananTotal = $pemasukanBulanan->sum('jml_masuk');
 
         //pemasukan Harian
@@ -44,13 +44,13 @@ class DirekturController extends Controller
             $tanggalHarians[$i] = $mingguan->copy()->addDays($i)->format('d-M');
 
             // Query untuk mendapatkan data pemasukan harian
-            $pemasukanHarian = tbl_pemasukan::where('created_at', '=', $tanggalHarian)->where('status', '1')->get();
+            $pemasukanHarian = tbl_pemasukan::where('tgl_pemasukan', '=', $tanggalHarian)->where('status', '1')->get();
 
             // Menyimpan data harian ke dalam array
             $pemasukanHarians[$i] = $pemasukanHarian->sum('jml_masuk');
         }
 
-        $totalPemasukan = tbl_pemasukan::all()->where('status', '1')->sum('jml_masuk');
+        $totalPemasukan = tbl_pemasukan::all()->where('status', '1')->whereBetween('tgl_pemasukan', [$time->now()->startOfMonth()->subDay(), $time->now()->endOfMonth()])->sum('jml_masuk');
 
         /* ------------------------------------- PEMASUKAN DAN PENGELUARAN TIAP 6 BULAN TERAKHIR ------------------------------------- */
         // data pemasukan dan pengeluaran sampai 6 bulan sebelumnya
@@ -66,17 +66,17 @@ class DirekturController extends Controller
             $tanggalBulanans[$i] = strtoupper($tanggalAwal->format('M'));
 
             // Ambil data untuk setiap bulan
-            $pemasukanBulanans[$i] = tbl_pemasukan::whereBetween('created_at', [$tanggalAwal, $tanggalAkhir])->where('status', '1')->get()->sum('jml_masuk');
-            $pengeluaranBulanans[$i] = tbl_pengeluaran::whereBetween('created_at', [$tanggalAwal, $tanggalAkhir])->where('status', '1')->get()->sum('jml_keluar');
+            $pemasukanBulanans[$i] = tbl_pemasukan::whereBetween('tgl_pemasukan', [$tanggalAwal, $tanggalAkhir])->where('status', '1')->get()->sum('jml_masuk');
+            $pengeluaranBulanans[$i] = tbl_pengeluaran::whereBetween('tgl_pengeluaran', [$tanggalAwal, $tanggalAkhir])->where('status', '1')->get()->sum('jml_keluar');
         }
 
         /* ------------------------------------- PENGELUARAN MINGGUAN ------------------------------------- */
         //pengeluaran 1 minggu terakhir
-        $pengeluaranMingguans = tbl_pengeluaran::whereDate('created_at', '>=', $mingguan)->where('status', '1')->get();
+        $pengeluaranMingguans = tbl_pengeluaran::whereDate('tgl_pengeluaran', '>=', $mingguan)->where('status', '1')->get();
         $pengeluaranMingguanTotal = $pengeluaranMingguans->sum('jml_keluar');
 
         //pengeluaran 1 bulan terakhir
-        $pengeluaranBulanan = tbl_pengeluaran::whereDate('created_at', '>=', $bulanan)->where('status', '1')->get();
+        $pengeluaranBulanan = tbl_pengeluaran::whereDate('tgl_pengeluaran', '>=', $bulanan)->where('status', '1')->get();
         $pengeluaranBulananTotal = $pengeluaranBulanan->sum('jml_keluar');
 
         $pengeluaranHarians = [];
@@ -85,13 +85,13 @@ class DirekturController extends Controller
             $tanggalHarian = $mingguan->copy()->addDays($i)->format('Y-m-d');
 
             // Query untuk mendapatkan data pengeluaran harian
-            $pengeluaranHarian = tbl_pengeluaran::where('created_at', '=', $tanggalHarian)->where('status', '1')->get();
+            $pengeluaranHarian = tbl_pengeluaran::where('tgl_pengeluaran', '=', $tanggalHarian)->where('status', '1')->get();
 
             // Menyimpan data harian ke dalam array
             $pengeluaranHarians[$i] = $pengeluaranHarian->sum('jml_keluar');
         }
 
-        $totalPengeluaran = tbl_pengeluaran::all()->where('status', '1')->sum('jml_keluar');
+        $totalPengeluaran = tbl_pengeluaran::all()->where('status', '1')->whereBetween('tgl_pengeluaran', [$time->now()->startOfMonth()->subDay(), $time->now()->endOfMonth()])->sum('jml_keluar');
 
         /* ------------------------------------- PERBANDINGAN PEMASUKAN DAN PENGELUARAN MINGGUAN ------------------------------------- */
         if ($totalPemasukan == 0 && $totalPengeluaran == 0) {
@@ -137,13 +137,25 @@ class DirekturController extends Controller
         if ($realisasiAnggaran < 0) {
             $realisasiAnggaranFormatted = '- Rp. ' . abs($realisasiAnggaranFormatted);
         } else {
-            $realisasiAnggaranFormatted = 'Rp. ' . $realisasiAnggaranFormatted;
+            $realisasiAnggaranFormatted = '- Rp. ' . $realisasiAnggaranFormatted;
         }
 
-        $persentasePerbandinganAnggaran = ($aktualisasiAnggaran / $rencanaAnggaran) * 100;
+        if ($aktualisasiAnggaran == 0 && $rencanaAnggaran == 0) {
+            $persentasePerbandinganAnggaran = 0;
+        } elseif ($aktualisasiAnggaran == 0) {
+            $persentasePerbandinganAnggaran = 100;
+        } elseif ($rencanaAnggaran == 0) {
+            $persentasePerbandinganAnggaran = -100;
+        } else {
+            $persentasePerbandinganAnggaran = ($aktualisasiAnggaran / $rencanaAnggaran) * 100;
+        }
+
+
+        $currentTime = now();
+        $greeting = $this->getGreeting($currentTime);
 
         return view('direktur.dashboard', [
-            // 'dump' => dd($rencanaAnggaran),
+            // 'dump' => dd($realisasiAnggaran),
             'pemasukanHarians' => $pemasukanHarians,
             'pemasukanBulanans' => $pemasukanBulanans,
             'pengeluaranBulanans' => $pengeluaranBulanans,
@@ -163,6 +175,7 @@ class DirekturController extends Controller
             'perbandinganPemasukanPengeluaranTotal' => $perbandinganPemasukanPengeluaranTotal,
             'perbandinganAnggaran' => $persentasePerbandinganAnggaran,
             'realisasiAnggaran' => $realisasiAnggaranFormatted,
+            'greeting' => $greeting,
         ]);
     }
 
@@ -178,13 +191,13 @@ class DirekturController extends Controller
             },
         ])->get();
 
-        $pemasukans = tbl_pemasukan::select('id_pemasukan as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_masuk as jumlah', 'tgl_pemasukan as tanggal', 'catatan', 'bukti_pemasukan as bukti', 'status', 'created_at')->where('status', '1')
+        $pemasukans = tbl_pemasukan::select('id_pemasukan as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_masuk as jumlah', 'tgl_pemasukan as tanggal', 'catatan', 'bukti_pemasukan as bukti', 'status', 'created_at')->where('status', '1')->orderBy('tanggal', 'desc')
             ->addSelect(DB::raw("'pemasukan' as jenis_transaksi"));
 
-        $pengeluarans = tbl_pengeluaran::select('id_pengeluaran as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_keluar as jumlah', 'tgl_pengeluaran as tanggal', 'catatan', 'bukti_pengeluaran as bukti', 'status', 'created_at')->where('status', '1')
+        $pengeluarans = tbl_pengeluaran::select('id_pengeluaran as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_keluar as jumlah', 'tgl_pengeluaran as tanggal', 'catatan', 'bukti_pengeluaran as bukti', 'status', 'created_at')->where('status', '1')->orderBy('tanggal', 'desc')
             ->addSelect(DB::raw("'pengeluaran' as jenis_transaksi"));
 
-        $riwayatPemasukanPengeluaran = $pemasukans->union($pengeluarans)->orderBy('created_at', 'desc')->take(10)->get();
+        $riwayatPemasukanPengeluaran = $pemasukans->union($pengeluarans)->orderBy('tanggal', 'desc')->take(10)->get();
 
         $users = User::where('role', 4)->get();
 
@@ -192,7 +205,7 @@ class DirekturController extends Controller
         $pengeluarans2 = tbl_pengeluaran::where('status', "1")->get();
 
         return view('direktur.cashflow', [
-            // 'dump' => dd($users),
+            // 'dump' => dd($riwayatPemasukanPengeluaran),
             'riwayatPemasukanPengeluaran' => $riwayatPemasukanPengeluaran,
             'divisis' => $divisis,
             'users' => $users,
@@ -318,5 +331,20 @@ class DirekturController extends Controller
             // 'dump' => dd($karyawans),
             'karyawans' => $karyawans,
         ]);
+    }
+
+    private function getGreeting($time)
+    {
+        $hour = $time->hour;
+    
+        if ($hour >= 5 && $hour < 12) {
+            return 'Selamat Pagi';
+        } elseif ($hour >= 12 && $hour < 15) {
+            return 'Selamat Siang';
+        } elseif ($hour >= 15 && $hour < 18) {
+            return 'Selamat Sore';
+        } else {
+            return 'Selamat Malam';
+        }
     }
 }
