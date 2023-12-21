@@ -136,11 +136,19 @@ class PemasukanController extends Controller
             'id_user_edit' => 'required|integer',
             'tgl_pemasukan' => 'required|string',
             'jml_masuk' => 'required|string|max:255',
-            'bukti_pemasukan' => 'required|string',
+            'bukti_pemasukan' => 'nullable|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'catatan' => 'nullable|string',
             'status' => 'nullable',
         ]);
-
+        if ($request->hasFile('bukti_pemasukan')) {
+            // Delete the old file
+            Storage::delete('bukti_pemasukan/' . $pemasukan->bukti_pemasukan);
+    
+            // Upload and save the new file
+            $file = $request->file('bukti_pemasukan');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('bukti_pemasukan', $fileName, 'public');
+            $pemasukan->bukti_pemasukan = $fileName;
         $pemasukan->id_kategori = $validatedData['id_kategori'];
         $pemasukan->id_user = $validatedData['id_user'];
         $pemasukan->id_user_create = $validatedData['id_user_create'];
@@ -148,7 +156,6 @@ class PemasukanController extends Controller
         $pemasukan->tgl_pemasukan = $validatedData['tgl_pemasukan'];
         $pemasukan->jml_masuk = $validatedData['jml_masuk'];
         $pemasukan->bukti_pemasukan = $validatedData['bukti_pemasukan'];
-        $pemasukan->status = $validatedData['status'];
         $pemasukan->catatan = $validatedData['catatan'];
         $pemasukan->save();
 

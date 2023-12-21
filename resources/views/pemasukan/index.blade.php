@@ -237,8 +237,10 @@
                                     <!-- Input untuk bukti edit pemasukan -->
                                     <div class="form-group">
                                         <label for="bukti_pemasukan_edit">Bukti Pemasukan</label>
-                                        <input type="file" class="form-control" id="bukti_pemasukan_edit"
-                                            name="bukti_pemasukan" required>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="bukti_pemasukan_edit" name="bukti_pemasukan" accept="image/*">
+                                            <label class="custom-file-label" for="bukti_pemasukan_edit">Choose file</label>
+                                        </div>
                                     </div>
 
                                     <div class="text-right">
