@@ -143,4 +143,17 @@
 @endsection
 @section("addJavascript")
 <script src="https://kit.fontawesome.com/e2b0e4079e.js" crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+        $(".toggle-password").click(function () {
+            var target = $("#" + $(this).data("target"));
+            var type = target.attr("type") === "password" ? "text" : "password";
+            target.attr("type", type);
+
+            // Ubah ikon mata sesuai dengan tipe password saat ini
+            $(this).find("i").toggleClass("fa-eye fa-eye-slash");
+        });
+    });
+</script>
+
 @endsection
