@@ -149,13 +149,13 @@ class PemasukanController extends Controller
             $fileName = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('bukti_pemasukan', $fileName, 'public');
             $pemasukan->bukti_pemasukan = $fileName;
+        }
         $pemasukan->id_kategori = $validatedData['id_kategori'];
         $pemasukan->id_user = $validatedData['id_user'];
         $pemasukan->id_user_create = $validatedData['id_user_create'];
         $pemasukan->id_user_edit = $validatedData['id_user_edit'];
         $pemasukan->tgl_pemasukan = $validatedData['tgl_pemasukan'];
         $pemasukan->jml_masuk = $validatedData['jml_masuk'];
-        $pemasukan->bukti_pemasukan = $validatedData['bukti_pemasukan'];
         $pemasukan->catatan = $validatedData['catatan'];
         $pemasukan->save();
 
