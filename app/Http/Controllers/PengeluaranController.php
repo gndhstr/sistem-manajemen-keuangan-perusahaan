@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\tbl_pengeluaran;
 use App\tbl_kategori;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Storage;
 
 class PengeluaranController extends Controller
 {
@@ -46,15 +48,17 @@ class PengeluaranController extends Controller
             'id_user_edit' => 'required',
             'jml_keluar' => 'required',
             'catatan' => 'nullable',
-            'bukti_pengeluaran' => 'required',
+            'bukti_pengeluaran' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'status' => 'nullable',
         ]);
-
+        $file = $request->file('bukti_pengeluaran');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $filePath = $file->storeAs('bukti_pengeluaran', $fileName, 'public');  
         $pengeluaran = new tbl_pengeluaran();
         $pengeluaran->fill($request->all());
         $pengeluaran->jml_keluar = $request->input('jml_keluar', 0);
         $pengeluaran->catatan = $request->input('catatan', '');
-        $pengeluaran->bukti_pengeluaran = $request->input('bukti_pengeluaran', '');
+        $pengeluaran->bukti_pengeluaran = $fileName;
         $pengeluaran->status ='1';
         $pengeluaran->save();
 
@@ -100,23 +104,32 @@ class PengeluaranController extends Controller
             'id_user_edit' => 'required|integer',
             'tgl_pengeluaran' => 'required|string',
             'jml_keluar' => 'required|string|max:255',
-            'bukti_pengeluaran' => 'required|string',
+            'bukti_pengeluaran' => 'nullable|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'catatan' => 'nullable|string',
             'status' => 'nullable',
         ]);
-
+    
+        if ($request->hasFile('bukti_pengeluaran')) {
+            // Delete the old file
+            Storage::delete('bukti_pengeluaran/' . $pengeluaran->bukti_pengeluaran);
+    
+            // Upload and save the new file
+            $file = $request->file('bukti_pengeluaran');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('bukti_pengeluaran', $fileName, 'public');
+            $pengeluaran->bukti_pengeluaran = $fileName;
+        }
+    
         $pengeluaran->id_kategori = $validatedData['id_kategori'];
         $pengeluaran->id_user = $validatedData['id_user'];
         $pengeluaran->id_user_create = $validatedData['id_user_create'];
         $pengeluaran->id_user_edit = $validatedData['id_user_edit'];
         $pengeluaran->tgl_pengeluaran = $validatedData['tgl_pengeluaran'];
         $pengeluaran->jml_keluar = $validatedData['jml_keluar'];
-        $pengeluaran->bukti_pengeluaran = $validatedData['bukti_pengeluaran'];
-        $pengeluaran->status = $validatedData['status'];
         $pengeluaran->catatan = $validatedData['catatan'];
         $pengeluaran->save();
-
-        return redirect()->route('daftarPengeluaran')->with('success', 'Data pemasukan berhasil diperbarui');
+    
+        return redirect()->route('daftarPengeluaran')->with('success', 'Data pengeluaran berhasil diperbarui');
     }
 
     /**
