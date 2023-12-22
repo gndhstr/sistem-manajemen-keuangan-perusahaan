@@ -18,6 +18,11 @@ class DashboardKaryawanController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
+        $time = new Carbon();
+        $time->setTimeZone('Asia/Jakarta');
+        $user = Auth::user();
+        $year = date('Y');
+
         $user = Auth::user();
         $role_user = 4;
         $divisi_user = $user->id_divisi;
@@ -46,6 +51,9 @@ class DashboardKaryawanController extends Controller
             $perbandinganPemasukanPengeluaran = (($totalMasuk - $totalKeluar) / $totalMasuk) * 100;
         }
 
+        $currentTime = now();
+        $greeting = $this->getGreeting($currentTime);
+
         return view("karyawan.dashboard", [
             "users" => $users,
             "pemasukans" => $pemasukans,
@@ -54,11 +62,26 @@ class DashboardKaryawanController extends Controller
             "totalKeluar" => $totalKeluar,
             "perbandinganPemasukanPengeluaran" => $perbandinganPemasukanPengeluaran,
             "divisi"=> $user->division->nama_divisi,
+            'greeting' => $greeting,
             "saldo" => $saldo,
         ]);
     }
     
-
+    private function getGreeting($time)
+    {
+        $hour = $time->hour;
+    
+        if ($hour >= 5 && $hour < 12) {
+            return 'Selamat Pagi';
+        } elseif ($hour >= 12 && $hour < 15) {
+            return 'Selamat Siang';
+        } elseif ($hour >= 15 && $hour < 18) {
+            return 'Selamat Sore';
+        } else {
+            return 'Selamat Malam';
+        }
+    }
+    
     /**
      * Show the form for creating a new resource.
      *

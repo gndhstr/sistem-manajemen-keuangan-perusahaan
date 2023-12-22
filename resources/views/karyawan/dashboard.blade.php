@@ -15,7 +15,7 @@ return $rupiah;
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Selamat Datang, {{ Auth::user()->nama }}</h1>
+                <h1 class="m-0 text-dark">{{$greeting}}, {{ Auth::user()->nama }}</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -29,47 +29,97 @@ return $rupiah;
 <!-- Main content -->
 <div class="content">
     <div class="container-fluid">
-        <div class="card p-3">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info"><i class="fa fa-wallet"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Saldo</span>
-                            <span class="info-box-number">
-                                <h2>{{ formatRupiah($saldo) }},-</h2>
-                            </span>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="col">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>Saldo</h3>
+                            <p>{{ formatRupiah($saldo) }},-</p>
                         </div>
-                    </div>
-
-                    <div class="info-box">
-                        <span class="info-box-icon bg-success"><i class="fa  fa-chevron-down"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Total Pemasukan</span>
-                            <span class="info-box-number">
-                                <h2>{{ formatRupiah($totalMasuk) }},-</h2>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="info-box">
-                        <span class="info-box-icon bg-danger"><i class="fa  fa-chevron-up"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Total Pengeluaran</span>
-                            <span class="info-box-number">
-                                <h2>{{ formatRupiah($totalKeluar) }},-</h2>
-                            </span>
+                        <div class="icon">
+                            <i class="fa fa-wallet"></i>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title text-center "><i class="fa fa-chart-bar"></i>Grafik Keuangan</h3>
+                <div class="col">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>Total Pemasukan</h3>
+                            <p>{{ formatRupiah($totalMasuk) }},-</p>
                         </div>
-                        <div class="card-body">
-                            <canvas id="myChart" style="height: 225px;"></canvas>
+                        <div class="icon">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <a href="{{route('daftarPemasukan')}}" class="small-box-footer">
+                            Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>Total Pengeluaran</h3>
+                            <p>{{ formatRupiah($totalKeluar) }},-</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <a href="{{route('daftarPengeluaran')}}" class="small-box-footer">
+                            Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                {{-- card grafik --}}
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title text-bold text-lg text-center">Grafik Keuangan Karyawan</h3>
+                        <div class="card-tools">
+                            <span class="badge badge-info">tanggal</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-header border-0 pb-0">
+                                <div class="d-flex justify-content-end">
+                                    {{-- <a href="javascript:void(0);">View Report</a> --}}
+                                </div>
+                                <div class="card-tools">
+                                </div>
+                            </div>
+                            <div class="card-body pt-3">
+                                <div class="d-flex">
+                                    <p class="d-flex flex-column">
+                                        <span class="text-bold text-lg">Pemasukan Karyawan Seiring Waktu</span>
+                                        <span class="text-sm">Pemasukan Karyawan Seiring Waktu</span>
+                                    </p>
+                                    <p class="ml-auto d-flex flex-column text-right">
+                                        <span class="">
+                                            <i class=""></i>
+                                            Perbandingan %
+                                        </span>
+                                        <span class="text-muted">Di Bulan ini</span>
+                                        <span class="text-muted">Diisi dengan mingguan</span>
+                                    </p>
+                                </div>
+                                <!-- /.d-flex -->
+
+                                <div class="position-relative mb-4">
+                                    <canvas id="sales-chart" height="200"></canvas>
+                                </div>
+
+                                <div class="d-flex flex-row justify-content-end">
+                                    <span class="mr-2">
+                                        <i class="fa fa-square text-primary"></i> Pemasukan
+                                    </span>
+
+                                    <span>
+                                        <i class="fa fa-square text-gray" style="opacity: 0.23;"></i> Pengeluaran
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -77,6 +127,7 @@ return $rupiah;
         </div>
     </div>
 </div><!-- /.content -->
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     var ctx = document.getElementById('myChart').getContext('2d');
@@ -86,7 +137,15 @@ return $rupiah;
             labels: ['Pemasukan', 'Pengeluaran'],
             datasets: [{
                 label: 'Total',
-                data: [{{ $totalMasuk }},{{ $totalKeluar }}],
+                data: [{
+                    {
+                        $totalMasuk
+                    }
+                }, {
+                    {
+                        $totalKeluar
+                    }
+                }],
                 backgroundColor: [
                     'rgba(75, 192, 192, 0.2)',
                     'rgba(255, 99, 132, 0.2)',
@@ -104,7 +163,7 @@ return $rupiah;
                     beginAtZero: true
                 }
             },
-            maintainAspectRatio: true, 
+            maintainAspectRatio: true,
             aspectRatio: 1.5
         }
     });
@@ -112,9 +171,9 @@ return $rupiah;
 <script>
     $(function() {
         // Format Rupiah
-        $('.rupiah').mask('000.000.000.000', {reverse: true});
-    });    
+        $('.rupiah').mask('000.000.000.000', {
+            reverse: true
+        });
+    });
 </script>
 @endsection
-
-
