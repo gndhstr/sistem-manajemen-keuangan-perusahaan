@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Pegawai</title>
-	<!-- <link rel="stylesheet" href="{{asset('css/cetak-pdf.css')}}"> -->
-	<style>
-		body {
+    <!-- <link rel="stylesheet" href="{{asset('css/cetak-pdf.css')}}"> -->
+    <style>
+        body {
             font-family: Arial, sans-serif;
         }
 
@@ -16,11 +17,12 @@
             margin-bottom: 20px;
         }
 
-        th, td {
-            border: 1px solid #dddddd ;
+        th,
+        td {
+            border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
-			text-align: center;
+            text-align: center;
         }
 
         th {
@@ -31,18 +33,25 @@
             text-align: center;
             margin-bottom: 20px;
         }
-
-	</style>
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+        $(function() {
+            // Format Rupiah
+            $('.rupiah').mask('000.000.000.000', {
+                reverse: true
+            });
+        });
+    </script>
 </head>
+
 <body>
-<h3>DATA PEMASUKAN KARYAWAN <br>BULAN {{ strtoupper(\Carbon\Carbon::parse($startDate)->formatLocalized('%B')) }} - {{ strtoupper(\Carbon\Carbon::parse($endDate)->formatLocalized('%B')) }} <br>2023</h3>
-
-
-        
+    <h3>DATA PEMASUKAN KARYAWAN <br>BULAN {{ strtoupper(\Carbon\Carbon::parse($startDate)->formatLocalized('%B')) }} - {{ strtoupper(\Carbon\Carbon::parse($endDate)->formatLocalized('%B')) }} <br>2023</h3>
     <table>
         <thead>
             <tr>
-                <th >No</th>
+                <th>No</th>
                 <th>Tanggal Pemasukan</th>
                 <th>Nama Kategori</th>
                 <th>Jumlah</th>
@@ -53,13 +62,27 @@
             @foreach ($pemasukans as $pemasukan)
                 <tr>
                     <td>{{ $loop->index + 1 }}</td>
-                    <td>{{ $pemasukan->tgl_pemasukan }}</td>
+                    <td>{{ \Carbon\Carbon::parse($pemasukan->tgl_pemasukan)->format('d/m/Y') }}</td>
                     <td>{{ $pemasukan->kategori->nama_kategori }}</td>
-                    <td>{{ $pemasukan->jml_masuk }}</td>
+                    <td class="rupiah">{{ formatRupiah($pemasukan->jml_masuk) }}</td>
                     <td>{{ $pemasukan->catatan }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
+
+    <script>
+        $(function () {
+            // Format Rupiah
+            $('.rupiah').mask('000.000.000.000', {reverse: true});
+        });
+    </script>
 </body>
 </html>
+
+@php
+function formatRupiah($angka){
+    $rupiah = "Rp. " . number_format($angka, 0, ',', '.');
+    return $rupiah;
+}
+@endphp
