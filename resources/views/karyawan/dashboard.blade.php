@@ -79,7 +79,6 @@ return $rupiah;
 </div><!-- /.content -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Set your data for the chart
     var ctx = document.getElementById('myChart').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
@@ -105,8 +104,8 @@ return $rupiah;
                     beginAtZero: true
                 }
             },
-            maintainAspectRatio: true, // Setel ke false untuk mengaktifkan penyesuaian aspek rasio
-            aspectRatio: 4.9 // Sesuaikan dengan angka yang sesuai dengan kebutuhan tinggi grafik
+            maintainAspectRatio: true, 
+            aspectRatio: 1.5
         }
     });
 </script>

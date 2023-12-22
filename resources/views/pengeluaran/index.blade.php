@@ -1,3 +1,10 @@
+@php
+function formatRupiah($angka){
+$rupiah = "Rp. " . number_format($angka,0,',','.');
+return $rupiah;
+}
+@endphp
+
 @extends('karyawan.layouts.master')
 
 @section("addCss")
@@ -32,6 +39,22 @@
                 <a href="{{ route('createPengeluaran') }}" class="btn btn-primary" role="button" data-toggle="modal" data-target="#tambahPengeluaranModal">Tambah Data</a>
             </div>
             <div class="card-body">
+                <form method="get" action="{{ route('daftarPengeluaran') }}" class="mb-3">
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <label for="start_date">Start Date:</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="end_date">End Date:</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="d-block invisible">Filter</label>
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </div>
+                    </div>
+                </form>
                 <!-- Tabel -->
                 <table id="dataTable" class="table table-hover mb-0">
                     <thead>
@@ -48,21 +71,16 @@
                         @foreach($pengeluarans as $pengeluaran)
                         <tr>
                             <td>{{ $loop->index + 1 }}</td>
-                            <td>{{ $pengeluaran->tgl_pengeluaran }}</td>
+                            <td>{{ \Carbon\Carbon::parse($pengeluaran->tgl_pengeluaran)->format('d/m/Y') }}</td>
                             <td>{{ $pengeluaran->kategori->nama_kategori }}</td>
-                            <td>{{ $pengeluaran->jml_keluar }}</td>
+                            <td>{{ formatRupiah($pengeluaran->jml_keluar) }}</td>
                             <td>{{ $pengeluaran->catatan }}</td>
                             <td class="text-center">
                                 <button class="btn btn-primary btn-sm view-button" data-url="{{ route('viewPengeluaran', ['id_pengeluaran'=>$pengeluaran->id_pengeluaran]) }}" data-toggle="modal" data-target="#viewPengeluaranModal{{ $pengeluaran->id_pengeluaran }}">
                                     <i class="fa fa-eye"></i> Lihat
                                 </button>
-                                <a data-url="{{ route('editPengeluaran', ['id_pengeluaran'=>$pengeluaran->id_pengeluaran]) }}" 
-                                class="btn btn-warning btn-sm edit-button" role="button" data-toggle="modal" 
-                                data-target="#editPengeluaranModal{{ $pengeluaran->id_pengeluaran }}">Edit</a>
-                                <a onclick="confirmDelete(this, '{{ $pengeluaran->id_pengeluaran }}')" 
-                                href="{{ route('deletePengeluaran', $pengeluaran->id_pengeluaran) }}" 
-                                data-nama="{{ $pengeluaran->kategori->nama_kategori }}" 
-                                class="btn btn-danger btn-sm ml-1 text-white delete-button" role="button">Hapus</a>
+                                <a data-url="{{ route('editPengeluaran', ['id_pengeluaran'=>$pengeluaran->id_pengeluaran]) }}" class="btn btn-warning btn-sm edit-button" role="button" data-toggle="modal" data-target="#editPengeluaranModal{{ $pengeluaran->id_pengeluaran }}">Edit</a>
+                                <a onclick="confirmDelete(this, '{{ $pengeluaran->id_pengeluaran }}')" href="{{ route('deletePengeluaran', $pengeluaran->id_pengeluaran) }}" data-nama="{{ $pengeluaran->kategori->nama_kategori }}" class="btn btn-danger btn-sm ml-1 text-white delete-button" role="button">Hapus</a>
                             </td>
                         </tr>
                         @endforeach
@@ -119,7 +137,7 @@
                                             </option>
                                             @endforeach
                                         </select>
-                                    </div>    
+                                    </div>
 
                                     <!-- Input untuk jumlah keluar -->
                                     <div class="form-group">
@@ -270,6 +288,8 @@
                 var url = $(this).data("url");
                 $("#viewPengeluaranModal").modal("show");
             });
+            // Format Rupiah
+            $('.rupiah').mask('000.000.000.000', {reverse: true});
         });
     </script>
     @endsection
