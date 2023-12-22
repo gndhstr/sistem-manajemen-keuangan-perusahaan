@@ -143,6 +143,7 @@ Route::prefix('karyawan')->middleware("auth", "role:4")->group(function () {
     Route::get('/pengeluaran/{pengeluaran}/edit', 'PengeluaranController@edit')->name('editPengeluaran');
     Route::post('/pengeluaran/{pengeluaran}/edit', 'PengeluaranController@update')->name('updatePengeluaran');
     Route::get('/pengeluaran/{pengeluaran}/delete', 'PengeluaranController@destroy')->name('deletePengeluaran');
+    Route::get("/pengeluaran/cetak","PengeluaranController@cetak")->name("cetakPengeluaran");
     Route::get('/view-pengeluaran/{id}', 'PengeleuaranController@viewPemasukan')->name('viewPengeluaran');
 });
 
