@@ -1,3 +1,9 @@
+@php
+function formatRupiah($angka){
+$rupiah = "Rp. " . number_format($angka,0,',','.');
+return $rupiah;
+}
+@endphp
 @extends('karyawan.layouts.master')
 
 @section('addJavascript')
@@ -31,7 +37,7 @@
                         <div class="info-box-content">
                             <span class="info-box-text">Saldo</span>
                             <span class="info-box-number">
-                                <h2>{{ $saldo }},-</h2>
+                                <h2>{{ formatRupiah($saldo) }},-</h2>
                             </span>
                         </div>
                     </div>
@@ -41,7 +47,7 @@
                         <div class="info-box-content">
                             <span class="info-box-text">Total Pemasukan</span>
                             <span class="info-box-number">
-                                <h2>{{ $totalMasuk }},-</h2>
+                                <h2>{{ formatRupiah($totalMasuk) }},-</h2>
                             </span>
                         </div>
                     </div>
@@ -51,7 +57,7 @@
                         <div class="info-box-content">
                             <span class="info-box-text">Total Pengeluaran</span>
                             <span class="info-box-number">
-                                <h2>{{ $totalKeluar }},-</h2>
+                                <h2>{{ formatRupiah($totalKeluar) }},-</h2>
                             </span>
                         </div>
                     </div>
@@ -103,6 +109,12 @@
             aspectRatio: 4.9 // Sesuaikan dengan angka yang sesuai dengan kebutuhan tinggi grafik
         }
     });
+</script>
+<script>
+    $(function() {
+        // Format Rupiah
+        $('.rupiah').mask('000.000.000.000', {reverse: true});
+    });    
 </script>
 @endsection
 
