@@ -37,6 +37,7 @@ return $rupiah;
         <div class="card">
             <div class="card-header text-right">
                 <a href="{{ route('createPengeluaran') }}" class="btn btn-primary" role="button" data-toggle="modal" data-target="#tambahPengeluaranModal">Tambah Data</a>
+                <a href="{{ route('cetakPengeluaran', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" class="btn btn-success mx-1" role="button">Export PDF <i class="fa fa-file-pdf"></i></a>
             </div>
             <div class="card-body">
                 <form method="get" action="{{ route('daftarPengeluaran') }}" class="mb-3">

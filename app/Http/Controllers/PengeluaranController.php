@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\tbl_pengeluaran;
 use App\tbl_kategori;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class PengeluaranController extends Controller
@@ -15,14 +18,48 @@ class PengeluaranController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $tampil)
     {
         $pengeluarans = tbl_pengeluaran::with('kategori')->where('status', '1')->get();
         $kategori = tbl_kategori::all();
-
+        $startDate = $tampil->input('start_date', now()->subMonth()->startOfDay());
+        $endDate = $tampil->input('end_date', now()->endOfDay());
+    
+        $pengeluarans = tbl_pengeluaran::with('kategori')
+            ->where('status', '1')
+            ->whereBetween('tgl_pengeluaran', [$startDate, $endDate])
+            ->get();
+            // dd($startDate, $endDate);
         return view('pengeluaran.index', compact('pengeluarans','kategori'));
     }
+        //cetak
+        public function cetak(Request $cetak)
+        {
+            // $pengeluarans = tbl_pengeluaran::with('kategori')->where('status', '1')->get();
+            $kategori = tbl_kategori::all();
+            //filter tanggal
+            $startDate = $cetak->input('start_date', now()->subMonth()->startOfDay());
+            $endDate = $cetak->input('end_date', now()->endOfDay());
+        
+            $pengeluarans = tbl_pengeluaran::with('kategori')
+                ->where('status', '1')
+                ->whereBetween('tgl_pengeluaran', [$startDate, $endDate])
+                ->orderBy('tgl_pengeluaran')
+                ->get();
+            
+            // inisialisasi
+            $options = new Options();
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isPhpEnabled', true);
+            $pdf = new Dompdf($options);
+            
+            $view = View::make('pengeluaran.cetak', compact('pengeluarans', 'kategori','startDate', 'endDate'))->render();
+            $pdf->loadHtml($view);
 
+            $pdf->render();
+            return $pdf->stream('Data Pengeluaran.pdf');
+        }
+    // 
     /**
      * Show the form for creating a new resource.
      *
