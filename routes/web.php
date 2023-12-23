@@ -92,6 +92,9 @@ Route::prefix('direktur')->middleware("auth", "role:2")->group(function () {
 
     Route::get('/cashflow/{id}/data', 'DirekturController@cashflowDivisi')->name('cashflowDivisi');    
     // Route::get('/karyawan/{id}', 'DirekturController@karyawan');
+
+    //cetak
+    Route::get("/cashflow/karyawan/cetak","DirekturController@mutasiKaryawanCetak")->name("cetakMutasiKaryawanDirektur");
 });
 
 Route::prefix('manajer')->middleware("auth", "role:3")->group(function () {

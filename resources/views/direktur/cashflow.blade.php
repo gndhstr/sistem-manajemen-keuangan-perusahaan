@@ -204,6 +204,7 @@
                         </table>
                     </div>
                 </div>
+
                 {{-- Modal mutasi karyawan --}}
                 @foreach ($users as $user)
                     <div class="modal fade" id="karyawan-{{ $user->id }}" tabindex="-1" role="dialog"
@@ -218,6 +219,28 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
+                                    <div class="row d-flex justify-content-between">
+                                        <form method="get" action="{{ route('daftarPemasukan') }}">
+                                            <div class="d-flex align-items-md-end">
+                                                <div class="col">
+                                                    <label for="start_date">Start Date:</label>
+                                                    <input type="date" name="start_date" id="start_date" class="form-control"
+                                                        value="{{ request('start_date') }}">
+                                                </div>
+                                                <div class="col">
+                                                    <label for="end_date">End Date:</label>
+                                                    <input type="date" name="end_date" id="end_date" class="form-control"
+                                                        value="{{ request('end_date') }}">
+                                                </div>
+                                                <div class="col">
+                                                    <button type="submit" class="btn btn-primary align-self-end">Filter</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <a href="{{ route('cetakMutasiKaryawanDirektur', ['start_date' => request('start_date'), 'end_date' => request('end_date'), 'id' => $user->id]) }}"
+                                            class="btn btn-success mb-1 mt-0 align-self-baseline" role="button">Export PDF<i
+                                                class="fa fa-file-pdf"></i></a>
+                                    </div>
                                     <div class="card-body">
                                         <table class="table table-hover mb-0" id="tabelModal">
                                             <thead>
@@ -243,7 +266,7 @@
                                                     <tr>
                                                         <td class="text-center">{{ $loop->index + 1 }}</td>
                                                         <td class="text-center">
-                                                            {{ isset($mutasi->tgl_pemasukan) ? $mutasi->tgl_pemasukan : $mutasi->tgl_pengeluaran }}
+                                                            {{ isset($mutasi->tgl_pemasukan) ? (new DateTime($mutasi->tgl_pemasukan))->format('d-m-Y') : (new DateTime($mutasi->tgl_pengeluaran))->format('d-m-Y') }}
                                                         </td>
                                                         <td class="text-center">
                                                             <small class="text-success mr-1">
@@ -283,7 +306,7 @@
                     </div>
                 @endforeach
 
-                {{-- modal lihat pemasukan --}}
+                {{-- modal lihat view pemasukan --}}
                 @foreach ($pemasukans as $pemasukan)
                     <div class="modal fade" id="viewPemasukanModal{{ $pemasukan->id_pemasukan }}" tabindex="-1"
                         role="dialog" aria-labelledby="viewPemasukanModalLabel" aria-hidden="true">
@@ -432,6 +455,15 @@
                 paging: true,
                 scrollCollapse: true,
                 scrollY: '350px',
+            });
+
+            $("#tabelModal").DataTable({
+                "pageLength": 5,
+                "lengthChange": false,
+                columnDefs: [{
+                    orderable: false,
+                    targets: [1, 2, 3, 4, 5],
+                }],
             });
         });
     </script>
