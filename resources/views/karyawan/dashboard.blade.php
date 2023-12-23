@@ -1,10 +1,9 @@
-@php
-function formatRupiah($angka){
-$rupiah = "Rp. " . number_format($angka,0,',','.');
-return $rupiah;
-}
-@endphp
 @extends('karyawan.layouts.master')
+
+@section('addCss')
+    <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
+    <!-- Add other CSS styles for your dashboard -->
+@endsection
 
 @section('addJavascript')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-...." crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -35,7 +34,7 @@ return $rupiah;
                     <div class="small-box bg-info">
                         <div class="inner">
                             <h3>Saldo</h3>
-                            <p>{{ formatRupiah($saldo) }},-</p>
+                            <p>Rp.{{ number_format($saldo, 2, ',', '.') }}</p>
                         </div>
                         <div class="icon">
                             <i class="fa fa-wallet"></i>
@@ -46,7 +45,7 @@ return $rupiah;
                     <div class="small-box bg-success">
                         <div class="inner">
                             <h3>Total Pemasukan</h3>
-                            <p>{{ formatRupiah($totalMasuk) }},-</p>
+                            <p>Rp.{{ number_format($totalMasuk, 2, ',', '.') }}</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-arrow-up"></i>
@@ -60,7 +59,7 @@ return $rupiah;
                     <div class="small-box bg-danger">
                         <div class="inner">
                             <h3>Total Pengeluaran</h3>
-                            <p>{{ formatRupiah($totalKeluar) }},-</p>
+                            <p>Rp.{{ number_format($totalKeluar, 2, ',', '.') }}</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-arrow-down"></i>
@@ -72,12 +71,12 @@ return $rupiah;
                 </div>
             </div>
             <div class="col-md-8">
-                {{-- card grafik --}}
+            {{-- card grafik --}}
                 <div class="card">
                     <div class="card-header border-0">
-                        <h3 class="card-title text-bold text-lg text-center">Grafik Keuangan Karyawan</h3>
+                        <h3 class="card-title text-bold text-lg text-center">Grafik Keuangan Karyawan ({{ $tahun }})</h3>
                         <div class="card-tools">
-                            <span class="badge badge-info">tanggal</span>
+                            <span class="badge badge-info">{{ date('Y') }}</span>
                         </div>
                     </div>
                     <div class="card-body">
@@ -92,22 +91,22 @@ return $rupiah;
                             <div class="card-body pt-3">
                                 <div class="d-flex">
                                     <p class="d-flex flex-column">
-                                        <span class="text-bold text-lg">Pemasukan Karyawan Seiring Waktu</span>
+                                        <span class="text-bold text-lg">Rp.{{ number_format($pemasukanBulanan, 2, ',', '.') }}</span>
                                         <span class="text-sm">Pemasukan Karyawan Seiring Waktu</span>
                                     </p>
                                     <p class="ml-auto d-flex flex-column text-right">
-                                        <span class="">
-                                            <i class=""></i>
-                                            Perbandingan %
+                                        <span class="{{ $perbandinganPemasukanPengeluaranBulanan > 0 ? 'text-success' : 'text-danger' }}">
+                                            <i class="fa {{ $perbandinganPemasukanPengeluaranBulanan > 0 ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i>
+                                            {{ number_format($perbandinganPemasukanPengeluaranBulanan, 2) }}
                                         </span>
                                         <span class="text-muted">Di Bulan ini</span>
-                                        <span class="text-muted">Diisi dengan mingguan</span>
+                                        <span class="text-muted">{{ $tanggalBulanan }}</span>
                                     </p>
                                 </div>
                                 <!-- /.d-flex -->
 
                                 <div class="position-relative mb-4">
-                                    <canvas id="sales-chart" height="200"></canvas>
+                                    <canvas id="sales-chart" height="140"></canvas>
                                 </div>
 
                                 <div class="d-flex flex-row justify-content-end">
@@ -127,53 +126,141 @@ return $rupiah;
         </div>
     </div>
 </div><!-- /.content -->
+@endsection
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Pemasukan', 'Pengeluaran'],
-            datasets: [{
-                label: 'Total',
-                data: [{
-                    {
-                        $totalMasuk
-                    }
-                }, {
-                    {
-                        $totalKeluar
-                    }
-                }],
-                backgroundColor: [
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(255, 99, 132, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(255, 99, 132, 1)',
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+@section('addJavascript')
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/Chart.js') }}"></script>
+    <script>
+        /* global Chart:false */
+
+        $(function() {
+            'use strict'
+
+            var ticksStyle = {
+                fontColor: '#495057',
+                fontStyle: 'bold'
+            }
+
+            var mode = 'index'
+            var intersect = true
+
+            var pemasukanHarians = @json($pemasukanHarians);
+            pemasukanHarians.forEach((element, index) => {
+                pemasukanHarians.push(element);
+            });
+
+            var pengeluaranHarians = @json($pengeluaranHarians);
+            pengeluaranHarians.forEach((element, index) => {
+                pengeluaranHarians.push(element);
+            });
+
+            var pemasukanBulanans = @json($pemasukanBulanans);
+            for (const key in pemasukanBulanans) {
+                if (pemasukanBulanans.hasOwnProperty(key)) {
+                    const element = pemasukanBulanans[key];
                 }
-            },
-            maintainAspectRatio: true,
-            aspectRatio: 1.5
-        }
-    });
-</script>
-<script>
-    $(function() {
-        // Format Rupiah
-        $('.rupiah').mask('000.000.000.000', {
-            reverse: true
-        });
-    });
-</script>
+            }
+
+            var pengeluaranBulanans = @json($pengeluaranBulanans);
+            for (const key in pengeluaranBulanans) {
+                if (pengeluaranBulanans.hasOwnProperty(key)) {
+                    const element = pengeluaranBulanans[key];
+                }
+            }
+
+            var tanggalHarians = @json($tanggalHarians);
+            for (const key in tanggalHarians) {
+                if (tanggalHarians.hasOwnProperty(key)) {
+                    const element = tanggalHarians[key];
+                }
+            }
+
+            var tanggalBulanans = @json($tanggalBulanans);
+            for (const key in tanggalBulanans) {
+                if (tanggalBulanans.hasOwnProperty(key)) {
+                    const element = tanggalBulanans[key];
+                }
+            }
+
+            // eslint-disable-next-line no-unused-vars
+
+            var $salesChart = $('#sales-chart')
+            // eslint-disable-next-line no-unused-vars
+            var salesChart = new Chart($salesChart, {
+                type: 'bar',
+                data: {
+                    labels: [tanggalBulanans[6], tanggalBulanans[5], tanggalBulanans[4], tanggalBulanans[3],
+                        tanggalBulanans[2], tanggalBulanans[1], tanggalBulanans[0]
+                    ],
+                    datasets: [{
+                            backgroundColor: '#007bff',
+                            borderColor: '#007bff',
+                            data: [pemasukanBulanans[6], pemasukanBulanans[5], pemasukanBulanans[4],
+                                pemasukanBulanans[3], pemasukanBulanans[2], pemasukanBulanans[1],
+                                pemasukanBulanans[0]
+                            ]
+                        },
+                        {
+                            backgroundColor: '#ced4da',
+                            borderColor: '#ced4da',
+                            data: [pengeluaranBulanans[6], pengeluaranBulanans[5], pengeluaranBulanans[
+                                    4], pengeluaranBulanans[3], pengeluaranBulanans[2],
+                                pengeluaranBulanans[1], pengeluaranBulanans[0]
+                            ]
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    hover: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            // display: false,
+                            gridLines: {
+                                display: true,
+                                lineWidth: '4px',
+                                color: 'rgba(0, 0, 0, .2)',
+                                zeroLineColor: 'transparent'
+                            },
+                            ticks: $.extend({
+                                beginAtZero: true,
+
+                                callback: function(value) {
+                                    if (value >= 1000) {
+                                        value /= 1000;
+                                        value += 'k';
+                                        // value = value.toLocaleString("id-ID");
+                                    }
+
+                                    return 'Rp. ' + value
+                                }
+                            }, ticksStyle)
+                        }],
+                        xAxes: [{
+                            display: true,
+                            gridLines: {
+                                display: true
+                            },
+                            ticks: ticksStyle
+                        }]
+                    }
+                }
+            })
+        })
+
+
+        // lgtm [js/unused-local-variable]
+    </script>
 @endsection
