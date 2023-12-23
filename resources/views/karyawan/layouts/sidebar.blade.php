@@ -43,6 +43,24 @@
                         <p>Pengeluaran</p>
                     </a>
                 </li>
+                
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fa fa-gear"></i>
+                        <p>
+                            Setting
+                            <i class="right fa fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{route('indexProfile')}}" class="nav-link">
+                                <i class="fa fa-sliders nav-icon"></i>
+                                <p>Edit Profil</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
                 <li class="nav-item">
                     <form id="logout-form" action="{{route('logout')}}" method="post">
