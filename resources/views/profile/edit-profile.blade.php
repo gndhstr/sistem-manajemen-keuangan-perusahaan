@@ -44,7 +44,7 @@
                                 <div class="row">
                                     <div class="col-md-3 text-center">
                                         <img src="{{ asset('storage/' . Auth()->user()->foto_profil) }}" alt=""
-                                            class="d-block ui-w-80" height="80">
+                                            class="d-block ui-w-80 ml-2" height="80">
                                     </div>
                                     <div class="col-md-6 d-flex align-items-center">
                                         <label class="btn btn-outline-primary">
@@ -54,7 +54,7 @@
                                         </label>
                                         <button type="reset" class="btn btn-default md-btn-flat ml-2">Reset</button>
                                     </div>
-                                    <div class="text-light small ml-3">
+                                    <div class="text-light small ml-3 mt-1">Rasio ukuran 1 : 1 <br>
                                         Perubahan foto saat sudah klik simpan <br>Format JPG, JPEG, dan PNG dengan
                                         maksimal 2Mb
                                     </div>
@@ -144,7 +144,26 @@
 @endsection
 @section("addJavascript")
 <script src="https://kit.fontawesome.com/e2b0e4079e.js" crossorigin="anonymous"></script>
+<script src="{{asset('js/sweetalert.min.js')}}"></script>
 <script>
+    //ubah ukuran text alert succes
+    var successMessage = "{{ session('success') }}";
+    if (successMessage) {
+        Swal.fire({
+            // title: "Sukses",
+            text: successMessage,
+            icon: "success",
+            confirmButtonClass: 'btn btn-primary',
+            confirmButtonText: 'OK',
+            timer: 5000,
+            customClass: {
+                // title: 'swal-title',
+                content: 'swal-text',
+            }
+        });
+    }
+
+    //menampilkan text pada eye
     $(document).ready(function () {
         $(".toggle-password").click(function () {
             var target = $("#" + $(this).data("target"));
@@ -155,6 +174,6 @@
             $(this).find("i").toggleClass("fa-eye fa-eye-slash");
         });
     });
-</script>
 
+</script>
 @endsection
