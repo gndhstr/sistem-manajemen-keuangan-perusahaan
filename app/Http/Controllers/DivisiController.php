@@ -42,7 +42,7 @@ class DivisiController extends Controller
         $divisi = new tbl_divisi($validasiData);
         $divisi->save();
         
-        return redirect(route("daftarDivisi"))->with("success","Divisi $divisi->nama_divisi berhasil ditambah");
+        return redirect(route("daftarDivisi"))->with("success","Divisi $divisi->nama_divisi berhasil diubah");
 
     }
 

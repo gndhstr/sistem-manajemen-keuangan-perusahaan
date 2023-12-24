@@ -151,7 +151,7 @@
 			var url = $(button).data("url");
 			var nama =$(button).data("nama");
 			swal({
-				"title" 	 : "Konfirmasi Hapus",
+				"text" 	 : "Konfirmasi Hapus",
 				"text" 		 : "Apakah anda yakin menghapus Divisi "+ nama + "?",
 				"icon"		 : "warning",
 				"dangerMode" : true,

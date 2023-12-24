@@ -30,8 +30,9 @@ class PemasukanController extends Controller
             ->where('status', '1')
             ->whereBetween('tgl_pemasukan', [$startDate, $endDate])
             ->get();
+        $total =$pemasukans->sum("jml_masuk");
             // dd($startDate, $endDate);
-        return view('pemasukan.index', compact('pemasukans', 'kategori'));
+        return view('pemasukan.index', compact('pemasukans', 'kategori',"total"));
     }
 
     //cetak
@@ -48,6 +49,7 @@ class PemasukanController extends Controller
                 ->whereBetween('tgl_pemasukan', [$startDate, $endDate])
                 ->orderBy('tgl_pemasukan')
                 ->get();
+                $total =$pemasukans->sum("jml_masuk");
             
             // inisialisasi
             $options = new Options();
@@ -55,7 +57,7 @@ class PemasukanController extends Controller
             $options->set('isPhpEnabled', true);
             $pdf = new Dompdf($options);
             
-            $view = View::make('pemasukan.cetak', compact('pemasukans', 'kategori','startDate', 'endDate'))->render();
+            $view = View::make('pemasukan.cetak', compact('pemasukans', 'kategori','startDate', 'endDate',"total"))->render();
             $pdf->loadHtml($view);
 
             $pdf->render();

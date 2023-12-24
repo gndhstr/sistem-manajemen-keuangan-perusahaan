@@ -128,6 +128,7 @@
                             </div>
                             <div class="text-right mb-5 mt-3">
                                 <button type="submit" class="btn btn-primary">Save changes</button>&nbsp;
+                                <a href="{{ route('indexProfile') }}" class="btn btn-default">Batal</a>
                             </div>
                         </form>
                     </div>

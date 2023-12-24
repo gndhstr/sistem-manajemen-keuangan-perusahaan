@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Pegawai</title>
-	<!-- <link rel="stylesheet" href="{{asset('css/cetak-pdf.css')}}"> -->
-	<style>
-		body {
+    <title>DATA PEMASUKAN </title>
+    <!-- <link rel="stylesheet" href="{{asset('css/cetak-pdf.css')}}"> -->
+    <style>
+        body {
             font-family: Arial, sans-serif;
         }
 
@@ -16,11 +17,12 @@
             margin-bottom: 20px;
         }
 
-        th, td {
-            border: 1px solid #dddddd ;
+        th,
+        td {
+            border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
-			text-align: center;
+            text-align: center;
         }
 
         th {
@@ -32,17 +34,17 @@
             margin-bottom: 20px;
         }
 
-	</style>
+    </style>
 </head>
+
 <body>
-<h3>DATA PEMASUKAN KARYAWAN <br>BULAN {{ strtoupper(\Carbon\Carbon::parse($startDate)->formatLocalized('%B')) }} - {{ strtoupper(\Carbon\Carbon::parse($endDate)->formatLocalized('%B')) }} <br>2023</h3>
-
-
-        
+    <h3>DATA PEMASUKAN KARYAWAN</h3>
+    <h3>PERIODE {{\Carbon\Carbon::parse($startDate)->locale('id')->isoFormat('D MMMM Y') }} -
+        {{ \Carbon\Carbon::parse($endDate)->locale('id')->isoFormat('D MMMM Y') }} </h3>
     <table>
         <thead>
             <tr>
-                <th >No</th>
+                <th>No</th>
                 <th>Tanggal Pemasukan</th>
                 <th>Nama Kategori</th>
                 <th>Jumlah</th>
@@ -51,15 +53,21 @@
         </thead>
         <tbody>
             @foreach ($pemasukans as $pemasukan)
-                <tr>
-                    <td>{{ $loop->index + 1 }}</td>
-                    <td>{{ $pemasukan->tgl_pemasukan }}</td>
-                    <td>{{ $pemasukan->kategori->nama_kategori }}</td>
-                    <td>{{ $pemasukan->jml_masuk }}</td>
-                    <td>{{ $pemasukan->catatan }}</td>
-                </tr>
+            <tr>
+                <td>{{ $loop->index + 1 }}</td>
+                <td>{{ \Carbon\Carbon::parse($pemasukan->tgl_pemasukan)->locale('id')->isoFormat('D MMMM Y') }}</td>
+                <td>{{ $pemasukan->kategori->nama_kategori }}</td>
+                <td>{{  "Rp ".number_format($pemasukan->jml_masuk, 0, ",", "." )  }}</td>
+                <td>{{ $pemasukan->catatan }}</td>
+            </tr>
             @endforeach
+            <tr>
+                <td colspan="3">Jumlah</td>
+                <td>{{"Rp ".number_format($total, 0, ",", "." ) }}</td>
+                <td></td>
+            </tr>
         </tbody>
     </table>
 </body>
+
 </html>

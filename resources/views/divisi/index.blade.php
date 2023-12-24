@@ -10,7 +10,7 @@
 	<div class="container-fluid">
 		<div class="row mb-2">
 			<div class="col-sm-6">
-				<h1 class="m-0 text-dark">Data DIvisi</h1>
+				<h1 class="m-0 text-dark">Data Divisi</h1>
 			</div><!-- /.col -->
 			<div class="col-sm-6">
 				<ol class="breadcrumb float-sm-right">
@@ -56,12 +56,13 @@
 			</div>
 		</div>
 	</div><!-- /.container-fluid -->
+	
 	<!-- Modal Tambah Data -->
 	<div class="modal fade" id="tambahData" tabindex="-1" role="dialog" aria-labelledby="tambahDataModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h5 class="modal-title" id="tambahDataModalLabel">Tambah Data Kategori</h5>
+					<h5 class="modal-title" id="tambahDataModalLabel">Tambah Data Divisi</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
@@ -75,7 +76,6 @@
 								<input type="text" name="nama_divisi" id="nama_divisi" class="form-control" required placeholder="Masukkan Nama Divisi">
 							</div>
 							<div class="text-right">
-							<a href="{{route('daftarDivisi')}}" class="btn btn-danger mr-1">Batal</a>
 								<button type="submit" class="btn btn-success">Simpan</button>
 							</div>
 					</form>
@@ -88,7 +88,7 @@
 
 	<!-- Modal Edit Data -->
 	@foreach($divisis as $divisi)
-		<div class="modal fade" id="editData{{ $divisi->id_divisi }}" tabindex="-1" role="dialog" aria-labelledby="editDataModalLabel" aria-hidden="true">
+		<div class="modal fade" id="editData{{ $divisi->id_divisi }}" tabindex="-1" role="dialog" aria-labelledby="editDataModalLabel" aria-hidden="true">s
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -106,7 +106,6 @@
 								<input type="text" name="nama_divisi" id="nama_divisi" class="form-control" required="required" placeholder="Masukkan Nama Divisi" value="{{$divisi->nama_divisi}}">
 							</div>
 							<div class="text-right">
-								<a href="{{route('daftarDivisi')}}" class="btn btn-danger">Batal</a>
 								<button type="submit" class="btn btn-success">Simpan</button>
 							</div>
 						</form>
@@ -128,7 +127,7 @@
 				var url = $(button).data("url");
 				var nama =$(button).data("nama");
 				swal({
-					"title" 	 : "Konfirmasi Hapus",
+					"text" 	 : "Konfirmasi Hapus",
 					"text" 		 : "Apakah anda yakin menghapus Divisi "+ nama + "?",
 					"icon"		 : "warning",
 					"dangermode" : true,

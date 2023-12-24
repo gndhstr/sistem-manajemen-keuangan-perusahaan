@@ -68,9 +68,9 @@
                         @foreach($pemasukans as $pemasukan)
                         <tr>
                             <td>{{ $loop->index + 1 }}</td>
-                            <td>{{ $pemasukan->tgl_pemasukan }}</td>
+                            <td>{{ \Carbon\Carbon::parse($pemasukan->tgl_pemasukan)->locale('id')->isoFormat('D MMMM Y') }}</td>
                             <td>{{ $pemasukan->kategori->nama_kategori }}</td>
-                            <td>{{ $pemasukan->jml_masuk }}</td>
+                            <td>{{"Rp ".number_format($pemasukan->jml_masuk, 0, ",", "." ) }}</td>
                             <td>{{ $pemasukan->catatan }}</td>
                             <td class="text-center">
                                 <button class="btn btn-primary btn-sm view-button"
@@ -89,6 +89,10 @@
                         </tr>
                         @endforeach
                     </tbody>
+                    <tr >
+                        <td colspan="3" class="text-center">Jumlah</td>
+                        <td colspan="2">{{"Rp ".number_format($total, 0, ",", "." ) }}</td>
+                    </tr>
                 </table>
 
                 <!-- Modal untuk Menampilkan Bukti Pemasukan -->
