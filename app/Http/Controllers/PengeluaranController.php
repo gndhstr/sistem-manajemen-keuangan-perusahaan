@@ -29,8 +29,9 @@ class PengeluaranController extends Controller
             ->where('status', '1')
             ->whereBetween('tgl_pengeluaran', [$startDate, $endDate])
             ->get();
+            $total =$pengeluarans->sum("jml_keluar");
             // dd($startDate, $endDate);
-        return view('pengeluaran.index', compact('pengeluarans','kategori'));
+        return view('pengeluaran.index', compact('pengeluarans','kategori',"total"));
     }
         //cetak
         public function cetak(Request $cetak)
@@ -46,6 +47,7 @@ class PengeluaranController extends Controller
                 ->whereBetween('tgl_pengeluaran', [$startDate, $endDate])
                 ->orderBy('tgl_pengeluaran')
                 ->get();
+            $total =$pengeluarans->sum("jml_keluar");
             
             // inisialisasi
             $options = new Options();
@@ -53,7 +55,7 @@ class PengeluaranController extends Controller
             $options->set('isPhpEnabled', true);
             $pdf = new Dompdf($options);
             
-            $view = View::make('pengeluaran.cetak', compact('pengeluarans', 'kategori','startDate', 'endDate'))->render();
+            $view = View::make('pengeluaran.cetak', compact('pengeluarans', 'kategori','startDate', 'endDate',"total"))->render();
             $pdf->loadHtml($view);
 
             $pdf->render();

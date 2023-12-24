@@ -72,9 +72,6 @@ return $rupiah;
                         @foreach($pemasukans as $pemasukan)
                         <tr>
                             <td>{{ $loop->index + 1 }}</td>
-                            <td>{{ \Carbon\Carbon::parse($pemasukan->tgl_pemasukan)->locale('id')->isoFormat('D MMMM Y') }}</td>
-                            <td>{{ $pemasukan->kategori->nama_kategori }}</td>
-                            <td>{{"Rp ".number_format($pemasukan->jml_masuk, 0, ",", "." ) }}</td>
                             <td>{{ \Carbon\Carbon::parse($pemasukan->tgl_pemasukan)->format('d/m/Y') }}</td>
                             <td>{{ $pemasukan->kategori->nama_kategori }}</td>
                             <td>{{ formatRupiah($pemasukan->jml_masuk) }}</td>
@@ -89,10 +86,6 @@ return $rupiah;
                         </tr>
                         @endforeach
                     </tbody>
-                    <tr >
-                        <td colspan="3" class="text-center">Jumlah</td>
-                        <td colspan="2">{{"Rp ".number_format($total, 0, ",", "." ) }}</td>
-                    </tr>
                 </table>
 
                 <!-- Modal untuk Menampilkan Bukti Pemasukan -->
