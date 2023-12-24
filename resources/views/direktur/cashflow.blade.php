@@ -128,8 +128,7 @@
                                     <th class="col-1">No.</th>
                                     <th>Nama</th>
                                     <th>Total Pemasukan</th>
-                                    <th>Total Pengeluaran</th>
-                                    <th>Lihat</th>
+                                    <th>Total Pengeluaran</th>                                    
                                 </tr>
                             </thead>
                             <tbody id="karyawan">
@@ -152,7 +151,7 @@
                                     <th>Karyawan</th>
                                     <th>Divisi</th>
                                     <th>Kategori</th>
-                                    <th>Jumlah</th>
+                                    <th>Nominal</th>
                                     <th>Tanggal</th>
                                     <th>Lihat</th>
                                 </tr>
@@ -241,64 +240,75 @@
                                             class="btn btn-success mb-1 mt-0 align-self-baseline" role="button">Export PDF<i
                                                 class="fa fa-file-pdf"></i></a>
                                     </div>
-                                    <div class="card-body">
-                                        <table class="table table-hover mb-0" id="tabelModal">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">No</th>
-                                                    <th class="text-center">Tanggal</th>
-                                                    <th class="text-center">Pemasukan</th>
-                                                    <th class="text-center">Pengeluaran</th>
-                                                    <th class="text-center">Catatan</th>
-                                                    <th class="text-center">Bukti</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @php
-                                                    $mutasis = $pemasukans
-                                                        ->concat($pengeluarans)
-                                                        ->where('id_user', $user->id)
-                                                        ->sortByDesc(function ($mutasi) {
-                                                            return isset($mutasi->tgl_pemasukan) ? $mutasi->tgl_pemasukan : $mutasi->tgl_pengeluaran;
-                                                        });
-                                                @endphp
-                                                @forelse ($mutasis as $mutasi)
+                                    <div class="card-body ">
+                                        <div class="table-responsive d-lg-table">
+                                            <table class="table table-hover mb-0" id="tabelModal">
+                                                <thead>
                                                     <tr>
-                                                        <td class="text-center">{{ $loop->index + 1 }}</td>
-                                                        <td class="text-center">
-                                                            {{ isset($mutasi->tgl_pemasukan) ? (new DateTime($mutasi->tgl_pemasukan))->format('d-m-Y') : (new DateTime($mutasi->tgl_pengeluaran))->format('d-m-Y') }}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <small class="text-success mr-1">
-                                                                <i class="fa fa-arrow-up"></i>
-                                                            </small>
-                                                            Rp.
-                                                            {{ number_format(isset($mutasi->jml_masuk) ? floatval($mutasi->jml_masuk) : 0, 0, ',', '.') }}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <small class="text-danger mr-1">
-                                                                <i class="fa fa-arrow-down"></i>
-                                                            </small>
-                                                            Rp.
-                                                            {{ number_format(isset($mutasi->jml_keluar) ? floatval($mutasi->jml_keluar) : 0, 0, ',', '.') }}
-                                                        </td>
-                                                        <td class="text-center">{{ $mutasi->catatan }}</td>
-                                                        <td class="text-center">
-                                                            <button class="btn btn-primary btn-sm view-button"
-                                                                data-url="{{ route('viewBukti', ['id_pemasukan' => $mutasi->id_pemasukan]) }}"
-                                                                data-dismiss="modal" data-toggle="modal"
-                                                                data-target="#viewPemasukanModal{{ $mutasi->id_pemasukan }}">
-                                                                <i class="fa fa-eye"></i>
-                                                            </button>
-                                                        </td>
+                                                        <th class="text-center">No</th>
+                                                        <th class="text-center">Tanggal</th>
+                                                        <th class="text-center">Pemasukan</th>
+                                                        <th class="text-center">Pengeluaran</th>
+                                                        <th class="text-center">Catatan</th>
+                                                        <th class="text-center">Bukti</th>
                                                     </tr>
-                                                @empty
-                                                    <tr>
-                                                        <td colspan="4" class="text-center">No data available</td>
-                                                    </tr>
-                                                @endforelse
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    @php
+                                                        $mutasis = $pemasukans
+                                                            ->concat($pengeluarans)
+                                                            ->where('id_user', $user->id)
+                                                            ->sortByDesc(function ($mutasi) {
+                                                                return isset($mutasi->tgl_pemasukan) ? $mutasi->tgl_pemasukan : $mutasi->tgl_pengeluaran;
+                                                            });
+                                                    @endphp                                                    
+                                                    @forelse ($mutasis as $mutasi)                                                    
+                                                        <tr>
+                                                            <td class="text-center">{{ $loop->index + 1 }}</td>
+                                                            <td class="text-center">
+                                                                {{ isset($mutasi->tgl_pemasukan) ? (new DateTime($mutasi->tgl_pemasukan))->format('d-m-Y') : (new DateTime($mutasi->tgl_pengeluaran))->format('d-m-Y') }}
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <small class="text-success mr-1">
+                                                                    <i class="fa fa-arrow-up"></i>
+                                                                </small>
+                                                                Rp.
+                                                                {{ number_format(isset($mutasi->jml_masuk) ? floatval($mutasi->jml_masuk) : 0, 0, ',', '.') }}
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <small class="text-danger mr-1">
+                                                                    <i class="fa fa-arrow-down"></i>
+                                                                </small>
+                                                                Rp.
+                                                                {{ number_format(isset($mutasi->jml_keluar) ? floatval($mutasi->jml_keluar) : 0, 0, ',', '.') }}
+                                                            </td>
+                                                            <td class="text-center">{{ $mutasi->catatan }}</td>
+                                                            <td class="text-center">
+                                                                @if ($mutasi->id_pemasukan)    
+                                                                <button class="btn btn-primary btn-sm view-button"
+                                                                    data-url="{{ route('viewBukti', ['id_pemasukan' => $mutasi->id_pemasukan]) }}"
+                                                                    data-dismiss="modal" data-toggle="modal"
+                                                                    data-target="#viewPemasukanModal{{ $mutasi->id_pemasukan }}">
+                                                                    <i class="fa fa-eye"></i>
+                                                                </button>
+                                                                @else
+                                                                <button class="btn btn-primary btn-sm view-button"
+                                                                    data-url="{{ route('viewBukti', ['id_pengeluaran' => $riwayat->id]) }}"
+                                                                    data-dismiss="modal" data-toggle="modal"
+                                                                    data-target="#viewPengeluaranModal{{ $riwayat->id }}">
+                                                                    <i class="fa fa-eye"></i>
+                                                                </button>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @empty
+                                                        <tr>
+                                                            <td colspan="4" class="text-center">No data available</td>
+                                                        </tr>
+                                                    @endforelse
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -321,6 +331,24 @@
                                 <div class="modal-body">
                                     <img src="{{ asset('storage/bukti_pemasukan/' . $pemasukan->bukti_pemasukan) }}"
                                         alt="Bukti Pemasukan" style="max-width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+
+                @foreach($pengeluarans as $pengeluaran)
+                    <div class="modal fade" id="viewPengeluaranModal{{ $pengeluaran->id_pengeluaran }}" tabindex="-1" role="dialog" aria-labelledby="viewPengeluaranModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="viewPengeluaranModalLabel">Bukti Pengeluaran</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="{{ asset('storage/bukti_pengeluaran/' . $pengeluaran->bukti_pengeluaran) }}" alt="Bukti Pengeluaran" style="max-width: 100%;">
                                 </div>
                             </div>
                         </div>
@@ -398,12 +426,7 @@
                                                 <i class="fa fa-arrow-down"></i>
                                             </small>
                                             ${pengeluaran}
-                                        </td>
-                                        <td class="text-center">
-                                            <a href="#" class="text-muted show-divisi">
-                                                <i class="fa fa-eye button-eye"></i>
-                                            </a>
-                                        </td>
+                                        </td>                                        
                                     </tr>
                                 `;
                         });
@@ -415,7 +438,7 @@
                             ],
                             columnDefs: [{
                                 orderable: false,
-                                targets: [1, 2, 3, 4],
+                                targets: [1, 2, 3],
                             }],
                             paging: true,
                             scrollCollapse: true,
@@ -450,7 +473,7 @@
                 ],
                 columnDefs: [{
                     orderable: false,
-                    targets: [1, 2, 3, 4],
+                    targets: [1, 2, 3],
                 }],
                 paging: true,
                 scrollCollapse: true,

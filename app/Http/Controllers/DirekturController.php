@@ -184,7 +184,11 @@ class DirekturController extends Controller
 
     public function cashflow()
     {
-        $divisis =  tbl_divisi::withCount('users')->with([
+        $divisis =  tbl_divisi::withCount([
+            'users' => function ($query) {
+                $query->where('role', 4);
+            }
+        ])->with([
             'pemasukans' => function ($query) {
                 $query->selectRaw('id_divisi, SUM(jml_masuk) as total_pemasukan')->where('status', '1')->groupBy('id_divisi');
             },
@@ -193,6 +197,19 @@ class DirekturController extends Controller
                     ->groupBy('id_divisi');
             },
         ])->get();
+
+        // $divisis =  tbl_divisi::withCount([
+        //     'users' => function ($query) {
+        //         $query->where('role', 4);
+        //     },
+        //     'pemasukans' => function ($query) {
+        //         $query->selectRaw('id_divisi, SUM(jml_masuk) as total_pemasukan')->where('status', '1')->groupBy('id_divisi');
+        //     },
+        //     'pengeluarans' => function ($query) {
+        //         $query->selectRaw('id_divisi, SUM(jml_keluar) as total_pengeluaran')->where('status', '1')
+        //             ->groupBy('id_divisi');
+        //     },
+        // ])->get();
 
         //variabel untuk tabel mutasi
         $pemasukans = tbl_pemasukan::select('id_pemasukan as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_masuk as jumlah', 'tgl_pemasukan as tanggal', 'catatan', 'bukti_pemasukan as bukti', 'status', 'created_at')->where('status', '1')->orderBy('tanggal', 'desc')
