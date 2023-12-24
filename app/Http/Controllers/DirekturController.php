@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\tbl_anggaran;
+use App\User;
+use Carbon\Carbon;
+use Dompdf\Dompdf;
 use App\tbl_divisi;
+use Dompdf\Options;
+use App\tbl_anggaran;
 use App\tbl_pemasukan;
 use App\tbl_pengeluaran;
-use App\User;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class DirekturController extends Controller
 {
@@ -181,7 +184,11 @@ class DirekturController extends Controller
 
     public function cashflow()
     {
-        $divisis =  tbl_divisi::withCount('users')->with([
+        $divisis =  tbl_divisi::withCount([
+            'users' => function ($query) {
+                $query->where('role', 4);
+            }
+        ])->with([
             'pemasukans' => function ($query) {
                 $query->selectRaw('id_divisi, SUM(jml_masuk) as total_pemasukan')->where('status', '1')->groupBy('id_divisi');
             },
@@ -191,6 +198,20 @@ class DirekturController extends Controller
             },
         ])->get();
 
+        // $divisis =  tbl_divisi::withCount([
+        //     'users' => function ($query) {
+        //         $query->where('role', 4);
+        //     },
+        //     'pemasukans' => function ($query) {
+        //         $query->selectRaw('id_divisi, SUM(jml_masuk) as total_pemasukan')->where('status', '1')->groupBy('id_divisi');
+        //     },
+        //     'pengeluarans' => function ($query) {
+        //         $query->selectRaw('id_divisi, SUM(jml_keluar) as total_pengeluaran')->where('status', '1')
+        //             ->groupBy('id_divisi');
+        //     },
+        // ])->get();
+
+        //variabel untuk tabel mutasi
         $pemasukans = tbl_pemasukan::select('id_pemasukan as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_masuk as jumlah', 'tgl_pemasukan as tanggal', 'catatan', 'bukti_pemasukan as bukti', 'status', 'created_at')->where('status', '1')->orderBy('tanggal', 'desc')
             ->addSelect(DB::raw("'pemasukan' as jenis_transaksi"));
 
@@ -201,6 +222,7 @@ class DirekturController extends Controller
 
         $users = User::where('role', 4)->get();
 
+        //variabel untuk view bukti
         $pemasukans2 = tbl_pemasukan::where('status', "1")->get();
         $pengeluarans2 = tbl_pengeluaran::where('status', "1")->get();
 
@@ -333,10 +355,42 @@ class DirekturController extends Controller
         ]);
     }
 
+    public function mutasiKaryawanCetak(Request $cetak)
+    {
+        $startDate = $cetak->input('start_date', now()->subMonth()->startOfDay());
+        $endDate = $cetak->input('end_date', now()->endOfDay());
+        $id = $cetak->input('id');
+
+        $pemasukans = tbl_pemasukan::select('id_pemasukan as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_masuk as jumlah', 'tgl_pemasukan as tanggal', 'catatan', 'bukti_pemasukan as bukti', 'status', 'created_at')->where('status', '1')->where('id_user', $id)->orderBy('tanggal', 'desc')
+            ->addSelect(DB::raw("'pemasukan' as jenis_transaksi"));
+
+        $pengeluarans = tbl_pengeluaran::select('id_pengeluaran as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_keluar as jumlah', 'tgl_pengeluaran as tanggal', 'catatan', 'bukti_pengeluaran as bukti', 'status', 'created_at')->where('status', '1')->where('id_user', $id)->orderBy('tanggal', 'desc')
+            ->addSelect(DB::raw("'pengeluaran' as jenis_transaksi"));
+
+        $mutasiPemasukanPengeluaran = $pemasukans->union($pengeluarans)->orderBy('tanggal', 'desc')->take(10)->get();
+
+
+        $user = User::find($id);
+
+        // return dd($startDate);
+
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true);
+        $pdf = new Dompdf($options);
+
+        $view = View::make('direktur.cetak.mutasi-karyawan', compact('mutasiPemasukanPengeluaran', 'user', 'startDate', 'endDate'))->render();
+        $pdf->loadHtml($view);
+
+        $pdf->render();
+
+        return $pdf->stream('Mutasi-' . $user->nama . '.pdf');
+    }
+
     private function getGreeting($time)
     {
         $hour = $time->hour;
-    
+
         if ($hour >= 5 && $hour < 12) {
             return 'Selamat Pagi';
         } elseif ($hour >= 12 && $hour < 15) {

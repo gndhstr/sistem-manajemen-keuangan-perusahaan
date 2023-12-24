@@ -1,3 +1,10 @@
+@php
+function formatRupiah($angka){
+$rupiah = "Rp. " . number_format($angka,0,',','.');
+return $rupiah;
+}
+@endphp
+
 @extends('karyawan.layouts.master')
 
 @section("addCss")
@@ -30,43 +37,75 @@
         <div class="card">
             <div class="card-header text-right">
                 <a href="{{ route('createPengeluaran') }}" class="btn btn-primary" role="button" data-toggle="modal" data-target="#tambahPengeluaranModal">Tambah Data</a>
+                <a href="{{ route('cetakPengeluaran', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" class="btn btn-success mx-1" role="button">Export PDF <i class="fa fa-file-pdf"></i></a>
             </div>
             <div class="card-body">
+                <form method="get" action="{{ route('daftarPengeluaran') }}" class="mb-3">
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <label for="start_date">Start Date:</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="end_date">End Date:</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="d-block invisible">Filter</label>
+                            <button type="submit" class="btn btn-primary">Filter</button>
+                        </div>
+                    </div>
+                </form>
                 <!-- Tabel -->
                 <table id="dataTable" class="table table-hover mb-0">
                     <thead>
                         <tr>
                             <th>NO</th>
-                            <th>Nama Kategori</th>
-                            <th>Jumlah Keluar</th>
                             <th>Tanggal Pengeluaran</th>
+                            <th>Kategori</th>
+                            <th>Nominal</th>
                             <th>Catatan</th>
-                            <th>Bukti Pengeluaran</th>
-                            <th>Aksi</th>
+                            <th class="text-center">Keterangan</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($pengeluarans as $pengeluaran)
                         <tr>
                             <td>{{ $loop->index + 1 }}</td>
+                            <td>{{ \Carbon\Carbon::parse($pengeluaran->tgl_pengeluaran)->format('d/m/Y') }}</td>
                             <td>{{ $pengeluaran->kategori->nama_kategori }}</td>
-                            <td>{{ $pengeluaran->jml_keluar }}</td>
-                            <td>{{ $pengeluaran->tgl_pengeluaran }}</td>
+                            <td>{{ formatRupiah($pengeluaran->jml_keluar) }}</td>
                             <td>{{ $pengeluaran->catatan }}</td>
-                            <td>{{ $pengeluaran->bukti_pengeluaran }}</td>
-                            <td>
-                                <a data-url="{{ route('editPengeluaran', ['id_pengeluaran'=>$pengeluaran->id_pengeluaran]) }}" 
-                                class="btn btn-warning btn-sm edit-button" role="button" data-toggle="modal" 
-                                data-target="#editPengeluaranModal{{ $pengeluaran->id_pengeluaran }}">Edit</a>
-                                <a onclick="confirmDelete(this, '{{ $pengeluaran->id_pengeluaran }}')" 
-                                href="{{ route('deletePengeluaran', $pengeluaran->id_pengeluaran) }}" 
-                                data-nama="{{ $pengeluaran->kategori->nama_kategori }}" 
-                                class="btn btn-danger btn-sm ml-1 text-white delete-button" role="button">Hapus</a>
+                            <td class="text-center">
+                                <button class="btn btn-primary btn-sm view-button" data-url="{{ route('viewPengeluaran', ['id_pengeluaran'=>$pengeluaran->id_pengeluaran]) }}" data-toggle="modal" data-target="#viewPengeluaranModal{{ $pengeluaran->id_pengeluaran }}">
+                                    <i class="fa fa-eye"></i> Lihat
+                                </button>
+                                <a data-url="{{ route('editPengeluaran', ['id_pengeluaran'=>$pengeluaran->id_pengeluaran]) }}" class="btn btn-warning btn-sm edit-button" role="button" data-toggle="modal" data-target="#editPengeluaranModal{{ $pengeluaran->id_pengeluaran }}">Edit</a>
+                                <a onclick="confirmDelete(this, '{{ $pengeluaran->id_pengeluaran }}')" href="{{ route('deletePengeluaran', $pengeluaran->id_pengeluaran) }}" data-nama="{{ $pengeluaran->kategori->nama_kategori }}" class="btn btn-danger btn-sm ml-1 text-white delete-button" role="button">Hapus</a>
                             </td>
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
+
+                <!-- Modal untuk Menampilkan Bukti Pengeluaran -->
+                @foreach($pengeluarans as $pengeluaran)
+                <div class="modal fade" id="viewPengeluaranModal{{ $pengeluaran->id_pengeluaran }}" tabindex="-1" role="dialog" aria-labelledby="viewPengeluaranModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="viewPengeluaranModalLabel">Bukti Pengeluaran</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ asset('storage/bukti_pengeluaran/' . $pengeluaran->bukti_pengeluaran) }}" alt="Bukti Pengeluaran" style="max-width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
 
                 <!-- Modal untuk Menambahkan pengeluaran -->
                 <div class="modal fade" id="tambahPengeluaranModal" tabindex="-1" role="dialog" aria-labelledby="tambahPengeluaranModalLabel" aria-hidden="true">
@@ -80,28 +119,31 @@
                             </div>
                             <div class="modal-body">
                                 <!-- Formulir untuk menambahkan catatan pengeluaran -->
-                                <form action="{{ route('storePengeluaran') }}" method="post">
+                                <form action="{{ route('storePengeluaran') }}" method="post" enctype="multipart/form-data">
                                     @csrf
-
-                                    <!-- Pilih kategori menggunakan select -->
-                                    <select class="form-control select" name="id_kategori" id="id_kategori" required>
-                                        @foreach ($kategori as $kategoris)
-                                        <option value="{{ $kategoris->id_kategori }}" {{ old('id_kategori') == $kategoris->id_kategori ? 'selected' : '' }}>
-                                            {{ $kategoris->nama_kategori }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-
-                                    <!-- Input untuk jumlah keluar -->
-                                    <div class="form-group">
-                                        <label for="jml_keluar">Jumlah Keluar</label>
-                                        <input type="text" class="form-control" id="jml_keluar" name="jml_keluar" value="{{ old('jml_keluar', 0) }}" required>
-                                    </div>
 
                                     <!-- Input untuk tanggal pengeluaran -->
                                     <div class="form-group">
                                         <label for="tgl_pengeluaran">Tanggal Pengeluaran</label>
                                         <input type="date" class="form-control" id="tgl_pengeluaran" name="tgl_pengeluaran" required>
+                                    </div>
+
+                                    <!-- Pilih kategori menggunakan select -->
+                                    <div class="form-group">
+                                        <label for="nama_kategori">Kategori</label>
+                                        <select class="form-control select" name="id_kategori" id="id_kategori" required>
+                                            @foreach ($kategori as $kategoris)
+                                            <option value="{{ $kategoris->id_kategori }}" {{ old('id_kategori') == $kategoris->id_kategori ? 'selected' : '' }}>
+                                                {{ $kategoris->nama_kategori }}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Input untuk jumlah keluar -->
+                                    <div class="form-group">
+                                        <label for="jml_keluar">Nominal</label>
+                                        <input type="text" class="form-control" id="jml_keluar" name="jml_keluar" value="{{ old('jml_keluar', 0) }}" required>
                                     </div>
 
                                     <!-- Textarea untuk catatan -->
@@ -110,9 +152,10 @@
                                         <textarea class="form-control" id="catatan" name="catatan" rows="3" required>{{ old('catatan', '') }}</textarea>
                                     </div>
 
+                                    <!-- Textarea untuk pengeluaran -->
                                     <div class="form-group">
                                         <label for="bukti_pengeluaran">Bukti Pengeluaran</label>
-                                        <input type="text" class="form-control" id="bukti_pengeluaran" name="bukti_pengeluaran" value="{{ old('bukti_pengeluaran', '') }}" required>
+                                        <input type="file" name="bukti_pengeluaran" accept="image/*" required>
                                     </div>
 
                                     <div class="text-right">
@@ -143,12 +186,19 @@
                             </div>
                             <div class="modal-body">
                                 <!-- Formulir untuk mengedit catatan pengeluaran -->
-                                <form action="{{ route('updatePengeluaran', ['tbl_pengeluaran' => $pengeluaran->id_pengeluaran]) }}" method="POST">
+                                <form action="{{ route('updatePengeluaran', ['tbl_pengeluaran' => $pengeluaran->id_pengeluaran]) }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     @method('POST')
+
+                                    <!-- Input untuk tanggal pengeluaran -->
+                                    <div class="form-group">
+                                        <label for="tgl_pengeluaran_edit">Tanggal pengeluaran</label>
+                                        <input type="date" class="form-control" id="tgl_pengeluaran_edit" name="tgl_pengeluaran" value="{{ $pengeluaran->tgl_pengeluaran }}" required>
+                                    </div>
+
                                     <!-- Pilih kategori menggunakan select -->
                                     <div class="form-group">
-                                        <label for="nama_kategori_edit">Nama Kategori</label>
+                                        <label for="nama_kategori_edit">Kategori</label>
                                         <select class="form-control select" name="id_kategori" id="nama_kategori_edit" required>
                                             @foreach ($kategori as $kategoris)
                                             <option value="{{ $kategoris->id_kategori }}" @if($kategoris->id_kategori == $pengeluaran->id_kategori) selected @endif>{{ $kategoris->nama_kategori }}</option>
@@ -158,7 +208,7 @@
 
                                     <!-- Input untuk jumlah keluar -->
                                     <div class="form-group">
-                                        <label for="jml_keluar_edit">Jumlah Keluar</label>
+                                        <label for="jml_keluar_edit">Nominal</label>
                                         <input type="text" class="form-control" id="jml_keluar_edit" name="jml_keluar" value="{{ $pengeluaran->jml_keluar }}" required>
                                     </div>
 
@@ -177,13 +227,10 @@
                                     <!-- Input untuk bukti pengeluaran -->
                                     <div class="form-group">
                                         <label for="bukti_pengeluaran_edit">Bukti Pengeluaran</label>
-                                        <input type="text" class="form-control" id="bukti_pengeluaran_edit" name="bukti_pengeluaran" value="{{ $pengeluaran->bukti_pengeluaran }}" required>
-                                    </div>
-
-                                    <!-- Input untuk status -->
-                                    <div class="form-group">
-                                        <label for="status_edit">Status</label>
-                                        <input type="text" class="form-control" id="status_edit" name="status" value="{{ $pengeluaran->status }}" required>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="bukti_pengeluaran_edit" name="bukti_pengeluaran" accept="image/*">
+                                            <label class="custom-file-label" for="bukti_pengeluaran_edit">Choose file</label>
+                                        </div>
                                     </div>
 
                                     <div class="text-right">
@@ -237,6 +284,13 @@
 
         $(function() {
             $("#dataTable").DataTable();
+            // Script untuk menangani klik tombol "Lihat"
+            $(".view-button").on("click", function() {
+                var url = $(this).data("url");
+                $("#viewPengeluaranModal").modal("show");
+            });
+            // Format Rupiah
+            $('.rupiah').mask('000.000.000.000', {reverse: true});
         });
     </script>
     @endsection

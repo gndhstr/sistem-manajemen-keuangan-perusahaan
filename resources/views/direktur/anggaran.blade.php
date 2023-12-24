@@ -58,7 +58,7 @@
                                             {{ number_format($anggaran->rencana_anggaran, 2, ',', '.') }}</td>
                                         <td class="text-right">Rp.
                                             {{ number_format($anggaran->aktualisasi_anggaran, 2, ',', '.') }}</td>
-                                        <td class="text-center">{{ $anggaran->tgl_anggaran }}</td>
+                                        <td class="text-center">{{  (new DateTime($anggaran->tgl_anggaran))->format('d-m-Y') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -77,9 +77,9 @@
                             <div class="d-flex">
                                 <p class="d-flex flex-column">
                                     <span
-                                        class="text-bold text-lg {{ $aktualisasiBulanans[0] - $rencanaBulanans[0] >= 0 ? 'text-danger' : ' text-success' }}"><i
-                                            class="fa {{ $aktualisasiBulanans[0] - $rencanaBulanans[0] >= 0 ? 'fa-plus' : ' fa-minus' }} mr-lg-1"></i>Rp.
-                                        {{ number_format($aktualisasiBulanans[0] - $rencanaBulanans[0], 2, ',', '.') }}
+                                        class="text-bold text-lg {{ $aktualisasiBulanans[0] - $rencanaBulanans[0] >= 0 ? 'text-danger' : ' text-success' }}"><b
+                                            class="mr-lg-1">{{ $aktualisasiBulanans[0] - $rencanaBulanans[0] >= 0 ? '+' : '-' }}</b>Rp.
+                                        {{ number_format(abs($aktualisasiBulanans[0] - $rencanaBulanans[0]), 2, ',', '.') }}
                                     </span>
                                     <span class="text-sm">Dari rencana</span>
                                 </p>

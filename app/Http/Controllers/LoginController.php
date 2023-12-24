@@ -11,7 +11,20 @@ class LoginController extends Controller
 {
   public function login()
   {
-    return view("login/index");
+    if (Auth::user()){
+        if (Auth::user()->role == "1") {
+            return redirect()->intended("/admin");
+        } elseif (Auth::user()->role == "2") {
+            return redirect()->intended("/direktur");
+        } elseif (Auth::user()->role == "3") {
+            return redirect()->intended("/manajer");
+        } elseif (Auth::user()->role == "4") {
+            return redirect()->intended("/karyawan");
+        }
+    } else {
+        return view("login/index");
+    }
+    // return view("login/index");
   } 
   
   public function authenticate(Request $request)

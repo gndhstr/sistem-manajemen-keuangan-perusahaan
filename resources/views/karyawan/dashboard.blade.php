@@ -1,7 +1,10 @@
 @extends('karyawan.layouts.master')
 
-@section('addJavascript')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-...." crossorigin="anonymous" referrerpolicy="no-referrer" />
+@section('addCss')
+    <link rel="stylesheet" href="{{ asset('css/dataTables.bootstrap4.min.css') }}">
+    <!-- Add other CSS styles for your dashboard -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-...." crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="{{asset('css/Chart.css')}}">
 @endsection
 
 @section('content')
@@ -9,7 +12,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1 class="m-0 text-dark">Selamat Datang, {{ Auth::user()->nama }}</h1>
+                <h1 class="m-0 text-dark">{{$greeting}}, {{ Auth::user()->nama }}</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -23,47 +26,97 @@
 <!-- Main content -->
 <div class="content">
     <div class="container-fluid">
-        <div class="card p-3">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-info"><i class="fa fa-wallet"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Saldo</span>
-                            <span class="info-box-number">
-                                <h2>{{ $saldo }},-</h2>
-                            </span>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="col">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>Saldo</h3>
+                            <p>Rp.{{ number_format($saldo, 2, ',', '.') }}</p>
                         </div>
-                    </div>
-
-                    <div class="info-box">
-                        <span class="info-box-icon bg-success"><i class="fa  fa-chevron-down"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Total Pemasukan</span>
-                            <span class="info-box-number">
-                                <h2>{{ $totalMasuk }},-</h2>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="info-box">
-                        <span class="info-box-icon bg-danger"><i class="fa  fa-chevron-up"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Total Pengeluaran</span>
-                            <span class="info-box-number">
-                                <h2>{{ $totalKeluar }},-</h2>
-                            </span>
+                        <div class="icon">
+                            <i class="fa fa-wallet"></i>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title text-center "><i class="fa fa-chart-bar"></i>Grafik Keuangan</h3>
+                <div class="col">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>Total Pemasukan</h3>
+                            <p>Rp.{{ number_format($totalMasuk, 2, ',', '.') }}</p>
                         </div>
-                        <div class="card-body">
-                            <canvas id="myChart" style="height: 225px;"></canvas>
+                        <div class="icon">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <a href="{{route('daftarPemasukan')}}" class="small-box-footer">
+                            Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>Total Pengeluaran</h3>
+                            <p>Rp.{{ number_format($totalKeluar, 2, ',', '.') }}</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <a href="{{route('daftarPengeluaran')}}" class="small-box-footer">
+                            Selengkapnya <i class="fas fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+            {{-- card grafik --}}
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title text-bold text-lg text-center">Grafik Keuangan Karyawan ({{ $tahun }})</h3>
+                        <div class="card-tools">
+                            <span class="badge badge-info">{{ date('Y') }}</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-header border-0 pb-0">
+                                <div class="d-flex justify-content-end">
+                                    {{-- <a href="javascript:void(0);">View Report</a> --}}
+                                </div>
+                                <div class="card-tools">
+                                </div>
+                            </div>
+                            <div class="card-body pt-3">
+                                <div class="d-flex">
+                                    <p class="d-flex flex-column">
+                                        <span class="text-bold text-lg">Rp.{{ number_format($pemasukanBulanan, 2, ',', '.') }}</span>
+                                        <span class="text-sm">Pemasukan Karyawan Seiring Waktu</span>
+                                    </p>
+                                    <p class="ml-auto d-flex flex-column text-right">
+                                        <span class="{{ $perbandinganPemasukanPengeluaranBulanan > 0 ? 'text-success' : 'text-danger' }}">
+                                            <i class="fa {{ $perbandinganPemasukanPengeluaranBulanan > 0 ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i>
+                                            {{ number_format($perbandinganPemasukanPengeluaranBulanan, 2) }}
+                                        </span>
+                                        <span class="text-muted">Di Bulan ini</span>
+                                        <span class="text-muted">{{ $tanggalBulanan }}</span>
+                                    </p>
+                                </div>
+                                <!-- /.d-flex -->
+
+                                <div class="position-relative mb-4">
+                                    <canvas id="sales-chart" height="140"></canvas>
+                                </div>
+
+                                <div class="d-flex flex-row justify-content-end">
+                                    <span class="mr-2">
+                                        <i class="fa fa-square text-primary"></i> Pemasukan
+                                    </span>
+
+                                    <span>
+                                        <i class="fa fa-square text-gray" style="opacity: 0.23;"></i> Pengeluaran
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -71,39 +124,141 @@
         </div>
     </div>
 </div><!-- /.content -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // Set your data for the chart
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Pemasukan', 'Pengeluaran'],
-            datasets: [{
-                label: 'Total',
-                data: [{{ $totalMasuk }},{{ $totalKeluar }}],
-                backgroundColor: [
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(255, 99, 132, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(255, 99, 132, 1)',
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            maintainAspectRatio: true, // Setel ke false untuk mengaktifkan penyesuaian aspek rasio
-            aspectRatio: 4.9 // Sesuaikan dengan angka yang sesuai dengan kebutuhan tinggi grafik
-        }
-    });
-</script>
 @endsection
 
+@section('addJavascript')
+    <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('js/Chart.js') }}"></script>
+    <script>
+        /* global Chart:false */
 
+        $(function() {
+            'use strict'
+
+            var ticksStyle = {
+                fontColor: '#495057',
+                fontStyle: 'bold'
+            }
+
+            var mode = 'index'
+            var intersect = true
+
+            var pemasukanHarians = @json($pemasukanHarians);
+            pemasukanHarians.forEach((element, index) => {
+                pemasukanHarians.push(element);
+            });
+
+            var pengeluaranHarians = @json($pengeluaranHarians);
+            pengeluaranHarians.forEach((element, index) => {
+                pengeluaranHarians.push(element);
+            });
+
+            var pemasukanBulanans = @json($pemasukanBulanans);
+            for (const key in pemasukanBulanans) {
+                if (pemasukanBulanans.hasOwnProperty(key)) {
+                    const element = pemasukanBulanans[key];
+                }
+            }
+
+            var pengeluaranBulanans = @json($pengeluaranBulanans);
+            for (const key in pengeluaranBulanans) {
+                if (pengeluaranBulanans.hasOwnProperty(key)) {
+                    const element = pengeluaranBulanans[key];
+                }
+            }
+
+            var tanggalHarians = @json($tanggalHarians);
+            for (const key in tanggalHarians) {
+                if (tanggalHarians.hasOwnProperty(key)) {
+                    const element = tanggalHarians[key];
+                }
+            }
+
+            var tanggalBulanans = @json($tanggalBulanans);
+            for (const key in tanggalBulanans) {
+                if (tanggalBulanans.hasOwnProperty(key)) {
+                    const element = tanggalBulanans[key];
+                }
+            }
+
+            // eslint-disable-next-line no-unused-vars
+
+            var $salesChart = $('#sales-chart')
+            // eslint-disable-next-line no-unused-vars
+            var salesChart = new Chart($salesChart, {
+                type: 'bar',
+                data: {
+                    labels: [tanggalBulanans[6], tanggalBulanans[5], tanggalBulanans[4], tanggalBulanans[3],
+                        tanggalBulanans[2], tanggalBulanans[1], tanggalBulanans[0]
+                    ],
+                    datasets: [{
+                            backgroundColor: '#007bff',
+                            borderColor: '#007bff',
+                            data: [pemasukanBulanans[6], pemasukanBulanans[5], pemasukanBulanans[4],
+                                pemasukanBulanans[3], pemasukanBulanans[2], pemasukanBulanans[1],
+                                pemasukanBulanans[0]
+                            ]
+                        },
+                        {
+                            backgroundColor: '#ced4da',
+                            borderColor: '#ced4da',
+                            data: [pengeluaranBulanans[6], pengeluaranBulanans[5], pengeluaranBulanans[
+                                    4], pengeluaranBulanans[3], pengeluaranBulanans[2],
+                                pengeluaranBulanans[1], pengeluaranBulanans[0]
+                            ]
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    hover: {
+                        mode: mode,
+                        intersect: intersect
+                    },
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            // display: false,
+                            gridLines: {
+                                display: true,
+                                lineWidth: '4px',
+                                color: 'rgba(0, 0, 0, .2)',
+                                zeroLineColor: 'transparent'
+                            },
+                            ticks: $.extend({
+                                beginAtZero: true,
+
+                                callback: function(value) {
+                                    if (value >= 1000) {
+                                        value /= 1000;
+                                        value += 'k';
+                                        // value = value.toLocaleString("id-ID");
+                                    }
+
+                                    return 'Rp. ' + value
+                                }
+                            }, ticksStyle)
+                        }],
+                        xAxes: [{
+                            display: true,
+                            gridLines: {
+                                display: true
+                            },
+                            ticks: ticksStyle
+                        }]
+                    }
+                }
+            })
+        })
+
+
+        // lgtm [js/unused-local-variable]
+    </script>
+@endsection

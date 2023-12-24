@@ -16,7 +16,7 @@
                 <img src="{{ asset('storage/' . Auth()->user()->foto_profil) }}"class="img-circle rounded-circle "alt="User Image" id="foto_profil_preview" width="110" height="110">
             </div>
             <div class="info">
-                <a href="#" class="d-block">{{Auth::user()->nama}}</a>
+                <a href="{{ route('indexProfile') }}" class="d-block">{{Auth::user()->nama}}</a>
             </div>
         </div>
         @endauth
