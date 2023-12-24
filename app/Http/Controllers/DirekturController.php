@@ -383,17 +383,30 @@ class DirekturController extends Controller
 
     public function mutasiKaryawanCetak(Request $cetak)
     {
-        $startDate = $cetak->input('start_date', now()->subMonth()->startOfDay());
-        $endDate = $cetak->input('end_date', now()->endOfDay());
+        $time = new Carbon();
+        $time->setTimeZone('Asia/Jakarta');        
+
+        //Ambil tanggal dari form filter
+        if ($cetak->startDate && $cetak->endDate) {
+            $startDate = Carbon::parse($cetak->startDate);
+            $endDate = Carbon::parse($cetak->endDate);
+        } elseif ($cetak->startDate) {
+            $startDate = Carbon::parse($cetak->startDate);
+            $endDate = $time->now()->endOfMonth();
+        } else {
+            $startDate = $time->now()->startOfMonth();
+            $endDate = $time->now()->endOfMonth();
+        }
+
         $id = $cetak->input('id');
 
-        $pemasukans = tbl_pemasukan::select('id_pemasukan as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_masuk as jumlah', 'tgl_pemasukan as tanggal', 'catatan', 'bukti_pemasukan as bukti', 'status', 'created_at')->where('status', '1')->where('id_user', $id)->orderBy('tanggal', 'desc')
+        $pemasukans = tbl_pemasukan::select('id_pemasukan as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_masuk as jumlah', 'tgl_pemasukan as tanggal', 'catatan', 'bukti_pemasukan as bukti', 'status', 'created_at')->where('status', '1')->where('id_user', $id)->whereBetween('tgl_pemasukan', [$startDate, $endDate])->orderBy('tanggal', 'desc')
             ->addSelect(DB::raw("'pemasukan' as jenis_transaksi"));
 
-        $pengeluarans = tbl_pengeluaran::select('id_pengeluaran as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_keluar as jumlah', 'tgl_pengeluaran as tanggal', 'catatan', 'bukti_pengeluaran as bukti', 'status', 'created_at')->where('status', '1')->where('id_user', $id)->orderBy('tanggal', 'desc')
+        $pengeluarans = tbl_pengeluaran::select('id_pengeluaran as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_keluar as jumlah', 'tgl_pengeluaran as tanggal', 'catatan', 'bukti_pengeluaran as bukti', 'status', 'created_at')->where('status', '1')->where('id_user', $id)->whereBetween('tgl_pengeluaran', [$startDate, $endDate])->orderBy('tanggal', 'desc')
             ->addSelect(DB::raw("'pengeluaran' as jenis_transaksi"));
 
-        $mutasiPemasukanPengeluaran = $pemasukans->union($pengeluarans)->orderBy('tanggal', 'desc')->take(10)->get();
+        $mutasiPemasukanPengeluaran = $pemasukans->union($pengeluarans)->orderBy('tanggal', 'desc')->get();
 
 
         $user = User::find($id);

@@ -134,8 +134,13 @@
                                             </div> --}}
                                         </div>
                                         <div class="col-5 text-center">
+                                            @if ($karyawan->foto_profil == '')
+                                            <img src="{{ asset('img/user-photo-default.png') }}" alt="user-avatar"
+                                                class="img-circle img-fluid" width="200px">
+                                            @else
                                             <img src="{{ asset('storage/' . $karyawan->foto_profil) }}" alt="user-avatar"
                                                 class="img-circle img-fluid" width="200px">
+                                            @endif
                                         </div>
                                     </div>
                                 </div>

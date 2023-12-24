@@ -85,7 +85,7 @@
                         <h3 class="card-title">Divisi</h3>
                         <div class="card-tools">
                             {{-- tools --}}
-                            <span class="badge badge-info">{{ date('F') }}</span>
+                            {{-- <span class="badge badge-info">{{ date('F') }}</span> --}}
                         </div>
                     </div>
                     <div class="card-body table-responsive">
@@ -137,7 +137,7 @@
                         <h3 class="card-title">Karyawan</h3>
                         <div class="card-tools">
                             {{-- tools --}}
-                            <span class="badge badge-info">{{ date('F') }}</span>
+                            {{-- <span class="badge badge-info">{{ date('F') }}</span> --}}
                         </div>
                     </div>
                     <div class="card-body table-responsive position-relative">
@@ -245,7 +245,7 @@
                                 <div class="modal-body">
                                     <div class="card-body pt-0">
                                         <div class="row d-flex justify-content-end mb-lg-2">
-                                            <a href="{{ route('cetakMutasiKaryawanDirektur', ['start_date' => request('start_date'), 'end_date' => request('end_date'), 'id' => $user->id]) }}"
+                                            <a href="{{ route('cetakMutasiKaryawanDirektur', ['startDate' => request('startDate'), 'endDate' => request('endDate'), 'id' => $user->id]) }}"
                                                 class="btn btn-success mb-1 mt-0 align-self-baseline"
                                                 role="button">Export PDF<i class="fa fa-file-pdf"></i></a>
                                         </div>

@@ -89,7 +89,7 @@
                                             class="fa {{ $perbandinganAnggaran >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} "></i>
                                         {{ number_format($perbandinganAnggaran, 2) }} %
                                     </span>
-                                    <span class="text-muted">Di bulan ini</span>
+                                    <span class="text-muted">Aktualisasi</span>
                                 </p>
                             </div>
                             <!-- /.d-flex -->
