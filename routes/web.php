@@ -86,7 +86,7 @@ Route::prefix("admin")->middleware("auth", "role:1")->group(function(){
 Route::prefix('direktur')->middleware("auth", "role:2")->group(function () {
     Route::redirect('/', 'direktur/dashboard');
     Route::get('/dashboard', 'DirekturController@dashboard');
-    Route::get('/cashflow', 'DirekturController@cashflow');
+    Route::get('/cashflow', 'DirekturController@cashflow')->name('mutasiDirektur');
     Route::get('/anggaran', 'DirekturController@anggaran');
     Route::get('/karyawan', 'DirekturController@karyawan');
 

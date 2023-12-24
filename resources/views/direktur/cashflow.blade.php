@@ -56,6 +56,29 @@
         <div class="container-fluid">
             <div class="row">
                 {{-- main content here --}}
+                {{-- Filter rentang waktu Card --}}
+                <div class="card col-lg-6 mr-lg-5 mb-0">
+                    <h3 class="card-title mt-3 ml-3">Rentang Waktu</h3>
+                    <form method="get" action="{{ route('mutasiDirektur') }}" class="m-3">
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <label for="startDate">Start Date:</label>
+                                <input type="date" name="startDate" id="startDate" class="form-control"
+                                    value="{{ request('startDate') }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="endDate">End Date:</label>
+                                <input type="date" name="endDate" id="endDate" class="form-control"
+                                    value="{{ request('endDate') }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="d-block invisible">Filter</label>
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
                 {{-- tabel divisi --}}
                 <div class="card col-lg-6">
                     <div class="card-header border-0">
@@ -107,6 +130,7 @@
                         </table>
                     </div>
                 </div>
+
                 {{-- tabel karyawan --}}
                 <div class="card col-lg-6">
                     <div class="card-header border-0">
@@ -128,7 +152,7 @@
                                     <th class="col-1">No.</th>
                                     <th>Nama</th>
                                     <th>Total Pemasukan</th>
-                                    <th>Total Pengeluaran</th>                                    
+                                    <th>Total Pengeluaran</th>
                                 </tr>
                             </thead>
                             <tbody id="karyawan">
@@ -136,6 +160,7 @@
                         </table>
                     </div>
                 </div>
+
                 {{-- tabel Mutasi Terakhir --}}
                 <div class="card">
                     <div class="card-header border-0">
@@ -218,29 +243,12 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="row d-flex justify-content-between">
-                                        <form method="get" action="{{ route('daftarPemasukan') }}">
-                                            <div class="d-flex align-items-md-end">
-                                                <div class="col">
-                                                    <label for="start_date">Start Date:</label>
-                                                    <input type="date" name="start_date" id="start_date" class="form-control"
-                                                        value="{{ request('start_date') }}">
-                                                </div>
-                                                <div class="col">
-                                                    <label for="end_date">End Date:</label>
-                                                    <input type="date" name="end_date" id="end_date" class="form-control"
-                                                        value="{{ request('end_date') }}">
-                                                </div>
-                                                <div class="col">
-                                                    <button type="submit" class="btn btn-primary align-self-end">Filter</button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                        <a href="{{ route('cetakMutasiKaryawanDirektur', ['start_date' => request('start_date'), 'end_date' => request('end_date'), 'id' => $user->id]) }}"
-                                            class="btn btn-success mb-1 mt-0 align-self-baseline" role="button">Export PDF<i
-                                                class="fa fa-file-pdf"></i></a>
-                                    </div>
-                                    <div class="card-body ">
+                                    <div class="card-body pt-0">
+                                        <div class="row d-flex justify-content-end mb-lg-2">
+                                            <a href="{{ route('cetakMutasiKaryawanDirektur', ['start_date' => request('start_date'), 'end_date' => request('end_date'), 'id' => $user->id]) }}"
+                                                class="btn btn-success mb-1 mt-0 align-self-baseline"
+                                                role="button">Export PDF<i class="fa fa-file-pdf"></i></a>
+                                        </div>
                                         <div class="table-responsive d-lg-table">
                                             <table class="table table-hover mb-0" id="tabelModal">
                                                 <thead>
@@ -255,14 +263,26 @@
                                                 </thead>
                                                 <tbody>
                                                     @php
+                                                        if (!$startDate && !$endDate) {
+                                                            $startDate = $time->now()->startOfMonth();
+                                                            $endDate = $time->now()->endOfMonth();
+                                                        } elseif (!$endDate) {
+                                                            $endDate = $time->now()->endOfMonth();
+                                                        }
+
+                                                        // dd($startDate);
                                                         $mutasis = $pemasukans
                                                             ->concat($pengeluarans)
                                                             ->where('id_user', $user->id)
                                                             ->sortByDesc(function ($mutasi) {
                                                                 return isset($mutasi->tgl_pemasukan) ? $mutasi->tgl_pemasukan : $mutasi->tgl_pengeluaran;
+                                                            })
+                                                            ->filter(function ($mutasi) use ($startDate, $endDate) {
+                                                                $tgl_mutasi = isset($mutasi->tgl_pemasukan) ? $mutasi->tgl_pemasukan : $mutasi->tgl_pengeluaran;
+                                                                return $tgl_mutasi >= $startDate && $tgl_mutasi <= $endDate;
                                                             });
-                                                    @endphp                                                    
-                                                    @forelse ($mutasis as $mutasi)                                                    
+                                                    @endphp
+                                                    @forelse ($mutasis as $mutasi)
                                                         <tr>
                                                             <td class="text-center">{{ $loop->index + 1 }}</td>
                                                             <td class="text-center">
@@ -284,20 +304,20 @@
                                                             </td>
                                                             <td class="text-center">{{ $mutasi->catatan }}</td>
                                                             <td class="text-center">
-                                                                @if ($mutasi->id_pemasukan)    
-                                                                <button class="btn btn-primary btn-sm view-button"
-                                                                    data-url="{{ route('viewBukti', ['id_pemasukan' => $mutasi->id_pemasukan]) }}"
-                                                                    data-dismiss="modal" data-toggle="modal"
-                                                                    data-target="#viewPemasukanModal{{ $mutasi->id_pemasukan }}">
-                                                                    <i class="fa fa-eye"></i>
-                                                                </button>
+                                                                @if ($mutasi->jml_keluar == '' || $mutasi->jml_keluar == null)
+                                                                    <button class="btn btn-primary btn-sm view-button"
+                                                                        data-url="{{ route('viewBukti', ['id_pemasukan' => $mutasi->id_pemasukan]) }}"
+                                                                        data-dismiss="modal" data-toggle="modal"
+                                                                        data-target="#viewPemasukanModal{{ $mutasi->id_pemasukan }}">
+                                                                        <i class="fa fa-eye"></i>
+                                                                    </button>
                                                                 @else
-                                                                <button class="btn btn-primary btn-sm view-button"
-                                                                    data-url="{{ route('viewBukti', ['id_pengeluaran' => $riwayat->id]) }}"
-                                                                    data-dismiss="modal" data-toggle="modal"
-                                                                    data-target="#viewPengeluaranModal{{ $riwayat->id }}">
-                                                                    <i class="fa fa-eye"></i>
-                                                                </button>
+                                                                    <button class="btn btn-primary btn-sm view-button"
+                                                                        data-url="{{ route('viewBukti', ['id_pengeluaran' => $mutasi->id_pengeluaran]) }}"
+                                                                        data-dismiss="modal" data-toggle="modal"
+                                                                        data-target="#viewPengeluaranModal{{ $mutasi->id_pengeluaran }}">
+                                                                        <i class="fa fa-eye"></i>
+                                                                    </button>
                                                                 @endif
                                                             </td>
                                                         </tr>
@@ -337,8 +357,10 @@
                     </div>
                 @endforeach
 
-                @foreach($pengeluarans as $pengeluaran)
-                    <div class="modal fade" id="viewPengeluaranModal{{ $pengeluaran->id_pengeluaran }}" tabindex="-1" role="dialog" aria-labelledby="viewPengeluaranModalLabel" aria-hidden="true">
+                {{-- modal lihat view pengeluaran --}}
+                @foreach ($pengeluarans as $pengeluaran)
+                    <div class="modal fade" id="viewPengeluaranModal{{ $pengeluaran->id_pengeluaran }}" tabindex="-1"
+                        role="dialog" aria-labelledby="viewPengeluaranModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -348,7 +370,8 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <img src="{{ asset('storage/bukti_pengeluaran/' . $pengeluaran->bukti_pengeluaran) }}" alt="Bukti Pengeluaran" style="max-width: 100%;">
+                                    <img src="{{ asset('storage/bukti_pengeluaran/' . $pengeluaran->bukti_pengeluaran) }}"
+                                        alt="Bukti Pengeluaran" style="max-width: 100%;">
                                 </div>
                             </div>
                         </div>
@@ -365,6 +388,11 @@
     <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
     <script>
         $(document).ready(function() {
+            if (!startDate.value && !endDate.value) {
+                endDate.value = @json($endDate);
+                startDate.value = @json($startDate);
+            }
+
             $('#spinner-karyawan').hide();
 
             $('.show-divisi').click(function(e) {
@@ -382,8 +410,13 @@
                 $.ajax({
                     type: 'GET',
                     url: 'cashflow/' + divisiId + '/data',
+                    data: {
+                        startDate: startDate.value,
+                        endDate: endDate.value
+                    },
                     success: function(data) {
-                        // console.log(data);
+                        console.log(data.startDate, data.endDate);
+                        console.log(data);
                         $('#data-table-karyawan').show();
                         $('#data-table-karyawan').DataTable().destroy();
 
@@ -392,12 +425,17 @@
 
                         data.users.forEach(user => {
                             let pemasukan = data.pemasukans
-                                .filter(pemasukan => pemasukan.id_user === user.id)
+                                .filter(pemasukan => pemasukan.id_user === user.id &&
+                                    pemasukan.tgl_pemasukan >= data.startDate &&
+                                    pemasukan.tgl_pemasukan <= data.endDate)
                                 .reduce((sum, pemasukan) => sum + pemasukan.jml_masuk,
                                     0);
 
                             let pengeluaran = data.pengeluarans
-                                .filter(pengeluaran => pengeluaran.id_user === user.id)
+                                .filter(pengeluaran => pengeluaran.id_user === user
+                                    .id &&
+                                    pengeluaran.tgl_pengeluaran >= data.startDate &&
+                                    pengeluaran.tgl_pengeluaran <= data.endDate)
                                 .reduce((sum, pengeluaran) => sum + pengeluaran
                                     .jml_keluar, 0);
 
@@ -455,6 +493,13 @@
             });
         });
     </script>
+
+    <script>
+        $(function() {
+
+        });
+    </script>
+
     <script>
         $(function() {
             $("#data-table-divisi").DataTable({

@@ -182,34 +182,40 @@ class DirekturController extends Controller
         ]);
     }
 
-    public function cashflow()
+    public function cashflow(Request $tampil)
     {
+        $time = new Carbon();
+        $time->setTimeZone('Asia/Jakarta');
+
+        //Ambil tanggal dari form filter
+        if ($tampil->startDate && $tampil->endDate) {
+            $startDate = Carbon::parse($tampil->startDate);
+            $endDate = Carbon::parse($tampil->endDate);
+        } elseif ($tampil->startDate) {
+            $startDate = Carbon::parse($tampil->startDate);
+            $endDate = $time->now()->endOfMonth();
+        } else {
+            $startDate = $time->now()->startOfMonth();
+            $endDate = $time->now()->endOfMonth();
+        }
+
+        // return dd($startDate, $endDate);  
+
+        // return response()->json($response);
+
         $divisis =  tbl_divisi::withCount([
             'users' => function ($query) {
                 $query->where('role', 4);
             }
         ])->with([
-            'pemasukans' => function ($query) {
-                $query->selectRaw('id_divisi, SUM(jml_masuk) as total_pemasukan')->where('status', '1')->groupBy('id_divisi');
+            'pemasukans' => function ($query) use ($startDate, $endDate) {
+                $query->selectRaw('id_divisi, SUM(jml_masuk) as total_pemasukan')->where('status', '1')->whereBetween('tgl_pemasukan', [$startDate, $endDate])->groupBy('id_divisi');
             },
-            'pengeluarans' => function ($query) {
-                $query->selectRaw('id_divisi, SUM(jml_keluar) as total_pengeluaran')->where('status', '1')
+            'pengeluarans' => function ($query) use ($startDate, $endDate) {
+                $query->selectRaw('id_divisi, SUM(jml_keluar) as total_pengeluaran')->where('status', '1')->whereBetween('tgl_pengeluaran', [$startDate, $endDate])
                     ->groupBy('id_divisi');
             },
         ])->get();
-
-        // $divisis =  tbl_divisi::withCount([
-        //     'users' => function ($query) {
-        //         $query->where('role', 4);
-        //     },
-        //     'pemasukans' => function ($query) {
-        //         $query->selectRaw('id_divisi, SUM(jml_masuk) as total_pemasukan')->where('status', '1')->groupBy('id_divisi');
-        //     },
-        //     'pengeluarans' => function ($query) {
-        //         $query->selectRaw('id_divisi, SUM(jml_keluar) as total_pengeluaran')->where('status', '1')
-        //             ->groupBy('id_divisi');
-        //     },
-        // ])->get();
 
         //variabel untuk tabel mutasi
         $pemasukans = tbl_pemasukan::select('id_pemasukan as id', 'id_kategori', 'id_user', 'id_user_create', 'id_user_edit', 'jml_masuk as jumlah', 'tgl_pemasukan as tanggal', 'catatan', 'bukti_pemasukan as bukti', 'status', 'created_at')->where('status', '1')->orderBy('tanggal', 'desc')
@@ -227,17 +233,21 @@ class DirekturController extends Controller
         $pengeluarans2 = tbl_pengeluaran::where('status', "1")->get();
 
         return view('direktur.cashflow', [
-            // 'dump' => dd($riwayatPemasukanPengeluaran),
+            // 'dump' => dd($riwayatPemasukanPengeluaran),            
             'riwayatPemasukanPengeluaran' => $riwayatPemasukanPengeluaran,
             'divisis' => $divisis,
             'users' => $users,
             "pemasukans" => $pemasukans2,
             "pengeluarans" => $pengeluarans2,
+            'startDate' => $startDate->format('Y-m-d'),
+            'endDate' => $endDate->format('Y-m-d'),
         ]);
     }
 
     public function cashflowDivisi(Request $request, $id)
     {
+        $startDate = $request->input('startDate');
+        $endDate = $request->input('endDate');
         $divisi = tbl_divisi::findOrFail($id);
         $totalPemasukan = $divisi->pemasukans->sum('jml_masuk');
         $totalPengeluaran = $divisi->pengeluarans->sum('jml_keluar');
@@ -247,10 +257,20 @@ class DirekturController extends Controller
             $query->where('role', 4);
         }, 'pemasukans', 'pengeluarans'])->find($id)->users;
 
-        $pemasukans = tbl_divisi::with('users', 'pemasukans', 'pengeluarans')->find($id)->pemasukans;
+        $pemasukans = tbl_divisi::with([
+            'users',
+            'pemasukans' => function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('tgl_pemasukan', [$startDate, $endDate]);
+            },
+            'pengeluarans' => function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('tgl_pengeluaran', [$startDate, $endDate]);
+            }
+        ])->find($id)->pemasukans;
         $pengeluarans = tbl_divisi::with('users', 'pemasukans', 'pengeluarans')->find($id)->pengeluarans;
 
         return response()->json([
+            'startDate' => $startDate,
+            'endDate' => $endDate,
             'divisi' => $divisi,
             'users' => $users,
             'pemasukans' => $pemasukans,
@@ -337,13 +357,19 @@ class DirekturController extends Controller
         //     ]
         // )->where('role', '=', '4')->get();
 
+        $time = new Carbon();
+        $time->setTimeZone('Asia/Jakarta');
+
+        $startDate = $time->now()->startOfMonth();
+        $endDate = $time->now()->endOfMonth();
+
         $karyawans = User::with(
             [
-                'pemasukan' => function ($query) {
-                    $query->select('id_user', DB::raw('SUM(jml_masuk) as total_pemasukan'))->groupBy('id_user');
+                'pemasukan' => function ($query) use ($startDate, $endDate) {
+                    $query->select('id_user', DB::raw('SUM(jml_masuk) as total_pemasukan'))->where('status', '=', 1)->whereBetween('tgl_pemasukan', [$startDate, $endDate])->groupBy('id_user');
                 },
-                'pengeluaran' => function ($query) {
-                    $query->select('id_user', DB::raw('SUM(jml_keluar) as total_pengeluaran'))
+                'pengeluaran' => function ($query) use ($startDate, $endDate) {
+                    $query->select('id_user', DB::raw('SUM(jml_keluar) as total_pengeluaran'))->where('status', '=', 1)->whereBetween('tgl_pengeluaran', [$startDate, $endDate])
                         ->groupBy('id_user');
                 }
             ]
