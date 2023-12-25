@@ -42,7 +42,8 @@
                     <h3 class="card-title">Karyawan</h3>
                     <div class="card-tools">
                         {{-- tools --}}
-                        <span class="badge badge-info">{{ date('F') }}</span>
+                        {{-- <span class="badge badge-info">{{ date('F') }}</span> --}}
+                        <p class="small text-muted text-small mx-0 mb-0">*Data di bulan ini</p>
                     </div>
                 </div>
                 <div class="card-body table-responsive">
@@ -53,8 +54,8 @@
                                 <th>Nama</th>
                                 <th>Divisi</th>
                                 <th class="col-2">nomor telepon</th>
-                                <th>Pemasukan</th>
-                                <th>Pengeluaran</th>
+                                <th>Total Pemasukan</th>
+                                <th>Total Pengeluaran</th>
                                 <th>saldo</th>
                             </tr>
                         </thead>
@@ -123,7 +124,8 @@
                                                 <li class="text-sm d-flex justify-content-between">Pengeluaran:<b>Rp.
                                                         {{ number_format($karyawan->pengeluaran->isEmpty() ? 0 : $karyawan->pengeluaran[0]->total_pengeluaran, 2, ',', '.') }}</b>
                                                 </li>
-                                                <li class="text-sm d-flex justify-content-between {{ (($karyawan->pemasukan->isEmpty() ? 0 : $karyawan->pemasukan[0]->total_pemasukan) - ($karyawan->pengeluaran->isEmpty() ? 0 : $karyawan->pengeluaran[0]->total_pengeluaran)) > 0 ? 'text-success' : 'text-danger' }}">
+                                                <li
+                                                    class="text-sm d-flex justify-content-between {{ ($karyawan->pemasukan->isEmpty() ? 0 : $karyawan->pemasukan[0]->total_pemasukan) - ($karyawan->pengeluaran->isEmpty() ? 0 : $karyawan->pengeluaran[0]->total_pengeluaran) > 0 ? 'text-success' : 'text-danger' }}">
                                                     Saldo:<b>Rp.
                                                         {{ number_format(($karyawan->pemasukan->isEmpty() ? 0 : $karyawan->pemasukan[0]->total_pemasukan) - ($karyawan->pengeluaran->isEmpty() ? 0 : $karyawan->pengeluaran[0]->total_pengeluaran), 2, ',', '.') }}</b>
                                                 </li>
@@ -134,12 +136,12 @@
                                             </div> --}}
                                         </div>
                                         <div class="col-5 text-center">
-                                            @if ($karyawan->foto_profil == '')
-                                            <img src="{{ asset('img/user-photo-default.png') }}" alt="user-avatar"
-                                                class="img-circle img-fluid" width="200px">
+                                            @if ($karyawan->foto_profil == '' && file_exists(public_path('storage/' . Auth()->user()->foto_profil)))
+                                                <img src="{{ asset('img/user-photo-default.png') }}" alt="user-avatar"
+                                                    class="img-circle img-fluid" width="200px">
                                             @else
-                                            <img src="{{ asset('storage/' . $karyawan->foto_profil) }}" alt="user-avatar"
-                                                class="img-circle img-fluid" width="200px">
+                                                <img src="{{ asset('storage/' . $karyawan->foto_profil) }}"
+                                                    alt="user-avatar" class="img-circle img-fluid" width="200px">
                                             @endif
                                         </div>
                                     </div>

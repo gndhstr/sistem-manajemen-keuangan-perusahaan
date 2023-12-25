@@ -153,7 +153,6 @@ class DirekturController extends Controller
             $persentasePerbandinganAnggaran = ($aktualisasiAnggaran / $rencanaAnggaran) * 100;
         }
 
-
         $currentTime = now();
         $greeting = $this->getGreeting($currentTime);
 
@@ -176,6 +175,7 @@ class DirekturController extends Controller
             'perbandinganPemasukanPengeluaranMingguan' => $perbandinganPemasukanPengeluaranMingguan,
             'perbandinganPemasukanPengeluaranBulanan' => $perbandinganPemasukanPengeluaranBulanan,
             'perbandinganPemasukanPengeluaranTotal' => $perbandinganPemasukanPengeluaranTotal,
+            'rencanaAnggaran' => $rencanaAnggaran,
             'perbandinganAnggaran' => $persentasePerbandinganAnggaran,
             'realisasiAnggaran' => $realisasiAnggaranFormatted,
             'greeting' => $greeting,
@@ -317,13 +317,20 @@ class DirekturController extends Controller
             $perbandinganAnggaran = (($aktualisasiBulanans[0] - $rencanaBulanans[0]) / $aktualisasiBulanans[0]) * 100;
         }
 
+        if ($rencanaBulanans[0] == 0) {
+            $persentasePemenuhanAnggaran = 0;
+        } else {
+            $persentasePemenuhanAnggaran = ($aktualisasiBulanans[0] / $rencanaBulanans[0]) * 100;
+        }
+
         return view('direktur.anggaran', [
-            // 'dump' => dd($aktualisasiBulanans),
+            // 'dump' => dd($perbandinganAnggaran),
             'tanggalBulanans' => $tanggalBulanans,
             'anggarans' => $anggarans,
             'rencanaBulanans' => $rencanaBulanans,
             'aktualisasiBulanans' => $aktualisasiBulanans,
             'perbandinganAnggaran' => $perbandinganAnggaran,
+            'persentasePemenuhanAnggaran' => $persentasePemenuhanAnggaran,
         ]);
     }
 

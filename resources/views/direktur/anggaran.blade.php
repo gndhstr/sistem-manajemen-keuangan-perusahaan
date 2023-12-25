@@ -33,7 +33,8 @@
                         <h3 class="card-title">Anggaran</h3>
                         <div class="card-tools">
                             {{-- tools --}}
-                            <span class="badge badge-info">{{ date('F') }}</span>
+                            {{-- <span class="badge badge-info">{{ date('F') }}</span> --}}
+                            <p class="small text-muted text-small mx-0 mb-0">*Data di bulan ini</p>
                         </div>
                     </div>
                     <div class="card-body">
@@ -84,10 +85,10 @@
                                     <span class="text-sm">Dari rencana</span>
                                 </p>
                                 <p class="ml-auto d-flex flex-column text-right">
-                                    <span class="{{ $perbandinganAnggaran >= 0 ? 'text-danger' : 'text-success' }}">
+                                    <span class="{{ $persentasePemenuhanAnggaran >= 100 ? 'text-danger' : 'text-success' }}">
                                         <i
-                                            class="fa {{ $perbandinganAnggaran >= 0 ? 'fa-arrow-up' : 'fa-arrow-down' }} "></i>
-                                        {{ number_format($perbandinganAnggaran, 2) }} %
+                                            class="fa fa-arrow-up"></i>
+                                        {{ number_format($persentasePemenuhanAnggaran, 2) }} %
                                     </span>
                                     <span class="text-muted">Aktualisasi</span>
                                 </p>

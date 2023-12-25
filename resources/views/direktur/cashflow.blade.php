@@ -415,8 +415,8 @@
                         endDate: endDate.value
                     },
                     success: function(data) {
-                        console.log(data.startDate, data.endDate);
-                        console.log(data);
+                        // console.log(data.startDate, data.endDate);
+                        // console.log(data);
                         $('#data-table-karyawan').show();
                         $('#data-table-karyawan').DataTable().destroy();
 
