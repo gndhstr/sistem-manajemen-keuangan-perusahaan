@@ -65,7 +65,7 @@ return $rupiah;
                             <th>Kategori</th>
                             <th>Nominal</th>
                             <th>Catatan</th>
-                            <th class="text-center">Keterangan</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,6 +85,10 @@ return $rupiah;
                             </td>
                         </tr>
                         @endforeach
+                        <tr>
+                            <td colspan="3" class="text-center">Jumlah</td>
+                            <td colspan="2">{{"Rp ".number_format($total, 0, ",", "." ) }}</td>
+                        </tr>
                     </tbody>
                 </table>
 
@@ -194,7 +198,7 @@ return $rupiah;
                                     <!-- Input untuk tanggal pemasukan -->
                                     <div class="form-group">
                                         <label for="tgl_pemasukan_edit">Tanggal Pemasukan</label>
-                                        <input type="date" class="form-control" id="tgl_pemasukan_edit" name="tgl_pemasukan" value="{{ $pemasukan->tgl_pemasukan }}" required>
+                                        <input type="date" class="form-control" id="tgl_pemasukan_edit" name="tgl_pemasukan" value="{{ $pemasukan->tgl_pemasukan }}" required readonly>
                                     </div>
 
                                     <!-- Pilih kategori menggunakan select -->
@@ -212,22 +216,13 @@ return $rupiah;
                                     <!-- Input untuk jumlah masuk -->
                                     <div class="form-group">
                                         <label for="jml_masuk_edit">Nominal</label>
-                                        <input type="text" class="form-control" id="jml_masuk_edit" name="jml_masuk" value="{{ $pemasukan->jml_masuk }}" required>
+                                        <input type="text" class="form-control" id="jml_masuk_edit" name="jml_masuk" value="{{ $pemasukan->jml_masuk }}" required readonly>
                                     </div>
 
                                     <!-- Textarea untuk catatan -->
                                     <div class="form-group">
                                         <label for="catatan_edit">Catatan</label>
                                         <textarea class="form-control" id="catatan_edit" name="catatan" rows="3" required>{{ $pemasukan->catatan }}</textarea>
-                                    </div>
-
-                                    <!-- Input untuk bukti edit pemasukan -->
-                                    <div class="form-group">
-                                        <label for="bukti_pemasukan_edit">Bukti Pemasukan</label>
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="bukti_pemasukan_edit" name="bukti_pemasukan" accept="image/*">
-                                            <label class="custom-file-label" for="bukti_pemasukan_edit">Choose file</label>
-                                        </div>
                                     </div>
 
                                     <div class="text-right">
