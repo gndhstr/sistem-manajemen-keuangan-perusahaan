@@ -1,10 +1,3 @@
-@php
-function formatRupiah($angka){
-$rupiah = "Rp. " . number_format($angka,0,',','.');
-return $rupiah;
-}
-@endphp
-
 @extends('karyawan.layouts.master')
 
 @section("addCss")
@@ -78,7 +71,7 @@ return $rupiah;
                             <td>{{ $loop->index + 1 }}</td>
                             <td>{{ \Carbon\Carbon::parse($pengeluaran->tgl_pengeluaran)->format('d/m/Y') }}</td>
                             <td>{{ $pengeluaran->kategori->nama_kategori }}</td>
-                            <td>{{ formatRupiah($pengeluaran->jml_keluar) }}</td>
+                            <td>{{"Rp ".number_format($pengeluaran->jml_keluar, 0, ",", "." ) }}</td>
                             <td>{{ $pengeluaran->catatan }}</td>
                             <td class="text-center">
                                 <button class="btn btn-primary btn-sm view-button"
@@ -308,10 +301,6 @@ return $rupiah;
             $(".view-button").on("click", function () {
                 var url = $(this).data("url");
                 $("#viewPengeluaranModal").modal("show");
-            });
-            // Format Rupiah
-            $('.rupiah').mask('000.000.000.000', {
-                reverse: true
             });
         });
 
