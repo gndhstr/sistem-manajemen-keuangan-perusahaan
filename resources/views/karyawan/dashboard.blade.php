@@ -42,7 +42,7 @@
                 <div class="col">
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3>Total Pemasukan</h3>
+                            <h3>Total Pemasukan {{$tahun}}</h3>
                             <p>Rp.{{ number_format($totalMasuk, 2, ',', '.') }}</p>
                         </div>
                         <div class="icon">
@@ -56,7 +56,7 @@
                 <div class="col">
                     <div class="small-box bg-danger">
                         <div class="inner">
-                            <h3>Total Pengeluaran</h3>
+                            <h3>Total Pengeluaran {{$tahun}}</h3>
                             <p>Rp.{{ number_format($totalKeluar, 2, ',', '.') }}</p>
                         </div>
                         <div class="icon">

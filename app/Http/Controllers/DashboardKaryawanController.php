@@ -29,11 +29,21 @@ class DashboardKaryawanController extends Controller
         $pemasukans = tbl_pemasukan::where('status', "1")->where('id_user', $id_user)->get();
         $pengeluarans = tbl_pengeluaran::where('status', "1")->where('id_user', $id_user)->get();
 
+        $pemasukanBulanIni = tbl_pemasukan::where('status', '1')
+        ->where('id_user', $id_user)
+        ->whereYear('tgl_pemasukan', '=', date('Y'))
+        ->get();
+        $pengeluaranBulanIni = tbl_pengeluaran::where('status', '1')
+        ->where('id_user', $id_user)
+        ->whereYear('tgl_pengeluaran', '=', date('Y'))
+        ->get();
+    
+
         $totalMasuk = 0;
         $totalKeluar = 0;
 
-        $JmlMasuk = $pemasukans->sum('jml_masuk');
-        $JmlKeluar = $pengeluarans->sum('jml_keluar');
+        $JmlMasuk = $pemasukanBulanIni->sum('jml_masuk');
+        $JmlKeluar = $pengeluaranBulanIni->sum('jml_keluar');
         $saldo = $JmlMasuk - $JmlKeluar;
 
         $totalMasuk += $JmlMasuk;

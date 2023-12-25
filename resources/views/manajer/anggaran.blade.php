@@ -49,8 +49,8 @@
 							<td class="text-center">{{ $loop->index + 1}}</td>
         					<td class="text-center">{{ $anggaran->divisi->nama_divisi }}</td>
 							<td class="text-center">{{ $anggaran->kategori->nama_kategori }}</td>
-							<td class="text-center">{{ $anggaran->rencana_anggaran}}</td>
-							<td class="text-center">{{ $anggaran->aktualisasi_anggaran}}</td>
+							<td class="text-center">Rp. {{ number_format($anggaran->rencana_anggaran) }}</td>
+							<td class="text-center">Rp. {{ number_format($anggaran->aktualisasi_anggaran) }}</td>
 							<td class="text-center">{{ $anggaran->tgl_anggaran}}</td>
 							<td class="text-center">
 								<a data-url="{{route('editAnggaran',['id_anggaran'=>$anggaran->id_anggaran])}}" class="btn btn-warning btn-sm" role="button" data-toggle="modal" data-target="#editData{{$anggaran->id_anggaran}}" >Edit</a>
@@ -71,7 +71,7 @@
                         </div>
                         <div class="card-body pt-3">
                             <div class="mb-5 text-center">
-								<h3>Grafik Anggaran Tahunan</h3>
+								<h3>Grafik Anggaran Tahunan ({{ $tahun }})</h3>
                             </div>
                             <!-- /.d-flex -->
                             <div class="position-relative mb-4">
