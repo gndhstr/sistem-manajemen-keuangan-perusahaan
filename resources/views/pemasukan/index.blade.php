@@ -1,10 +1,3 @@
-@php
-function formatRupiah($angka){
-$rupiah = "Rp. " . number_format($angka,0,',','.');
-return $rupiah;
-}
-@endphp
-
 @extends('karyawan.layouts.master')
 
 @section("addCss")
@@ -74,7 +67,7 @@ return $rupiah;
                             <td>{{ $loop->index + 1 }}</td>
                             <td>{{ \Carbon\Carbon::parse($pemasukan->tgl_pemasukan)->format('d/m/Y') }}</td>
                             <td>{{ $pemasukan->kategori->nama_kategori }}</td>
-                            <td>{{ formatRupiah($pemasukan->jml_masuk) }}</td>
+                            <td>{{ "Rp ".number_format($pemasukan->jml_masuk, 0, ",", "." ) }}</td>
                             <td>{{ $pemasukan->catatan }}</td>
                             <td class="text-center">
                                 <button class="btn btn-primary btn-sm view-button" data-url="{{ route('viewPemasukan', ['id_pemasukan'=>$pemasukan->id_pemasukan]) }}" data-toggle="modal" data-target="#viewPemasukanModal{{ $pemasukan->id_pemasukan }}">
@@ -281,10 +274,6 @@ return $rupiah;
             $(".view-button").on("click", function() {
                 var url = $(this).data("url");
                 $("#viewPemasukanModal").modal("show");
-            });
-            // Format Rupiah
-            $('.rupiah').mask('000.000.000.000', {
-                reverse: true
             });
         });
     </script>
