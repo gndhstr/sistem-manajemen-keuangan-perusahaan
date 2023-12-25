@@ -222,7 +222,7 @@ return $rupiah;
                                     <div class="form-group">
                                         <label for="tgl_pengeluaran_edit">Tanggal pengeluaran</label>
                                         <input type="date" class="form-control" id="tgl_pengeluaran_edit"
-                                            name="tgl_pengeluaran" value="{{ $pengeluaran->tgl_pengeluaran }}" required>
+                                            name="tgl_pengeluaran" value="{{ $pengeluaran->tgl_pengeluaran }}" required readonly>
                                     </div>
 
                                     <!-- Pilih kategori menggunakan select -->
@@ -242,14 +242,7 @@ return $rupiah;
                                     <div class="form-group">
                                         <label for="jml_keluar_edit">Nominal</label>
                                         <input type="text" class="form-control" id="jml_keluar_edit" name="jml_keluar"
-                                            value="{{ $pengeluaran->jml_keluar }}" required>
-                                    </div>
-
-                                    <!-- Input untuk tanggal pengeluaran -->
-                                    <div class="form-group">
-                                        <label for="tgl_pengeluaran_edit">Tanggal pengeluaran</label>
-                                        <input type="date" class="form-control" id="tgl_pengeluaran_edit"
-                                            name="tgl_pengeluaran" value="{{ $pengeluaran->tgl_pengeluaran }}" required>
+                                            value="{{ $pengeluaran->jml_keluar }}" required readonly>
                                     </div>
 
                                     <!-- Textarea untuk catatan -->
@@ -257,17 +250,6 @@ return $rupiah;
                                         <label for="catatan_edit">Catatan</label>
                                         <textarea class="form-control" id="catatan_edit" name="catatan" rows="3"
                                             required>{{ $pengeluaran->catatan }}</textarea>
-                                    </div>
-
-                                    <!-- Input untuk bukti pengeluaran -->
-                                    <div class="form-group">
-                                        <label for="bukti_pengeluaran_edit">Bukti Pengeluaran</label>
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="bukti_pengeluaran_edit"
-                                                name="bukti_pengeluaran" accept="image/*">
-                                            <label class="custom-file-label" for="bukti_pengeluaran_edit">Choose
-                                                file</label>
-                                        </div>
                                     </div>
 
                                     <div class="text-right">

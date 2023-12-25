@@ -143,21 +143,12 @@ class PengeluaranController extends Controller
             'id_user_edit' => 'required|integer',
             'tgl_pengeluaran' => 'required|string',
             'jml_keluar' => 'required|string|max:255',
-            'bukti_pengeluaran' => 'nullable|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'catatan' => 'nullable|string',
             'status' => 'nullable',
         ]);
     
-        if ($request->hasFile('bukti_pengeluaran')) {
-            // Delete the old file
-            Storage::delete('bukti_pengeluaran/' . $pengeluaran->bukti_pengeluaran);
-    
-            // Upload and save the new file
-            $file = $request->file('bukti_pengeluaran');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('bukti_pengeluaran', $fileName, 'public');
-            $pengeluaran->bukti_pengeluaran = $fileName;
-        }
+
+        
     
         $pengeluaran->id_kategori = $validatedData['id_kategori'];
         $pengeluaran->id_user = $validatedData['id_user'];
