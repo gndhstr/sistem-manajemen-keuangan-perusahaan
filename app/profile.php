@@ -7,14 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 class profile extends Model
 {
     protected $table ="tbl_users";
-    protected $primaryKey = 'id';
-    protected $fillable =[
-        "id",
-        "nama",
-        "alamat",
-        "foto_profil",
-        "nomor_telepon",
-        "id_divisi",
+    // protected $primaryKey = 'id';
+    // protected $fillable =[
+    //     "id",
+    //     "nama",
+    //     "alamat",
+    //     "foto_profil",
+    //     "nomor_telepon",
+    //     "id_divisi",
+    //     "email",
+
+    // ];
+    protected $guarded = [
+        'id'
     ];
     public function division()
     {
