@@ -19,6 +19,10 @@
             transform: translate(-50%, -50%);
         }
 
+        .tabelModal {
+            width: 100%;
+        }        
+
         @media screen and (max-width: 700px) {
             .spinner-container {
                 top: 75%;
@@ -43,7 +47,8 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active">cashflow</li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboardDirektur') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Mutasi</li>
                     </ol>
                 </div><!-- /.col -->
             </div><!-- /.row -->
@@ -249,7 +254,7 @@
                                                 class="btn btn-success mb-1 mt-0 align-self-baseline"
                                                 role="button">Export PDF<i class="fa fa-file-pdf"></i></a>
                                         </div>
-                                        <div class="table-responsive d-lg-table">
+                                        <div class="d-lg-table width-100 tabelModal table-responsive">
                                             <table class="table table-hover mb-0" id="tabelModal">
                                                 <thead>
                                                     <tr>
@@ -286,7 +291,7 @@
                                                         <tr>
                                                             <td class="text-center">{{ $loop->index + 1 }}</td>
                                                             <td class="text-center">
-                                                                {{ isset($mutasi->tgl_pemasukan) ? (new DateTime($mutasi->tgl_pemasukan))->format('d-m-Y') : (new DateTime($mutasi->tgl_pengeluaran))->format('d-m-Y') }}
+                                                                {{ isset($mutasi->tgl_pemasukan) ? (new DateTime($mutasi->tgl_pemasukan))->format('d/m/Y') : (new DateTime($mutasi->tgl_pengeluaran))->format('d/m/Y') }}
                                                             </td>
                                                             <td class="text-center">
                                                                 <small class="text-success mr-1">
@@ -307,14 +312,14 @@
                                                                 @if ($mutasi->jml_keluar == '' || $mutasi->jml_keluar == null)
                                                                     <button class="btn btn-primary btn-sm view-button"
                                                                         data-url="{{ route('viewBukti', ['id_pemasukan' => $mutasi->id_pemasukan]) }}"
-                                                                        data-dismiss="modal" data-toggle="modal"
+                                                                        data-toggle="modal"
                                                                         data-target="#viewPemasukanModal{{ $mutasi->id_pemasukan }}">
                                                                         <i class="fa fa-eye"></i>
                                                                     </button>
                                                                 @else
                                                                     <button class="btn btn-primary btn-sm view-button"
                                                                         data-url="{{ route('viewBukti', ['id_pengeluaran' => $mutasi->id_pengeluaran]) }}"
-                                                                        data-dismiss="modal" data-toggle="modal"
+                                                                        data-toggle="modal"
                                                                         data-target="#viewPengeluaranModal{{ $mutasi->id_pengeluaran }}">
                                                                         <i class="fa fa-eye"></i>
                                                                     </button>
@@ -349,8 +354,15 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <img src="{{ asset('storage/bukti_pemasukan/' . $pemasukan->bukti_pemasukan) }}"
-                                        alt="Bukti Pemasukan" style="max-width: 100%;">
+                                    @if (file_exists(public_path('storage/bukti_pemasukan/' . $pemasukan->bukti_pemasukan)))
+                                        <img src="{{ asset('storage/bukti_pemasukan/' . $pemasukan->bukti_pemasukan) }}"
+                                            alt="Bukti Pemasukan" style="max-width: 100%;">
+                                    @else
+                                        <img src="{{ asset('img/user-photo-default.png') }}"
+                                            class="img-circle elevation-2" alt="User Image">
+                                    @endif
+                                    {{-- <img src="{{ asset('storage/bukti_pemasukan/' . $pemasukan->bukti_pemasukan) }}"
+                                        alt="Bukti Pemasukan" style="max-width: 100%;"> --}}
                                 </div>
                             </div>
                         </div>
@@ -370,8 +382,15 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <img src="{{ asset('storage/bukti_pengeluaran/' . $pengeluaran->bukti_pengeluaran) }}"
-                                        alt="Bukti Pengeluaran" style="max-width: 100%;">
+                                    @if (file_exists(public_path('storage/bukti_pengeluaran/' . $pengeluaran->bukti_pengeluaran)))
+                                        <img src="{{ asset('storage/bukti_pengeluaran/' . $pengeluaran->bukti_pengeluaran) }}"
+                                            alt="Bukti Pengeluaran" style="max-width: 100%;">
+                                    @else
+                                        <img src="{{ asset('img/user-photo-default.png') }}"
+                                            class="img-circle elevation-2" alt="User Image">
+                                    @endif
+                                    {{-- <img src="{{ asset('storage/bukti_pengeluaran/' . $pengeluaran->bukti_pengeluaran) }}"
+                                        alt="Bukti Pengeluaran" style="max-width: 100%;"> --}}
                                 </div>
                             </div>
                         </div>
@@ -386,6 +405,9 @@
 @section('addJavascript')
     <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+    <script>
+        // responsivitas 
+    </script>
     <script>
         $(document).ready(function() {
             if (!startDate.value && !endDate.value) {
@@ -409,7 +431,7 @@
 
                 $.ajax({
                     type: 'GET',
-                    url: 'cashflow/' + divisiId + '/data',
+                    url: 'mutasi/' + divisiId + '/data',
                     data: {
                         startDate: startDate.value,
                         endDate: endDate.value
@@ -470,7 +492,7 @@
                         });
                         $('#karyawan').html(html);
 
-                        $("#data-table-karyawan").DataTable({
+                        var dataTableKaryawanConfig = {
                             order: [
                                 [0, 'asc']
                             ],
@@ -481,7 +503,13 @@
                             paging: true,
                             scrollCollapse: true,
                             scrollY: '350px',
-                        });
+                        };
+
+                        if (window.innerWidth <= 767) {
+                            dataTableKaryawanConfig.scrollX = true;
+                        }
+
+                        $("#data-table-karyawan").DataTable(dataTableKaryawanConfig);
                     },
                     error: function(error) {
                         console.error('Error:', error);
@@ -496,13 +524,8 @@
 
     <script>
         $(function() {
-
-        });
-    </script>
-
-    <script>
-        $(function() {
-            $("#data-table-divisi").DataTable({
+            // Data table Divisi Config
+            var dataTableDivisiConfig = {
                 columnDefs: [{
                     orderable: false,
                     targets: [1, 2, 3, 4],
@@ -510,9 +533,10 @@
                 paging: true,
                 scrollCollapse: true,
                 scrollY: '350px',
-            });
+            };
 
-            $("#data-table-karyawan").DataTable({
+            // Data table Karyawan Config
+            var dataTableKaryawanConfig = {
                 order: [
                     [0, 'asc']
                 ],
@@ -523,16 +547,26 @@
                 paging: true,
                 scrollCollapse: true,
                 scrollY: '350px',
-            });
+            };
 
-            $("#tabelModal").DataTable({
-                "pageLength": 5,
-                "lengthChange": false,
+            var dataTableModalConfig = {                
                 columnDefs: [{
                     orderable: false,
                     targets: [1, 2, 3, 4, 5],
                 }],
-            });
+            };
+
+            //Responsivitas
+            if (window.innerWidth <= 767) {
+                dataTableDivisiConfig.scrollX = true;
+                dataTableKaryawanConfig.scrollX = true;
+                dataTableModalConfig.scrollX = true;
+            }
+
+            //Create Datatable
+            $("#data-table-divisi").DataTable(dataTableDivisiConfig);
+            $("#data-table-karyawan").DataTable(dataTableKaryawanConfig);
+            $("#tabelModal").DataTable(dataTableModalConfig);
         });
     </script>
 @endsection

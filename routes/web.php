@@ -100,17 +100,17 @@ Route::prefix("admin")->middleware("auth", "role:1")->group(function(){
 
 
 Route::prefix('direktur')->middleware("auth", "role:2")->group(function () {
-    Route::redirect('/', 'direktur/dashboard');
-    Route::get('/dashboard', 'DirekturController@dashboard');
-    Route::get('/cashflow', 'DirekturController@cashflow')->name('mutasiDirektur');
-    Route::get('/anggaran', 'DirekturController@anggaran');
-    Route::get('/karyawan', 'DirekturController@karyawan');
+    Route::redirect('', '/direktur/dashboard');    
 
-    Route::get('/cashflow/{id}/data', 'DirekturController@cashflowDivisi')->name('cashflowDivisi');    
-    // Route::get('/karyawan/{id}', 'DirekturController@karyawan');
+    Route::get('/dashboard', 'DirekturController@dashboard')->name("dashboardDirektur");
+    Route::get('/mutasi', 'DirekturController@mutasi')->name('mutasiDirektur');
+    Route::get('/anggaran', 'DirekturController@anggaran')->name("anggaranDirektur");
+    Route::get('/karyawan', 'DirekturController@karyawan')->name("karyawanDirektur");
+
+    Route::get('/mutasi/{id}/data', 'DirekturController@mutasiDivisi')->name('mutasiDivisi');
 
     //cetak
-    Route::get("/cashflow/karyawan/cetak","DirekturController@mutasiKaryawanCetak")->name("cetakMutasiKaryawanDirektur");
+    Route::get("/mutasi/karyawan/cetak","DirekturController@mutasiKaryawanCetak")->name("cetakMutasiKaryawanDirektur");
 });
 
 Route::prefix('manajer')->middleware("auth", "role:3")->group(function () {

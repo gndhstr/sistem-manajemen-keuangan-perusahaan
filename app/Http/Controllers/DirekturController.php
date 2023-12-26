@@ -182,7 +182,7 @@ class DirekturController extends Controller
         ]);
     }
 
-    public function cashflow(Request $tampil)
+    public function mutasi(Request $tampil)
     {
         $time = new Carbon();
         $time->setTimeZone('Asia/Jakarta');
@@ -232,7 +232,7 @@ class DirekturController extends Controller
         $pemasukans2 = tbl_pemasukan::where('status', "1")->get();
         $pengeluarans2 = tbl_pengeluaran::where('status', "1")->get();
 
-        return view('direktur.cashflow', [
+        return view('direktur.mutasi', [
             // 'dump' => dd($riwayatPemasukanPengeluaran),            
             'riwayatPemasukanPengeluaran' => $riwayatPemasukanPengeluaran,
             'divisis' => $divisis,
@@ -244,7 +244,7 @@ class DirekturController extends Controller
         ]);
     }
 
-    public function cashflowDivisi(Request $request, $id)
+    public function mutasiDivisi(Request $request, $id)
     {
         $startDate = $request->input('startDate');
         $endDate = $request->input('endDate');

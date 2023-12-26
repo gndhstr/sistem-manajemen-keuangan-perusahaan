@@ -14,6 +14,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="{{ route('dashboardDirektur') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active">Anggaran</li>
                     </ol>
                 </div><!-- /.col -->
@@ -34,11 +35,11 @@
                         <div class="card-tools">
                             {{-- tools --}}
                             {{-- <span class="badge badge-info">{{ date('F') }}</span> --}}
-                            <p class="small text-muted text-small mx-0 mb-0">*Data di bulan ini</p>
+                            {{-- <p class="small text-muted text-small mx-0 mb-0">*Data di bulan ini</p> --}}
                         </div>
                     </div>
                     <div class="card-body">
-                        <table class="table table-hover" id="data-table-divisi">
+                        <table class="table table-hover" id="data-table-anggaran">
                             <thead>
                                 <tr class="text-center">
                                     <th class="col-1">No</th>
@@ -59,7 +60,8 @@
                                             {{ number_format($anggaran->rencana_anggaran, 2, ',', '.') }}</td>
                                         <td class="text-right">Rp.
                                             {{ number_format($anggaran->aktualisasi_anggaran, 2, ',', '.') }}</td>
-                                        <td class="text-center">{{  (new DateTime($anggaran->tgl_anggaran))->format('d-m-Y') }}</td>
+                                        <td class="text-center">
+                                            {{ (new DateTime($anggaran->tgl_anggaran))->format('d/m/Y') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -67,7 +69,7 @@
                     </div>
                 </div>
                 {{-- chart --}}
-                <div class="col-lg-6">
+                <div class="col-lg-6 px-0 px-lg-2">
                     <div class="card border-3">
                         <div class="card-header border-0 pb-0">
                             <div class="card-tools">
@@ -82,15 +84,15 @@
                                             class="mr-lg-1">{{ $aktualisasiBulanans[0] - $rencanaBulanans[0] >= 0 ? '+' : '-' }}</b>Rp.
                                         {{ number_format(abs($aktualisasiBulanans[0] - $rencanaBulanans[0]), 2, ',', '.') }}
                                     </span>
-                                    <span class="text-sm">Dari rencana</span>
+                                    <span class="text-muted text-sm">Dari rencana di bulan ini</span>
                                 </p>
                                 <p class="ml-auto d-flex flex-column text-right">
-                                    <span class="{{ $persentasePemenuhanAnggaran >= 100 ? 'text-danger' : 'text-success' }}">
-                                        <i
-                                            class="fa fa-arrow-up"></i>
+                                    <span
+                                        class="{{ $persentasePemenuhanAnggaran >= 100 ? 'text-danger' : 'text-success' }}">
+                                        <i class="fa fa-arrow-up"></i>
                                         {{ number_format($persentasePemenuhanAnggaran, 2) }} %
                                     </span>
-                                    <span class="text-muted">Aktualisasi</span>
+                                    <span class="text-muted text-sm">Aktualisasi di bulan ini</span>
                                 </p>
                             </div>
                             <!-- /.d-flex -->
@@ -122,7 +124,7 @@
     <script src="{{ asset('js/Chart.js') }}"></script>
     <script>
         $(function() {
-            $("#data-table-divisi").DataTable({
+            var dataTableConfig = {
                 order: [
                     [0, 'asc']
                 ],
@@ -133,11 +135,27 @@
                 paging: true,
                 scrollCollapse: true,
                 scrollY: '350px',
-            });
+            };
+
+            if (window.innerWidth <= 767) {
+                dataTableConfig.scrollX = true;
+            }
+
+            $("#data-table-anggaran").DataTable(dataTableConfig);
         });
     </script>
     <script>
         $(function() {
+            // Chart
+            'use strict'
+
+            var ticksStyle = {
+                fontColor: '#495057',
+                fontStyle: 'bold'
+            }
+            var mode = 'index'
+            var intersect = true
+
             var tanggalBulanans = @json($tanggalBulanans);
             for (const key in tanggalBulanans) {
                 if (tanggalBulanans.hasOwnProperty(key)) {
@@ -158,16 +176,6 @@
                     const element = aktualisasiBulanans[key];
                 }
             }
-
-            // Chart
-            'use strict'
-
-            var ticksStyle = {
-                fontColor: '#495057',
-                fontStyle: 'bold'
-            }
-            var mode = 'index'
-            var intersect = true
 
             var $visitorsChart = $('#visitors-chart')
             // eslint-disable-next-line no-unused-vars

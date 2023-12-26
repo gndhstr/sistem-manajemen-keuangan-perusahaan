@@ -34,25 +34,25 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
                 <li class="nav-item">
-                    <a href="/direktur/dashboard" class="nav-link">
+                    <a href="{{ route('dashboardDirektur') }}" class="nav-link">
                         <i class="nav-icon fa fa-dashboard"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/direktur/cashflow" class="nav-link">
+                    <a href="{{ route('mutasiDirektur') }}" class="nav-link">
                         <i class="nav-icon fa fa-file-text-o"></i>
                         <p>Mutasi Keuangan</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/direktur/anggaran" class="nav-link">
-                        <i class="nav-icon fa fa-money"></i>
+                    <a href="{{ route('anggaranDirektur') }}" class="nav-link">
+                        <i class="nav-icon fa fa-briefcase"></i>
                         <p>Anggaran</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/direktur/karyawan" class="nav-link">
+                    <a href="{{ route('karyawanDirektur') }}" class="nav-link">
                         <i class="nav-icon fa fa-users"></i>
                         <p>Karyawan</p>
                     </a>

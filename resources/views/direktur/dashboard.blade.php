@@ -45,7 +45,7 @@
                                         <p class="d-flex flex-column">
                                             <span class="text-bold text-lg">Rp.
                                                 {{ number_format($pemasukanMingguan, 2, ',', '.') }}</span>
-                                            <span class="text-sm">Pemasukan Karyawan di Minggu ini</span>
+                                            <span class="text-muted text-sm">Pemasukan Karyawan di Minggu ini</span>
                                         </p>
                                         <p class="ml-auto d-flex flex-column text-right">
                                             <span
@@ -53,7 +53,7 @@
                                                 {{-- <i class="fa {{ $perbandinganPemasukanPengeluaranMingguan > 0 ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i> --}}
                                                 {{ number_format($perbandinganPemasukanPengeluaranMingguan, 2) }} %
                                             </span>
-                                            <span class="text-muted">Dari Pemasukan</span>
+                                            <span class="text-muted text-sm">Dibanding Pengeluaran</span>
                                             {{-- <span class="text-muted">{{ $tanggalMingguan }}</span> --}}
                                         </p>
                                     </div>
@@ -88,7 +88,7 @@
                                         <p class="d-flex flex-column">
                                             <span class="text-bold text-lg">Rp.
                                                 {{ number_format($pemasukanBulanan, 2, ',', '.') }}</span>
-                                            <span class="text-sm">Pemasukan Karyawan di Bulan ini</span>
+                                            <span class="text-muted text-sm">Pemasukan Karyawan di Bulan ini</span>
                                         </p>
                                         <p class="ml-auto d-flex flex-column text-right">
                                             <span
@@ -97,7 +97,7 @@
                                                     class="fa {{ $perbandinganPemasukanPengeluaranBulanan > 0 ? 'fa-arrow-up' : 'fa-arrow-down' }}"></i> --}}
                                                 {{ number_format($perbandinganPemasukanPengeluaranBulanan, 2) }}%
                                             </span>
-                                            <span class="text-muted">Dari Pemasukan</span>
+                                            <span class="text-muted text-sm">Dibanding Pengeluaran</span>
                                             {{-- <span class="text-muted">{{ $tanggalBulanan }}</span> --}}
                                         </p>
                                     </div>
@@ -124,15 +124,14 @@
                 </div>
             </div>
 
-
             {{-- card ringkasan --}}
-            <div class="col-12">
+            <div class="col-12 py-2">
                 <div class="card">
                     <div class="row">
                         <div class="col-sm-3 col-6">
                             <div class="description-block border-right">
-                                <span class="description-percentage text-success"><i class="fa fa-caret-up"></i>
-                                    {{ number_format($perbandinganPemasukanPengeluaranTotal, 2) }}%</span>
+                                <span class="description-percentage"><i class="fa fa-caret-down text-success mr-lg-1"></i></span>
+                                <span class="description-percentage"><i class="fa fa-money text-success"></i></span>
                                 <h5 class="description-header">Rp. {{ number_format($totalPemasukan, 2, ',', '.') }}</h5>
                                 <span class="description-text">TOTAL PEMASUKAN KARYAWAN</span>
                             </div>
@@ -151,7 +150,7 @@
                         <!-- /.col -->
                         <div class="col-sm-3 col-6">
                             <div class="description-block border-right">
-                                <span class="description-percentage"><i class="fa fa-money"></i></span>
+                                <span class="description-percentage"><i class="fa fa-briefcase text-success"></i></span>
                                 <h5 class="description-header">Rp. {{ number_format($rencanaAnggaran, 2, ',', '.') }}</h5>
                                 <span class="description-text">TOTAL ANGGARAN</span>
                             </div>
