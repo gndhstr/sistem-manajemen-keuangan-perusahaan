@@ -32,7 +32,7 @@
                 <a href="{{ route('createPengeluaran') }}" class="btn btn-primary" role="button" data-toggle="modal"
                     data-target="#tambahPengeluaranModal">Tambah Data</a>
                 <a href="{{ route('cetakPengeluaran', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}"
-                    class="btn btn-success mx-1" role="button">Export PDF <i class="fa fa-file-pdf"></i></a>
+                    class="btn btn-success mx-1" role="button">Export PDF <i class="fa fa-file-pdf-o"></i></a>
             </div>
             <div class="card-body">
                 <form method="get" action="{{ route('daftarPengeluaran') }}" class="mb-3">
@@ -49,7 +49,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="d-block invisible">Filter</label>
-                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <button type="submit" class="btn btn-primary fa fa-filter"></button>
                         </div>
                     </div>
                 </form>
@@ -78,15 +78,15 @@
                                     data-url="{{ route('viewPengeluaran', ['id_pengeluaran'=>$pengeluaran->id_pengeluaran]) }}"
                                     data-toggle="modal"
                                     data-target="#viewPengeluaranModal{{ $pengeluaran->id_pengeluaran }}">
-                                    <i class="fa fa-eye"></i> Lihat
+                                    <i class="fa fa-eye"></i>
                                 </button>
                                 <a data-url="{{ route('editPengeluaran', ['id_pengeluaran'=>$pengeluaran->id_pengeluaran]) }}"
-                                    class="btn btn-warning btn-sm edit-button" role="button" data-toggle="modal"
-                                    data-target="#editPengeluaranModal{{ $pengeluaran->id_pengeluaran }}">Edit</a>
+                                    class="btn btn-warning btn-sm edit-button fa fa-pencil" role="button" data-toggle="modal"
+                                    data-target="#editPengeluaranModal{{ $pengeluaran->id_pengeluaran }}"></a>
                                 <a onclick="confirmDelete(this, '{{ $pengeluaran->id_pengeluaran }}')"
                                     href="{{ route('deletePengeluaran', $pengeluaran->id_pengeluaran) }}"
                                     data-nama="{{ $pengeluaran->kategori->nama_kategori }}"
-                                    class="btn btn-danger btn-sm ml-1 text-white delete-button" role="button">Hapus</a>
+                                    class="btn btn-danger btn-sm ml-1 text-white delete-button fa fa-trash" role="button"></a>
                             </td>
                         </tr>
                         @endforeach
