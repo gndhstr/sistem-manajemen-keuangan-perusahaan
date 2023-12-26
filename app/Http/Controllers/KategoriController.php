@@ -47,7 +47,7 @@ class KategoriController extends Controller
         $kategori = new tbl_kategori($validasiData);
         $kategori->save();
 
-        return redirect(route("daftarKategori"))->with("success","Kategori $kategori->nama_kategori berhasil ditambah");
+        return redirect(route("daftarKategori"))->with("berhasil","Kategori $kategori->nama_kategori berhasil ditambah");
     }
 
     /**
@@ -93,7 +93,7 @@ class KategoriController extends Controller
            $kategori->jenis_kategori=$validasiData["jenis_kategori"];
            $kategori->save();
    
-           return redirect(route("daftarKategori"))->with("success","Kategori $kategori->nama_kategori berhasil diubah");
+           return redirect(route("daftarKategori"))->with("berhasil","Kategori $kategori->nama_kategori berhasil diubah");
     }
 
     /**
@@ -105,6 +105,6 @@ class KategoriController extends Controller
     public function destroy(tbl_kategori $kategori)
     {
         $kategori->delete();
-        return redirect(route("daftarKategori"))->with("success","Kategori $kategori->nama_kategori berhasil dihapus");
+        return redirect(route("daftarKategori"))->with("berhasil","Kategori $kategori->nama_kategori berhasil dihapus");
     }
 }

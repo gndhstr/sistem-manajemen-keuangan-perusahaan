@@ -30,7 +30,7 @@
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
                             <img src="{{ asset('storage/' . Auth()->user()->foto_profil) }}" alt="Admin"
-                                class="rounded-circle p-1 " width="110" height="110">
+                                class="rounded-circle p-1" width="110" height="110">
                             <div class="mt-3">
                                 <div class="row">
                                     <h4>{{$profile->nama}} </h4>

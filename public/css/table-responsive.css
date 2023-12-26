@@ -1,0 +1,49 @@
+@media (max-width: 500px) {
+    .table thead {
+        display: none;
+    }
+
+    .table,
+    .table tbody,
+    .table tr,
+    .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tr {
+        margin-bottom: 15px;
+        border-top: 1px solid black;
+        /* Warna, ketebalan, dan jenis garis dapat disesuaikan */
+        border-bottom: 1px solid black;
+    }
+
+    .table td {
+        text-align: right;
+        border: none;
+        width: 95%
+    }
+
+    .table tr:nth-child(odd) {
+        background-color: #e0e0e0;
+        /* Warna abu-abu untuk elemen ganjil */
+    }
+
+    .table tr:nth-child(even) {
+        background-color: #f0f0f0;
+        /* Warna abu-abu terang untuk elemen genap */
+    }
+
+
+
+    .table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 50%;
+        padding-left: 15px;
+        font-size: 15px;
+        font-weight: bold;
+        text-align: left;                
+    }
+}

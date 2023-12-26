@@ -42,7 +42,7 @@ class DivisiController extends Controller
         $divisi = new tbl_divisi($validasiData);
         $divisi->save();
         
-        return redirect(route("daftarDivisi"))->with("success","Divisi $divisi->nama_divisi berhasil ditambah");
+        return redirect(route("daftarDivisi"))->with("berhasil","Divisi $divisi->nama_divisi berhasil ditambah");
 
     }
 
@@ -87,7 +87,7 @@ class DivisiController extends Controller
     $divisi->nama_divisi = $validasiData["nama_divisi"];
     $divisi->save();
 
-    return redirect(route("daftarDivisi"))->with("success","Divisi $divisi->nama_divisi berhasil diubah");
+    return redirect(route("daftarDivisi"))->with("berhasil","Divisi $divisi->nama_divisi berhasil diubah");
 }
 
     
@@ -102,6 +102,6 @@ class DivisiController extends Controller
     public function destroy(tbl_divisi $divisi)
     {
         $divisi->delete();
-        return redirect(route("daftarDivisi"))->with("success","Divisi $divisi->nama_divisi berhasil dihapus");
+        return redirect(route("daftarDivisi"))->with("berhasil","Divisi $divisi->nama_divisi berhasil dihapus");
     }
 }

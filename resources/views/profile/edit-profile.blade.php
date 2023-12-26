@@ -41,10 +41,10 @@
                             <form action="{{ route('updateProfile',$profile->id) }}" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
-                                <div class="row">
+                                <div class="row ">
                                     <div class="col-md-3 text-center">
                                         <img src="{{ asset('storage/' . Auth()->user()->foto_profil) }}" alt=""
-                                            class="d-block ui-w-80 ml-2" height="80">
+                                            class="d-block ui-w-80 ml-2 " height="80">
                                     </div>
                                     <div class="col-md-6 d-flex align-items-center">
                                         <label class="btn btn-outline-primary">
@@ -152,9 +152,9 @@
 <script src="{{asset('js/sweetalert.min.js')}}"></script>
 <script>
     //ubah ukuran text alert succes
-    var successMessage = "{{ session('success') }}";
+    var successMessage = "{{ session('berhasil') }}";
     if (successMessage) {
-        Swal.fire({
+        swal({
             // title: "Sukses",
             text: successMessage,
             icon: "success",

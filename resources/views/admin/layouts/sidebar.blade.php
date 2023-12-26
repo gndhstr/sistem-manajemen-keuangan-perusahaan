@@ -13,7 +13,7 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{ asset('storage/' . Auth()->user()->foto_profil) }}"class="img-circle rounded-circle "alt="User Image" id="foto_profil_preview" width="110" height="110">
+                <img src="{{ !is_null(Auth()->user()->foto_profil) && file_exists(public_path('storage/' . Auth()->user()->foto_profil)) ? asset('storage/' . Auth()->user()->foto_profil) : asset('img/user-photo-default.png') }}" class="img-circle elevation-2" alt="Foto Profil" id="foto_profil_preview" width="110" height="110">
             </div>
             <div class="info">
                 <a href="{{ route('indexProfile') }}" class="d-block">{{Auth::user()->nama}}</a>

@@ -3,6 +3,7 @@
 @section("addCss")
 <link rel="stylesheet" href="{{asset('css/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('css/bootstrap4.min.css')}}">
+<link rel="stylesheet" href="{{asset('css/table-responsive.css')}}">
 @endsection
 @section('content')
 <div class="content-header">
@@ -25,13 +26,25 @@
 <div class="content">
     <div class="container-fluid">
         <div class="card">
-            <div class="card-header text-right">
-                <a href="{{route('createUser')}}" class="btn btn-primary" role="button" data-toggle="modal"
-                    data-target="#tambahData">Tambah Data</a>
-                <a href="{{route('cetakUser')}}" class="btn btn-success mx-1" role="button">Export PDF <i
-                        class="fa fa-file-pdf"></i></a>
+            <div class="card-header text-right mb-2">
+                <h3 class=""></h3>
+                <div>
+                    <a href="{{route('createUser')}}" class="btn btn-primary" role="button" data-toggle="modal"
+                        data-target="#tambahData"><i class="fa fa-plus"></i></a>
+                    <a href="{{route('cetakUser')}}" class="btn btn-success mx-1" role="button"><i
+                            class="fa fa-print"></i></a>
+                </div>
             </div>
-            <div class="card-body">
+            <div class="card-body  tabel-responsive">
+                <!-- <div class="d-flex justify-content-between mb-2">
+                    <h3 class="">Data User</h3>
+                    <div>
+                        <a href="{{route('createUser')}}" class="btn btn-primary" role="button" data-toggle="modal"
+                            data-target="#tambahData"><i class="fa fa-plus"></i></a>
+                        <a href="{{route('cetakUser')}}" class="btn btn-success mx-1" role="button"><i
+                                class="fa fa-print"></i></a>
+                    </div>
+                </div> -->
                 <table class="table table-hover mb-0" id="dataTable">
                     <thead>
                         <tr>
@@ -45,16 +58,19 @@
                     <tbody>
                         @foreach ($users as $user)
                         <tr>
-                            <td class="text-center">{{ $loop->index + 1}}</td>
-                            <td class="text-center">{{ $user->nama}}</td>
-                            <td class="text-center">{{ $user->role_user ? $user->role_user->role : "-"}}</td>
-                            <td class="text-center">{{ $user->division ? $user->division->nama_divisi : "-"}}</td>
-                            <td class="text-center">
+                            <td data-label="No" class="text-center">{{ $loop->index + 1}}</td>
+                            <td data-label="Nama" class="text-center">{{ $user->nama}}</td>
+                            <td data-label="Role" class="text-center">
+                                {{ $user->role_user ? $user->role_user->role : "-"}}</td>
+                            <td data-label="Divisi" class="text-center">
+                                {{ $user->division ? $user->division->nama_divisi : "-"}}</td>
+                            <td data-label="Aksi" class="text-center">
                                 <a data-url="{{route('editUser',['id'=>$user->id])}}" class="btn btn-warning btn-sm"
-                                    role="button" data-toggle="modal" data-target="#editData{{$user->id}}">Edit</a>
+                                    role="button" data-toggle="modal" data-target="#editData{{$user->id}}"><i
+                                        class="fa fa-pen"></i></a>
                                 <a onclick="confirmDelete(this)" data-url="{{route('deleteUser',['id'=>$user->id])}}"
                                     data-nama="{{ $user->nama}}" class="btn btn-danger btn-sm ml-1 text-white"
-                                    role="button">Hapus</a>
+                                    role="button"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                         @endforeach
@@ -210,9 +226,9 @@
         }
 
         //ubah ukuran text alert succes
-        var successMessage = "{{ session('success') }}";
+        var successMessage = "{{ session('berhasil') }}";
         if (successMessage) {
-            Swal.fire({
+            swal({
                 // title: "Sukses",
                 text: successMessage,
                 icon: "success",
@@ -225,6 +241,36 @@
                 }
             });
         }
+        //tabel 
+        const textCenterTdElements = document.querySelectorAll('.table td.text-center');
+
+        // Fungsi untuk menyesuaikan kelas pada elemen <td> dan <table>
+        function adjustLayout() {
+            const windowWidth = window.innerWidth;
+
+            // Jika lebar layar kurang dari atau sama dengan 500px
+            if (windowWidth <= 500) {
+                // Hapus kelas text-center dari elemen <td>
+                textCenterTdElements.forEach(td => {
+                    td.classList.remove('text-center');
+                });
+
+
+            } else {
+                // Jika lebar layar lebih dari 500px, tambahkan kembali kelas yang dihapus sebelumnya
+                textCenterTdElements.forEach(td => {
+                    td.classList.add('text-center');
+                });
+
+
+            }
+        }
+
+        // Panggil fungsi pertama kali saat dokumen dimuat
+        adjustLayout();
+
+        // Tambahkan event listener untuk menanggapi perubahan ukuran layar
+        window.addEventListener('resize', adjustLayout);
 
         // fungsi data table
         $(function () {

@@ -42,7 +42,7 @@ class RoleController extends Controller
           $role = new tbl_role($validasiData);
           $role->save();
           
-          return redirect(route("daftarRole"))->with("success"," $role->role berhasil ditambah");
+          return redirect(route("daftarRole"))->with("berhasil"," $role->role berhasil ditambah");
     }
 
     /**
@@ -85,7 +85,7 @@ class RoleController extends Controller
         $role->role = $validasiData["role"];
         $role->save();
     
-        return redirect(route("daftarRole"))->with("success"," $role->role berhasil diubah");
+        return redirect(route("daftarRole"))->with("berhasil"," $role->role berhasil diubah");
     }
 
     /**
@@ -97,6 +97,6 @@ class RoleController extends Controller
     public function destroy(tbl_role $role)
     {
         $role->delete();
-        return redirect(route("daftarRole"))->with("success"," $role->role berhasil dihapus");
+        return redirect(route("daftarRole"))->with("berhasil"," $role->role berhasil dihapus");
     }
 }

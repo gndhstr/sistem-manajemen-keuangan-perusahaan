@@ -3,6 +3,7 @@
 @section("addCss")
 <link rel="stylesheet" href="{{asset('css/dataTables.bootstrap4.min.css')}}">
 <link rel="stylesheet" href="{{asset('css/bootstrap4.min.css')}}">
+<link rel="stylesheet" href="{{asset('css/table-responsive.css')}}">
 @endsection
 
 @section('content')
@@ -12,17 +13,18 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="m-0 text-dark">Daftar Kategori</h1>
-            </div><!-- /.col -->
+            </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
                     <li class="breadcrumb-item active">Kategori</li>
                 </ol>
-            </div><!-- /.col -->
-        </div><!-- /.row -->
-    </div><!-- /.container-fluid -->
+            </div>
+        </div>
+    </div>
 </div>
 <!-- /.content-header -->
+
 
 <!-- Main content -->
 <div class="content">
@@ -30,9 +32,16 @@
         <div class="card">
             <div class="card-header text-right">
                 <a href="{{route('createKategori')}}" class="btn btn-primary" role="button" data-toggle="modal"
-                    data-target="#tambahDataModal">Tambah Data</a>
+                    data-target="#tambahDataModal"><i class="fa fa-plus"></i></a>
             </div>
-            <div class="card-body">
+            <div class="card-body tabel-responsive">
+                <!-- <div class="d-flex justify-content-between mb-2">
+                    <h3 class="">Data Kategori</h3>
+                    <div>
+                        <a href="{{route('createKategori')}}" class="btn btn-primary" role="button" data-toggle="modal"
+                            data-target="#tambahDataModal">Tambah Data</a>
+                    </div>
+                </div> -->
                 <table class="table table-hover mb-0" id="dataTable">
                     <thead>
                         <tr>
@@ -45,17 +54,18 @@
                     <tbody>
                         @foreach ($kategoris as $kategori)
                         <tr>
-                            <td class="text-center">{{ $loop->index + 1}}</td>
-                            <td class="text-center">{{ $kategori->nama_kategori}}</td>
-                            <td class="text-center">{{ $kategori->jenis_kategori}}</td>
+                            <td data-label="No" class="text-center">{{ $loop->index + 1}}</td>
+                            <td data-label="Kategori" class="text-center">{{ $kategori->nama_kategori}}</td>
+                            <td data-label="Jenis" class="text-center">{{ $kategori->jenis_kategori}}</td>
                             <td class="text-center">
                                 <a data-url="{{route('editKategori',['id_kategori'=>$kategori->id_kategori])}}"
                                     class="btn btn-warning btn-sm " role="button" data-toggle="modal"
-                                    data-target="#editData{{$kategori->id_kategori}}">Edit</a>
+                                    data-target="#editData{{$kategori->id_kategori}}"><i class="fa fa-pen"></i></a>
                                 <a onclick="confirmDelete(this)"
                                     data-url="{{route('deleteKategori',['id_kategori'=>$kategori->id_kategori])}}"
                                     data-nama="{{$kategori->nama_kategori}}"
-                                    class="btn btn-danger btn-sm ml-1 text-white" role="button">Hapus</a>
+                                    class="btn btn-danger btn-sm ml-1 text-white" role="button"><i
+                                        class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                         @endforeach
@@ -155,6 +165,7 @@
     <script src="{{asset('js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('js/dataTables.bootstrap4.min.js')}}"></script>
     <script src="{{asset('js/sweetalert.min.js')}}"></script>
+    <script src="https://kit.fontawesome.com/e2b0e4079e.js" crossorigin="anonymous"></script>
     <script>
         confirmDelete = function (button) {
             var url = $(button).data("url");
@@ -172,9 +183,9 @@
             })
         }
         //ubah ukuran text alert succes
-        var successMessage = "{{ session('success') }}";
+        var successMessage = "{{ session('berhasil') }}";
         if (successMessage) {
-            Swal.fire({
+            swal({
                 // title: "Sukses",
                 text: successMessage,
                 icon: "success",
@@ -187,6 +198,37 @@
                 }
             });
         }
+
+        //tabel 
+        const textCenterTdElements = document.querySelectorAll('.table td.text-center');
+
+        // Fungsi untuk menyesuaikan kelas pada elemen <td> dan <table>
+        function adjustLayout() {
+            const windowWidth = window.innerWidth;
+
+            // Jika lebar layar kurang dari atau sama dengan 500px
+            if (windowWidth <= 500) {
+                // Hapus kelas text-center dari elemen <td>
+                textCenterTdElements.forEach(td => {
+                    td.classList.remove('text-center');
+                });
+
+
+            } else {
+                // Jika lebar layar lebih dari 500px, tambahkan kembali kelas yang dihapus sebelumnya
+                textCenterTdElements.forEach(td => {
+                    td.classList.add('text-center');
+                });
+
+
+            }
+        }
+
+        // Panggil fungsi pertama kali saat dokumen dimuat
+        adjustLayout();
+
+        // Tambahkan event listener untuk menanggapi perubahan ukuran layar
+        window.addEventListener('resize', adjustLayout);
 
         $(function () {
             $("#dataTable").DataTable();

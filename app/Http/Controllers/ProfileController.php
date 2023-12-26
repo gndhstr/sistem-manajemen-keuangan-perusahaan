@@ -115,7 +115,7 @@ class ProfileController extends Controller
         
         // $profile->update($validatedData);
         // session()->flash('success', 'Profil berhasil diperbarui');
-        return redirect(route("Profile"))->with("success","Profile Berhasil Diperbarui");
+        return redirect(route("Profile"))->with("berhasil","Profile Berhasil Diperbarui");
     }
 
     //password
@@ -138,8 +138,8 @@ class ProfileController extends Controller
 
         $user->password = Hash::make($request->input("pw_baru"));
         $user->save();
-        // session()->flash('success', 'Kata sandi berhasil diperbarui');
-        return redirect(route("Profile"))->with("success","Kata Sandi Berhasil Diperbarui");
+        // session()->flash('berhasil', 'Kata sandi berhasil diperbarui');
+        return redirect(route("Profile"))->with("berhasil","Kata Sandi Berhasil Diperbarui");
     }
 
 
