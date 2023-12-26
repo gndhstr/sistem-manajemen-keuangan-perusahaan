@@ -23,29 +23,41 @@ class PemasukanController extends Controller
      */
     public function index(Request $tampil)
     {
+        $time = new Carbon();
+        $time->setTimeZone('Asia/Jakarta');
+
         $user = Auth::user();
         $id_user = $user->id;
         // $pemasukans = tbl_pemasukan::with('kategori')->where('status', '1')->get();
-        $kategori = tbl_kategori::all();
+        $kategori = tbl_kategori::all()->where('id_kategori', '<>', 8);
         //filter tanggal
         $startDate = $tampil->input('start_date', now()->subMonth()->startOfDay());
         $endDate = $tampil->input('end_date', now()->endOfDay());
+        $start_date = $time->now()->startOfMonth();
+        $end_date = $time->now()->endOfMonth();
     
         $pemasukans = tbl_pemasukan::with('kategori')
             ->where('status', '1')
             ->where('id_user', $id_user)
             ->whereBetween('tgl_pemasukan', [$startDate, $endDate])
             ->get();
-            $total =$pemasukans->sum("jml_masuk");
-            // dd($startDate, $endDate);
-        return view('pemasukan.index', compact('pemasukans', 'kategori',"total"));
-            $total =$pemasukans->sum("jml_masuk");
-        return view('pemasukan.index', compact('pemasukans', 'kategori', 'total'));
+        $total =$pemasukans->sum("jml_masuk");
+        
+        return view('pemasukan.index', [
+            // 'dump' => dd($start_date),
+            'pemasukans' => $pemasukans, 
+            'kategori' => $kategori, 
+            'total' => $total, 
+            'start_date' => $start_date->format('Y-m-d'),
+            'end_date' => $end_date->format('Y-m-d'),
+        ]);
+        // return view('pemasukan.index', compact('pemasukans', 'kategori', 'total', 'start_date', 'end_date'));
     }
 
     //cetak
         public function cetak(Request $cetak)
         {
+            $user = Auth::user()->id;
             // $pemasukans = tbl_pemasukan::with('kategori')->where('status', '1')->get();
             $kategori = tbl_kategori::all();
             //filter tanggal
@@ -53,7 +65,7 @@ class PemasukanController extends Controller
             $endDate = $cetak->input('end_date', now()->endOfDay());
         
             $pemasukans = tbl_pemasukan::with('kategori')
-                ->where('status', '1')
+                ->where('status', '1')->where('id_user', $user)
                 ->whereBetween('tgl_pemasukan', [$startDate, $endDate])
                 ->orderBy('tgl_pemasukan')
                 ->get();

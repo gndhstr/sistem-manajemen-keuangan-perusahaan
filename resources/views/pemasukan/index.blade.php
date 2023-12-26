@@ -79,9 +79,8 @@
                         </tr>
                         @endforeach
                         <tr>
-                            <td colspan="3" class="text-center">Jumlah</td>
-                            <td colspan="3">{{"Rp ".number_format($total, 0, ",", "." ) }}</td>
-                            <td colspan="2">{{"Rp ".number_format($total, 0, ",", "." ) }}</td>
+                            <td colspan="3" class="text-center"><b>Jumlah</b></td>
+                            <td colspan="3">{{"Rp ".number_format($total, 0, ",", "." ) }}</td>                            
                         </tr>
                     </tbody>
                 </table>
@@ -241,6 +240,14 @@
     <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+        $(function () {            
+            if (!start_date.value && !end_date.value) {
+                start_date.value = @json($start_date);
+                end_date.value = @json($end_date);
+            }       
+        });
+    </script>
     <script>
         confirmDelete = function(button) {
             event.preventDefault();
