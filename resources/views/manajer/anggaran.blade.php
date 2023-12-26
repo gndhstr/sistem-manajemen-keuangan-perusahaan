@@ -109,25 +109,7 @@
 							<div class="form-group">
 
 								<label for="kategori">Kategori</label>
-								<div class="input-group">
-									@php
-										$kategoris = App\tbl_kategori::get();
-									@endphp
-
-									<select id="kategori" class="form-control @error('kategori') is-invalid @enderror" name="kategori" value="{{ old('kategori') }}" required autocomplete="kategori">
-										@foreach ($kategoris as $kategori)
-											<option value="{{ $kategori->id_kategori }}">{{ $kategori->nama_kategori }}</option>
-										@endforeach
-										<option value="" hidden></option>
-									</select>
-									@error('kategori')
-										<span class="invalid-feedback" role="alert">
-											<strong>{{ $message }}</strong>
-										</span>
-									@enderror
-
-								</div>
-
+                                <input type="text" name="kategori" id="kategori" class="form-control" required value="Anggaran Divisi" readonly>
 								<label for="rencana_anggaran">Rencana Anggaran</label>
 								<input type="text" name="rencana_anggaran" id="rencana_anggaran" class="form-control" required placeholder="Masukkan Rencana Anggaran">
 								<label for="aktualisasi_anggaran">Aktualisasi Anggaran</label>
@@ -168,25 +150,7 @@
                         <div class="form-group">
 
                             <label for="kategori">Kategori</label>
-                            <div class="input-group">
-                                @php
-                                    $kategoris = App\tbl_kategori::get();
-                                @endphp
-
-                                <select id="kategori" class="form-control @error('kategori') is-invalid @enderror" name="kategori" required autocomplete="kategori">
-                                    @foreach ($kategoris as $kategori)
-                                        <option value="{{ $kategori->id_kategori }}" {{ $anggaran->id_kategori == $kategori->id_kategori ? 'selected' : '' }}>
-                                            {{ $kategori->nama_kategori }}
-                                        </option>
-                                    @endforeach
-                                    <option value="" hidden></option>
-                                </select>
-                                @error('kategori')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                            <input type="text" name="kategori" id="kategori" class="form-control" required value="Anggaran Divisi" readonly>
 
                             <label for="rencana_anggaran">Rencana Anggaran</label>
                             <input type="text" name="rencana_anggaran" id="rencana_anggaran" class="form-control" required placeholder="Masukkan Rencana Anggaran" value="{{ $anggaran->rencana_anggaran }}">

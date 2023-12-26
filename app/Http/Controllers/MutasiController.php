@@ -62,8 +62,6 @@ class MutasiController extends Controller
         $request->validate([
             'id_kategori' => 'required',
             'id_user' => 'required',
-            'id_user_create' => 'required',
-            'id_user_edit' => 'required',
             'jml_masuk' => 'required',
             'catatan' => 'nullable',
             'bukti_pemasukan' => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -76,6 +74,9 @@ class MutasiController extends Controller
 
         $pemasukan = new tbl_pemasukan();
         $pemasukan->fill($request->all());
+        $pemasukan->id_user = $request->input('id_user');
+        $pemasukan->id_user_create = $request->input('id_user');
+        $pemasukan->id_user_edit = $request->input('id_user');
         $pemasukan->jml_masuk = $request->input('jml_masuk', 0);
         $pemasukan->catatan = $request->input('catatan', '');
         $pemasukan->bukti_pemasukan = $fileName;

@@ -77,7 +77,7 @@
                         <div class="modal-body">
                             <div class="card-header">
                                 <div class="btn btn-outline-primary" role="button" data-toggle="modal" data-target="#tambahData">Saldo : Rp. {{ number_format($result, 0, ',', '.') }}</div>
-                                <a href="{{route('createRole')}}" class="btn btn-primary fa fa-plus" role="button" data-dismiss="modal" data-toggle="modal" data-target="#tambahPemasukanModalLabel" data-userid="{{ $user->id }}"></a>
+                                <a href="{{ route('storeSaldo')}}" class="btn btn-primary fa fa-plus" role="button" data-dismiss="modal" data-toggle="modal" data-target="#tambahPemasukanModalLabel" data-userid="{{ $user->id }}"></a>
                             </div>
                             <div class="card-body">
                                 <table class="table table-hover mb-0" id="tabelModal">
@@ -195,11 +195,10 @@
                     </div>
                 </div>
             @endif
-        @empty
-            <!-- Handle jika tidak ada data -->
-            <p>Tidak ada bukti pemasukan atau pengeluaran</p>
+            @empty
+
         @endforelse
-    @endforeach
+        @endforeach
 
 
         @foreach($users as $user)
@@ -343,9 +342,7 @@
                                         <button type="submit" class="btn btn-success">Simpan</button>
                                     </div>
 
-                                    <input type="hidden" name="id_user" value="{{ $user->id }}">
-                                    <input type="hidden" name="id_user_create" value="{{ $user->id }}">
-                                    <input type="hidden" name="id_user_edit" value="{{ $user->id }}">
+                                    <input type="hidden" id="id_user" name="id_user">
                                 </form>
                     </div>
                 </div>
@@ -353,7 +350,7 @@
         </div>
     </div>
     @endforeach
-    @endsection  
+
 
 
     <!-- javascript -->
@@ -382,14 +379,17 @@
             })
         }
 
-        const modalToOpen = '{{ session("modalToOpen") }}';
-
-        // Jika modalToOpen ada, tampilkan modal dengan ID yang sesuai
-        if (modalToOpen) {
-            $(document).ready(function () {
-                $(`#${modalToOpen}`).modal('show');
+        document.addEventListener('DOMContentLoaded', function() {
+            var modalTriggerButtons = document.querySelectorAll('[data-target="#tambahPemasukanModalLabel"]');
+            
+            modalTriggerButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var userId = button.getAttribute('data-userid');
+                    document.getElementById('id_user').value = userId;
+                });
             });
-        }
+        });
+
 
         $(function(){
                 $("#dataTable").DataTable({
@@ -401,7 +401,7 @@
                 $("#tabelModal").DataTable({
                     "pageLength": 5,
                     "lengthChange": false,
-                    "scrollY": '325px',
+                    "responsive": true, // Tambahkan opsi responsive
                 });
 
 
@@ -414,7 +414,8 @@
             });
 
         </script>
-    @endsection
+        @endsection
 </div>
 <!-- /.content -->
+@endsection  
 

@@ -22,10 +22,10 @@ class AnggaranController extends Controller
         $divisi_login = $user->id_divisi;
         $year = date('Y');
 
-
-        $anggarans = tbl_anggaran::all()->where('status', '1')
-                                        ->where('id_divisi', $divisi_login);
-
+        $anggarans = tbl_anggaran::where('status', '1')
+                    ->where('id_divisi', $divisi_login)
+                    ->orderBy('tgl_anggaran', 'desc')
+                    ->get();
 
         $time = new Carbon();
         $time->setTimeZone('Asia/Jakarta');
@@ -94,7 +94,6 @@ class AnggaranController extends Controller
     {
  
         $validator = Validator::make($request->all(), [
-            'kategori' => 'required|exists:tbl_kategoris,id_kategori',
             'rencana_anggaran' => 'required|numeric',
             'aktualisasi_anggaran' => 'required|numeric',
             'tanggal' => 'required|date',
@@ -106,7 +105,7 @@ class AnggaranController extends Controller
 
         $anggaran = new tbl_anggaran([
             'id_divisi' => Auth::user()->id_divisi,
-            'id_kategori' => $request->kategori,
+            'id_kategori' => 8,
             'rencana_anggaran' => $request->rencana_anggaran,
             'aktualisasi_anggaran' => $request->aktualisasi_anggaran,
             'tgl_anggaran' => $request->tanggal,
@@ -152,7 +151,6 @@ class AnggaranController extends Controller
     {
         // Validasi input
         $validator = Validator::make($request->all(), [
-            'kategori' => 'required|exists:tbl_kategoris,id_kategori',
             'rencana_anggaran' => 'required|numeric',
             'aktualisasi_anggaran' => 'required|numeric',
             'tanggal' => 'required|date',
@@ -164,7 +162,7 @@ class AnggaranController extends Controller
     
 
         $anggaran->id_divisi = Auth::user()->id_divisi;
-        $anggaran->id_kategori = $request->kategori;
+        $anggaran->id_kategori = 8;
         $anggaran->rencana_anggaran = $request->rencana_anggaran;
         $anggaran->aktualisasi_anggaran = $request->aktualisasi_anggaran;
         $anggaran->tgl_anggaran = $request->tanggal;
