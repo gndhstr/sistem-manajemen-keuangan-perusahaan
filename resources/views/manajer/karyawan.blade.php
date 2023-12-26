@@ -195,7 +195,18 @@
 
 			// fungsi data table
 			$(function(){
-				$("#dataTable").DataTable();
+				$("#dataTable").DataTable({
+					order: [
+                                [0, 'asc']
+                            ],
+                            columnDefs: [{
+                                orderable: false,
+                                targets: [1, 2, 3],
+                            }],
+                            paging: true,
+                            scrollCollapse: true,
+                            scrollY: '350px',
+				});
 			});
 		</script>
 	@endsection

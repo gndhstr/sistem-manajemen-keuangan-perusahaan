@@ -240,7 +240,10 @@
 
 			// fungsi data table
 			$(function(){
-				$("#dataTable").DataTable();
+				$("#dataTable").DataTable({
+                    scrollCollapse: true,
+                    scrollY: '350px',
+                });
 			});
 		</script>
 		 <script>

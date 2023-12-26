@@ -401,6 +401,7 @@
                 $("#tabelModal").DataTable({
                     "pageLength": 5,
                     "lengthChange": false,
+                    "scrollY": '325px',
                 });
 
 

@@ -71,11 +71,13 @@
     <div class="overlay-container">
       <div class="overlay">
         <div class="overlay-panel overlay-left">
+          <img class="img-fluid" style="width: 200px" src="{{asset('img/app-logo-shadow.png')}}" alt="logo"></img>
           <h1>Peringatan</h1>
           <p>Usahakan Jangan Login Pakai Akun Lain ya..</p>
           <button class="ghost" id="signIn">Kiri</button>
         </div>
         <div class="overlay-panel overlay-right">
+          <img class="img-fluid" style="width: 200px" src="{{asset('img/app-logo-shadow.png')}}" alt="logo"></img>
           <h1>Selamat Datang !</h1>
           <p>Silahkan Login dengan Akun Masing - Masing </p>
           <button class="ghost" id="signUp">Kanan</button>
