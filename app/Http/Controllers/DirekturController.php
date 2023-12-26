@@ -391,7 +391,7 @@ class DirekturController extends Controller
     public function mutasiKaryawanCetak(Request $cetak)
     {
         $time = new Carbon();
-        $time->setTimeZone('Asia/Jakarta');        
+        $time->setTimeZone('Asia/Jakarta');
 
         //Ambil tanggal dari form filter
         if ($cetak->startDate && $cetak->endDate) {
@@ -415,7 +415,8 @@ class DirekturController extends Controller
 
         $mutasiPemasukanPengeluaran = $pemasukans->union($pengeluarans)->orderBy('tanggal', 'desc')->get();
 
-
+        $total = $mutasiPemasukanPengeluaran->sum('jumlah');
+        // dd($total);
         $user = User::find($id);
 
         // return dd($startDate);
@@ -425,7 +426,7 @@ class DirekturController extends Controller
         $options->set('isPhpEnabled', true);
         $pdf = new Dompdf($options);
 
-        $view = View::make('direktur.cetak.mutasi-karyawan', compact('mutasiPemasukanPengeluaran', 'user', 'startDate', 'endDate'))->render();
+        $view = View::make('direktur.cetak.mutasi-karyawan', compact('mutasiPemasukanPengeluaran', 'user', 'startDate', 'endDate', 'total'))->render();
         $pdf->loadHtml($view);
 
         $pdf->render();
