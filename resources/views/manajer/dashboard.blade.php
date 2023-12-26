@@ -28,45 +28,43 @@
         <div class="container-fluid">
             <!-- Statistics Cards -->
             <div class="row">
-                <div class="col-md-4">
-                    <div class="card p-3 mb-2">
-                        <div class="d-flex justify-content-between">
-                            <div class="d-flex flex-row align-items-center">
-                                <div class="ms-2 c-details">
-                                    <h4 class="mb-0">Total Pemasukan ({{ $tahun }})</h4>
-                                </div>
-                            </div>
-                            <div class="badge"><i class="fa fa-arrow-down"></i></div>
-                        </div>
-                        <div class="mt-5">
-                            <h3 class="heading">Rp. {{ number_format($totalPemasukan, 2, ',', '.') }}</h3>
+                <div class="col-md-3">
+                    <div class="info-box bg-info">
+                        <span class="info-box-icon"><i class="fa fa-credit-card"></i></span>
+
+                        <div class="info-box-content">
+                            <h5 class="info-box-text">Sisa Anggaran </h5>
+                            <span class="info-box-number">Rp. {{ number_format($saldo, 2, ',', '.') }}</span>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card p-3 mb-2">
-                        <div class="d-flex justify-content-between">
-                            <div class="d-flex flex-row align-items-center">
-                                <div class="ms-2 c-details">
-                                    <h4 class="mb-0">Total Pengeluaran ({{ $tahun }})</h4>
-                                </div>
-                            </div>
-                            <div class="badge"><i class="fa fa-arrow-up"></i></div>
+                <div class="col-md-3">
+                    <div class="info-box bg-success">
+                        <span class="info-box-icon"><i class="fa fa-arrow-down"></i></span>
+
+                        <div class="info-box-content">
+                            <h5 class="info-box-text">Total Pemasukan ({{ $tahun }})</h5>
+                            <span class="info-box-number">Rp. {{ number_format($totalPemasukan, 2, ',', '.') }}</span>
                         </div>
-                        <div class="mt-5">
-                            <h3 class="heading">Rp. {{ number_format($totalPengeluaran, 2, ',', '.') }}</h3>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-box bg-danger">
+                        <span class="info-box-icon"><i class="fa fa-arrow-up"></i></span>
+
+                        <div class="info-box-content">
+                            <h5 class="info-box-text">Total Pengeluaran ({{ $tahun }})</h5>
+                            <span class="info-box-number">Rp. {{ number_format($totalPengeluaran, 2, ',', '.') }}</span>
                         </div>
                     </div>
                 </div>
             </div>
 
+
             {{-- card grafik --}}
             <div class="card">
                 <div class="card-header border-0">
                     <h3 class="card-title text-bold text-lg text-center">Grafik Keuangan Divisi {{ Auth::user()->division->nama_divisi }} ({{ $tahun }})</h3>
-                    <div class="card-tools">
-                        <span class="badge badge-info">{{ date('Y') }}</span>
-                    </div>
                 </div>
                 <div class="card-body">
                             <div class="card">
@@ -82,7 +80,7 @@
                                         <p class="d-flex flex-column">
                                             <span class="text-bold text-lg">Rp.
                                                 {{ number_format($pemasukanBulanan, 2, ',', '.') }}</span>
-                                            <span class="text-sm">Pemasukan Karyawan Seiring Waktu</span>
+                                            <span class="text-sm">Pemasukan Divisi Bulan Ini</span>
                                         </p>
                                         <p class="ml-auto d-flex flex-column text-right">
                                             <span

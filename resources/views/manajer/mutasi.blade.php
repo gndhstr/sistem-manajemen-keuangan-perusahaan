@@ -101,7 +101,7 @@
                                         @forelse ($mutasis as $mutasi)
                                             <tr>
                                                 <td class="text-center">{{ $loop->index + 1 }}</td>
-                                                <td class="text-center">{{ isset($mutasi->tgl_pemasukan) ? $mutasi->tgl_pemasukan : $mutasi->tgl_pengeluaran }}</td>
+                                                <td class="text-center">{{ isset($mutasi->tgl_pemasukan) ? date('d/m/Y', strtotime($mutasi->tgl_pemasukan)) : date('d/m/Y', strtotime($mutasi->tgl_pengeluaran)) }}</td>
                                                 <td class="text-center">
                                                     <small class="text-success mr-1">
                                                         <i class="fa fa-arrow-up"></i>
@@ -116,17 +116,24 @@
                                                 </td>
                                                 <td class="text-center">{{ $mutasi->catatan }}</td>
                                                 <td class="text-center">
-                                                    <button class="btn btn-primary btn-sm view-button" data-url="{{ route('viewBukti', ['id_pemasukan'=>$mutasi->id_pemasukan]) }}"  data-toggle="modal" data-target="#viewPemasukanModal{{ $mutasi->id_pemasukan }}">
-                                                        <i class="fa fa-eye"></i>
-                                                    </button>
+                                                    @if(isset($mutasi->id_pemasukan))
+                                                        <button class="btn btn-primary btn-sm view-button" data-url="{{ route('viewBukti', ['id_pemasukan'=>$mutasi->id_pemasukan]) }}" data-dismiss="modal" data-toggle="modal" data-target="#viewPemasukanModal{{ $mutasi->id_pemasukan }}">
+                                                            <i class="fa fa-eye"></i>
+                                                        </button>
+                                                    @elseif(isset($mutasi->id_pengeluaran))
+                                                        <!-- Jika ini adalah pengeluaran, tambahkan tombol untuk modal pengeluaran -->
+                                                        <button class="btn btn-primary btn-sm view-button" data-url="{{ route('viewBukti', ['id_pengeluaran'=>$mutasi->id_pengeluaran]) }}" data-dismiss="modal" data-toggle="modal" data-target="#viewPengeluaranModal{{ $mutasi->id_pengeluaran }}">
+                                                            <i class="fa fa-eye"></i>
+                                                        </button>
+                                                    @endif
                                                 </td>
                                                 <td class="d-flex">
                                                 @if(isset($mutasi->jml_keluar))
-                                                <button class="btn btn-warning btn-sm fa fa-pencil" role="button" data-dismiss="modal" data-toggle="modal" data-target="#editMutasi{{$mutasi->id_pengeluaran}}"></butt>
-								                <button onclick="confirmDelete(this, '{{ $mutasi->id_pengeluaran }}')"  data-url="{{route('deleteMutasiPengeluaran',$mutasi->id_pengeluaran)}}"data-nama="{{ $user->nama}}" class="btn btn-danger btn-sm ml-1 text-white fa fa-trash" role="button"></button>
+                                                <button onclick="openEditModal()" data-url="{{ route('mutasiPengeluaran', ['id_pengeluaran'=>$mutasi->id_pengeluaran]) }}" class="btn btn-warning btn-sm fa fa-pencil" role="button" data-dismiss="modal" data-toggle="modal" data-target="#editMutasi{{ $mutasi->id_pengeluaran }}"></button>
+								                <button onclick="confirmDelete(this)" data-url="{{ route('deleteMutasiPengeluaran', $mutasi->id_pengeluaran) }}" data-nama="{{ $user->nama }}" class="btn btn-danger btn-sm ml-1 text-white fa fa-trash" role="button"></button>
                                                 @else
-                                                <a class="btn btn-warning btn-sm fa fa-pencil" role="button" data-dismiss="modal" data-toggle="modal" data-target="#editMutasi{{$mutasi->id_pemasukan}}"></a>
-								                <button onclick="confirmDelete(this, '{{ $mutasi->id_pemasukan }}')"  data-url="{{route('deleteMutasiPemasukan',$mutasi->id_pemasukan)}}"data-nama="{{ $user->nama}}" class="btn btn-danger btn-sm ml-1 text-white fa fa-trash" role="button"></button>
+                                                <button onclick="openEditModal()" data-url="{{ route('mutasiPemasukan', ['id_pemasukan'=>$mutasi->id_pemasukan]) }}" class="btn btn-warning btn-sm fa fa-pencil" role="button" data-dismiss="modal" data-toggle="modal" data-target="#editMutasi{{ $mutasi->id_pemasukan }}"></button>
+                                                <button onclick="confirmDelete(this)" data-url="{{ route('deleteMutasiPemasukan', $mutasi->id_pemasukan) }}" data-nama="{{ $user->nama }}" class="btn btn-danger btn-sm ml-1 text-white fa fa-trash" role="button"></button>
                                                 @endif
                                                 </td>
                                             </tr>
@@ -153,36 +160,61 @@
         @endphp
 
         @forelse ($mutasis as $mutasi)
-            <!-- Modal for viewing pemasukan -->
-            <div class="modal fade" id="viewPemasukanModal{{ $mutasi->id_pemasukan }}" tabindex="-1" role="dialog" aria-labelledby="viewPemasukanModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="viewPemasukanModalLabel">Bukti Transaksi</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <img src="{{ asset('storage/bukti_pemasukan/' . ($mutasi->bukti_pemasukan ?: $mutasi->bukti_pengeluaran)) }}" alt="Bukti Pemasukan" style="max-width: 100%;">
+            @if(isset($mutasi->id_pemasukan))
+                <!-- Modal for viewing pemasukan -->
+                <div class="modal fade" id="viewPemasukanModal{{ $mutasi->id_pemasukan }}" tabindex="-1" role="dialog" aria-labelledby="viewPemasukanModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="viewPemasukanModalLabel">Bukti Transaksi</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"  data-toggle="modal" data-target="#editData{{$user->id}}">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ asset('storage/bukti_pemasukan/' . $mutasi->bukti_pemasukan) }}" alt="Bukti Pemasukan" style="max-width: 100%;">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @elseif(isset($mutasi->id_pengeluaran))
+                <!-- Modal for viewing pengeluaran -->
+                <div class="modal fade" id="viewPengeluaranModal{{ $mutasi->id_pengeluaran }}" tabindex="-1" role="dialog" aria-labelledby="viewPengeluaranModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="viewPengeluaranModalLabel">Bukti Transaksi</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"  data-toggle="modal" data-target="#editData{{$user->id}}">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ asset('storage/bukti_pengeluaran/' . $mutasi->bukti_pengeluaran) }}" alt="Bukti Pengeluaran" style="max-width: 100%;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
         @empty
             <!-- Handle jika tidak ada data -->
-            <p>Tidak ada bukti pemasukan</p>
+            <p>Tidak ada bukti pemasukan atau pengeluaran</p>
         @endforelse
-        @endforeach
+    @endforeach
 
 
+        @foreach($users as $user)
+        @php
+            $mutasis = $pemasukans->concat($pengeluarans)->where('id_user', $user->id)->sortByDesc(function($mutasi) {
+                return isset($mutasi->tgl_pemasukan) ? $mutasi->tgl_pemasukan : $mutasi->tgl_pengeluaran;
+            });
+        @endphp
 
-        @foreach($mutasis as $mutasi)
-        @if(isset($mutasi->id_pemasukan))
-            <div class="modal fade" id="editMutasi{{ $mutasi->id_pemasukan }}" tabindex="-1" role="dialog" aria-labelledby="editMutasiModalLabel" aria-hidden="true">
-        @elseif(isset($mutasi->id_pengeluaran))
-            <div class="modal fade" id="editMutasi{{ $mutasi->id_pengeluaran }}" tabindex="-1" role="dialog" aria-labelledby="editMutasiModalLabel" aria-hidden="true">
-        @endif
+        @forelse ($mutasis as $mutasi)
+            @if(isset($mutasi->id_pemasukan))
+                <div class="modal fade" id="editMutasi{{ $mutasi->id_pemasukan }}" tabindex="-1" role="dialog" aria-labelledby="editMutasiLabel" aria-hidden="true">
+            @elseif(isset($mutasi->id_pengeluaran))
+                <div class="modal fade" id="editMutasi{{ $mutasi->id_pengeluaran }}" tabindex="-1" role="dialog" aria-labelledby="editMutasiLabel" aria-hidden="true">
+            @endif
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -193,14 +225,9 @@
                     </div>
                     <div class="modal-body">
                         <!-- Formulir untuk mengedit catatan pemasukan/pengeluaran -->
-                        @if(isset($mutasi->id_pemasukan))
-                            <form action="{{ route('mutasiPengeluaran', ['id_pengeluaran' => $mutasi->id_pengeluaran]) }}" method="post">
-                        @elseif(isset($mutasi->id_pengeluaran))
-                            <form action="{{ route('mutasiPemasukan', ['id_pemasukan' => $mutasi->id_pemasukan]) }}" method="post">
-                        @endif
-                        
+                        <form action="{{ isset($mutasi->id_pemasukan) ? route('mutasiPemasukan', ['id_pemasukan' => $mutasi->id_pemasukan]) : route('mutasiPengeluaran', ['id_pengeluaran' => $mutasi->id_pengeluaran]) }}" enctype="multipart/form-data" method="post">
                             @csrf
-                            @method('PUT')
+                            @method('POST')
 
                             <!-- Input hidden untuk mengetahui jenis mutasi -->
                             <input type="hidden" name="jenis_mutasi" value="{{ isset($mutasi->id_pemasukan) ? 'pemasukan' : 'pengeluaran' }}">
@@ -208,8 +235,20 @@
 
                             <!-- Input untuk jumlah masuk/keluar -->
                             <div class="form-group">
-                                <label for="jumlah_mutasi">Jumlah {{ isset($mutasi->id_pemasukan) ? 'Masuk' : 'Keluar' }}</label>
+                                <label for="jumlah_mutasi">Nominal {{ isset($mutasi->id_pemasukan) ? 'Masuk' : 'Keluar' }}</label>
                                 <input type="text" class="form-control" id="jumlah_mutasi" name="jumlah_mutasi" value="{{ isset($mutasi->jml_masuk) ? $mutasi->jml_masuk : $mutasi->jml_keluar }}" required>
+                            </div>
+
+                            <!-- Pilih kategori menggunakan select -->
+                            <div class="form-group">
+                                <label for="nama_kategori">Nama Kategori</label>
+                                <select class="form-control select" name="id_kategori" id="nama_kategori" required>
+                                    @foreach ($kategori as $kategoris)
+                                    <option value="{{ $kategoris->id_kategori }}" {{ old('id_kategori') == $kategoris->id_kategori ? 'selected' : '' }}>
+                                        {{ $kategoris->nama_kategori }}
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <!-- Input untuk tanggal mutasi -->
@@ -220,9 +259,17 @@
 
                             <!-- Textarea untuk catatan -->
                             <div class="form-group">
-                                <label for="catatan_mutasi">Catatan</label>
-                                <textarea class="form-control" id="catatan_mutasi" name="catatan_mutasi" rows="3" required>{{ $mutasi->catatan }}</textarea>
+                                <label for="catatan">Catatan</label>
+                                <textarea class="form-control" id="catatan" name="catatan" rows="3" required>{{ $mutasi->catatan }}</textarea>
                             </div>
+
+                            <!-- Textarea untuk Bukti Pemasukan -->
+                            <div class="form-group">
+                                <label for="bukti_mutasi">Bukti {{ isset($mutasi->id_pemasukan) ? 'Pemasukan' : 'Pengeluaran' }}</label>
+                                <input  type="file" name="bukti_mutasi" accept="image/*" required>
+                            </div>
+
+                            <input type="hidden" name="id_user_edit" value="{{ Auth()->user()->id }}">
 
                             <div class="text-right">
                                 <button type="button" class="btn btn-danger mr-1" data-dismiss="modal">Batal</button>
@@ -233,7 +280,11 @@
                 </div>
             </div>
         </div>
+        @empty
+            <!-- Handle empty case if needed -->
+        @endforelse
     @endforeach
+
 
     @foreach($users as $user)
         <div class="modal fade" id="tambahPemasukanModalLabel" tabindex="-1" role="dialog" aria-labelledby="tambahPemasukanModalLabel" aria-hidden="true">
@@ -311,27 +362,36 @@
         <script src="{{asset('js/dataTables.bootstrap4.min.js')}}"></script>
         <script src="{{asset('js/sweetalert.min.js')}}"></script>
         <script>
-            confirmDelete = function(button){
-                var url = $(button).data("url");
-                swal({
-                    "title"      : "Konfirmasi Hapus",
-                    "text"       : "Apakah anda yakin menghapus data ini ?",
-                    "dangermode" : true,
-                    "buttons"    : true,
-                }).then(function(value) {
-					if (value) {
-						var form = document.createElement('form');
-						form.action = url;
-						form.method = 'POST';
-						form.innerHTML = '<input type="hidden" name="_method" value="POST">' +
-							'{{ csrf_field() }}';
-						document.body.appendChild(form);
-						form.submit();
-					}
-                })
-            }
+        confirmDelete = function(button){
+            var url = $(button).data("url");
+            swal({
+                "title"      : "Konfirmasi Hapus",
+                "text"       : "Apakah anda yakin menghapus data ini ?",
+                "dangermode" : true,
+                "buttons"    : true,
+            }).then(function(value) {
+                if (value) {
+                    var form = document.createElement('form');
+                    form.action = url;
+                    form.method = 'POST';
+                    form.innerHTML = '<input type="hidden" name="_method" value="POST">' +
+                        '{{ csrf_field() }}';
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            })
+        }
 
-            $(function(){
+        const modalToOpen = '{{ session("modalToOpen") }}';
+
+        // Jika modalToOpen ada, tampilkan modal dengan ID yang sesuai
+        if (modalToOpen) {
+            $(document).ready(function () {
+                $(`#${modalToOpen}`).modal('show');
+            });
+        }
+
+        $(function(){
                 $("#dataTable").DataTable({
                     "columnDefs": [
                         { "width": "50px", "targets": 0 }

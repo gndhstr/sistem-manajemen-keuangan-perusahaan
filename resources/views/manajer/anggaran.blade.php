@@ -49,9 +49,9 @@
 							<td class="text-center">{{ $loop->index + 1}}</td>
         					<td class="text-center">{{ $anggaran->divisi->nama_divisi }}</td>
 							<td class="text-center">{{ $anggaran->kategori->nama_kategori }}</td>
-							<td class="text-center">Rp. {{ number_format($anggaran->rencana_anggaran) }}</td>
-							<td class="text-center">Rp. {{ number_format($anggaran->aktualisasi_anggaran) }}</td>
-							<td class="text-center">{{ $anggaran->tgl_anggaran}}</td>
+							<td class="text-center">Rp. {{ number_format($anggaran->rencana_anggaran, 2, ',', '.') }}</td>
+							<td class="text-center">Rp. {{ number_format($anggaran->aktualisasi_anggaran, 2, ',', '.') }}</td>
+							<td class="text-center">{{ date('d/m/Y', strtotime($anggaran->tgl_anggaran))}}</td>
 							<td class="text-center">
 								<a data-url="{{route('editAnggaran',['id_anggaran'=>$anggaran->id_anggaran])}}" class="btn btn-warning btn-sm" role="button" data-toggle="modal" data-target="#editData{{$anggaran->id_anggaran}}" >Edit</a>
 								<button onclick="confirmDelete(this)"  data-url="{{route('deleteAnggaran',['id_anggaran'=>$anggaran->id_anggaran])}}" class="btn btn-danger btn-sm ml-1 text-white" role="button">Hapus</button>

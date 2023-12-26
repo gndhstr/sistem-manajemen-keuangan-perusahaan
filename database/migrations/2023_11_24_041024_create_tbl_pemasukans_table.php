@@ -26,7 +26,7 @@ class CreateTblPemasukansTable extends Migration
             $table->integer("jml_masuk")->default(0);
             $table->date("tgl_pemasukan");
             $table->text("catatan")->default('');
-            $table->string('bukti_pemasukan');
+            $table->binary('bukti_pemasukan');
             $table->string('status')->nullable()->default('');
             $table->timestamps();
         });

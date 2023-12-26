@@ -25,7 +25,7 @@ class CreateTblPengeluaransTable extends Migration
             $table->integer("jml_keluar");
             $table->date("tgl_pengeluaran");
             $table->text("catatan");
-            $table->string('bukti_pengeluaran');
+            $table->binary('bukti_pengeluaran');
             $table->string('status',20);
             $table->timestamps();
         });

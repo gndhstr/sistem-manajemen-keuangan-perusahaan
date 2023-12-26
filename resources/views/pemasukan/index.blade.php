@@ -80,11 +80,8 @@
                         @endforeach
                         <tr>
                             <td colspan="3" class="text-center">Jumlah</td>
-<<<<<<< HEAD
                             <td colspan="3">{{"Rp ".number_format($total, 0, ",", "." ) }}</td>
-=======
                             <td colspan="2">{{"Rp ".number_format($total, 0, ",", "." ) }}</td>
->>>>>>> 5354da65b7a0037c24581643be085954c4d38b79
                         </tr>
                     </tbody>
                 </table>

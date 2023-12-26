@@ -149,6 +149,8 @@ class ManajerController extends Controller
         $currentTime = now();
         $greeting = $this->getGreeting($currentTime);
 
+        $sisaAnggaran = $totalPemasukan - $totalPengeluaran;
+
 
         return view('manajer.dashboard', [
             // 'dump' => dd($pemasukanBulanans),
@@ -171,6 +173,7 @@ class ManajerController extends Controller
             'perbandinganPemasukanPengeluaranTotal' => $perbandinganPemasukanPengeluaranTotal,
             'greeting' => $greeting,
             'tahun' => $year,
+            'saldo' => $sisaAnggaran,
         ]);
     }
     
