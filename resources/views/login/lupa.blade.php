@@ -7,6 +7,7 @@
     <title>Password Reset</title>
 
     <!-- Bootstrap CSS CDN -->
+	<link rel="icon" type="image/png" href="{{ asset('img/app-logo.png') }}"/>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Optional: Add your custom styles here -->

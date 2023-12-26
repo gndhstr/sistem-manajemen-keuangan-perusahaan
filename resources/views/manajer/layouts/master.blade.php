@@ -8,6 +8,8 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+	<link rel="icon" type="image/png" href="{{ asset('img/app-logo.png') }}"/>
+
 	<!-- Font Awesome Icons -->
 	<link rel="stylesheet" href="{{asset('css/fontawesome.min.css')}}">
 	<!-- Theme style -->
