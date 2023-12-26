@@ -28,7 +28,7 @@
 	<div class="container-fluid">
 		<div class="card">
 			<div class="card-header text-right">
-				<a href="{{route('createRole')}}" class="btn btn-primary" role="button" data-toggle="modal" data-target="#tambahData">Tambah Data</a>
+				<a href="{{route('createRole')}}" class="btn btn-primary fa fa-plus" role="button" data-toggle="modal" data-target="#tambahData"></a>
 			</div>
 			<div class="card-body">
 				<table class="table table-hover mb-0" id="dataTable">
@@ -53,8 +53,8 @@
 							<td class="text-center">Rp. {{ number_format($anggaran->aktualisasi_anggaran, 2, ',', '.') }}</td>
 							<td class="text-center">{{ date('d/m/Y', strtotime($anggaran->tgl_anggaran))}}</td>
 							<td class="text-center">
-								<a data-url="{{route('editAnggaran',['id_anggaran'=>$anggaran->id_anggaran])}}" class="btn btn-warning btn-sm" role="button" data-toggle="modal" data-target="#editData{{$anggaran->id_anggaran}}" >Edit</a>
-								<button onclick="confirmDelete(this)"  data-url="{{route('deleteAnggaran',['id_anggaran'=>$anggaran->id_anggaran])}}" class="btn btn-danger btn-sm ml-1 text-white" role="button">Hapus</button>
+								<a data-url="{{route('editAnggaran',['id_anggaran'=>$anggaran->id_anggaran])}}" class="btn btn-warning btn-sm fa fa-pencil" role="button" data-toggle="modal" data-target="#editData{{$anggaran->id_anggaran}}" ></a>
+								<button onclick="confirmDelete(this)"  data-url="{{route('deleteAnggaran',['id_anggaran'=>$anggaran->id_anggaran])}}" class="btn btn-danger btn-sm ml-1 text-white fa fa-trash" role="button"></button>
 							</td>
 						</tr>
 						@endforeach
