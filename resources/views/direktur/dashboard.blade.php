@@ -141,7 +141,7 @@
                         <div class="col-sm-3 col-6">
                             <div class="description-block border-right">
                                 <span class="description-percentage text-warning"><i class="fa fa-caret-left"></i>
-                                    {{ 100 - number_format($perbandinganPemasukanPengeluaranTotal, 2) }}%</span>
+                                    {{ number_format(abs($perbandinganPemasukanPengeluaranTotal), 2) }}%</span>
                                 <h5 class="description-header">Rp. {{ number_format($totalPengeluaran, 2, ',', '.') }}</h5>
                                 <span class="description-text">TOTAL BIAYA KARYAWAN</span>
                             </div>

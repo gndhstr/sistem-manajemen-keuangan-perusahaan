@@ -21,17 +21,25 @@
 
         .tabelModal {
             width: 100%;
-        }        
+        }
+
 
         @media screen and (max-width: 700px) {
             .spinner-container {
                 top: 75%;
             }
+
         }
 
         @media screen and (min-width: 701px) {
             .spinner-container {
                 top: 45%;
+            }
+        }
+
+        @media screen and (min-width: 1000px) {
+            #tabelModal_wrapper>div:nth-child(2)>div>div>div.dataTables_scrollHead>div>table {
+                width: 710px !important;
             }
         }
     </style>
@@ -248,92 +256,93 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="card-body pt-0">
+                                    <div class="card-header pt-0">
                                         <div class="row d-flex justify-content-end mb-lg-2">
                                             <a href="{{ route('cetakMutasiKaryawanDirektur', ['startDate' => request('startDate'), 'endDate' => request('endDate'), 'id' => $user->id]) }}"
                                                 class="btn btn-success mb-1 mt-0 align-self-baseline"
                                                 role="button">Export PDF<i class="fa fa-file-pdf"></i></a>
                                         </div>
-                                        <div class="d-lg-table width-100 tabelModal table-responsive">
-                                            <table class="table table-hover mb-0" id="tabelModal">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="text-center">No</th>
-                                                        <th class="text-center">Tanggal</th>
-                                                        <th class="text-center">Pemasukan</th>
-                                                        <th class="text-center">Pengeluaran</th>
-                                                        <th class="text-center">Catatan</th>
-                                                        <th class="text-center">Bukti</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @php
-                                                        if (!$startDate && !$endDate) {
-                                                            $startDate = $time->now()->startOfMonth();
-                                                            $endDate = $time->now()->endOfMonth();
-                                                        } elseif (!$endDate) {
-                                                            $endDate = $time->now()->endOfMonth();
-                                                        }
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-hover mb-0" id="tabelModal">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">No</th>
+                                                    <th class="text-center">Tanggal</th>
+                                                    <th class="text-center">Pemasukan</th>
+                                                    <th class="text-center">Pengeluaran</th>
+                                                    <th class="text-center">Catatan</th>
+                                                    <th class="text-center">Bukti</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @php
+                                                    if (!$startDate && !$endDate) {
+                                                        $startDate = $time->now()->startOfMonth();
+                                                        $endDate = $time->now()->endOfMonth();
+                                                    } elseif (!$endDate) {
+                                                        $endDate = $time->now()->endOfMonth();
+                                                    }
 
-                                                        // dd($startDate);
-                                                        $mutasis = $pemasukans
-                                                            ->concat($pengeluarans)
-                                                            ->where('id_user', $user->id)
-                                                            ->sortByDesc(function ($mutasi) {
-                                                                return isset($mutasi->tgl_pemasukan) ? $mutasi->tgl_pemasukan : $mutasi->tgl_pengeluaran;
-                                                            })
-                                                            ->filter(function ($mutasi) use ($startDate, $endDate) {
-                                                                $tgl_mutasi = isset($mutasi->tgl_pemasukan) ? $mutasi->tgl_pemasukan : $mutasi->tgl_pengeluaran;
-                                                                return $tgl_mutasi >= $startDate && $tgl_mutasi <= $endDate;
-                                                            });
-                                                    @endphp
-                                                    @forelse ($mutasis as $mutasi)
-                                                        <tr>
-                                                            <td class="text-center">{{ $loop->index + 1 }}</td>
-                                                            <td class="text-center">
-                                                                {{ isset($mutasi->tgl_pemasukan) ? (new DateTime($mutasi->tgl_pemasukan))->format('d/m/Y') : (new DateTime($mutasi->tgl_pengeluaran))->format('d/m/Y') }}
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <small class="text-success mr-1">
-                                                                    <i class="fa fa-arrow-up"></i>
-                                                                </small>
-                                                                Rp.
-                                                                {{ number_format(isset($mutasi->jml_masuk) ? floatval($mutasi->jml_masuk) : 0, 0, ',', '.') }}
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <small class="text-danger mr-1">
-                                                                    <i class="fa fa-arrow-down"></i>
-                                                                </small>
-                                                                Rp.
-                                                                {{ number_format(isset($mutasi->jml_keluar) ? floatval($mutasi->jml_keluar) : 0, 0, ',', '.') }}
-                                                            </td>
-                                                            <td class="text-center">{{ $mutasi->catatan }}</td>
-                                                            <td class="text-center">
-                                                                @if ($mutasi->jml_keluar == '' || $mutasi->jml_keluar == null)
-                                                                    <button class="btn btn-primary btn-sm view-button"
-                                                                        data-url="{{ route('viewBukti', ['id_pemasukan' => $mutasi->id_pemasukan]) }}"
-                                                                        data-toggle="modal"
-                                                                        data-target="#viewPemasukanModal{{ $mutasi->id_pemasukan }}">
-                                                                        <i class="fa fa-eye"></i>
-                                                                    </button>
-                                                                @else
-                                                                    <button class="btn btn-primary btn-sm view-button"
-                                                                        data-url="{{ route('viewBukti', ['id_pengeluaran' => $mutasi->id_pengeluaran]) }}"
-                                                                        data-toggle="modal"
-                                                                        data-target="#viewPengeluaranModal{{ $mutasi->id_pengeluaran }}">
-                                                                        <i class="fa fa-eye"></i>
-                                                                    </button>
-                                                                @endif
-                                                            </td>
-                                                        </tr>
-                                                    @empty
-                                                        <tr>
-                                                            <td colspan="4" class="text-center">No data available</td>
-                                                        </tr>
-                                                    @endforelse
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                    // dd($startDate);
+                                                    $mutasis = $pemasukans
+                                                        ->concat($pengeluarans)
+                                                        ->where('id_user', $user->id)
+                                                        ->sortByDesc(function ($mutasi) {
+                                                            return isset($mutasi->tgl_pemasukan) ? $mutasi->tgl_pemasukan : $mutasi->tgl_pengeluaran;
+                                                        })
+                                                        ->filter(function ($mutasi) use ($startDate, $endDate) {
+                                                            $tgl_mutasi = isset($mutasi->tgl_pemasukan) ? $mutasi->tgl_pemasukan : $mutasi->tgl_pengeluaran;
+                                                            return $tgl_mutasi >= $startDate && $tgl_mutasi <= $endDate;
+                                                        });
+                                                @endphp
+                                                @forelse ($mutasis as $mutasi)
+                                                    <tr>
+                                                        <td class="text-center">{{ $loop->index + 1 }}</td>
+                                                        <td class="text-center">
+                                                            {{ isset($mutasi->tgl_pemasukan) ? (new DateTime($mutasi->tgl_pemasukan))->format('d/m/Y') : (new DateTime($mutasi->tgl_pengeluaran))->format('d/m/Y') }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <small class="text-success mr-1">
+                                                                <i class="fa fa-arrow-up"></i>
+                                                            </small>
+                                                            Rp.
+                                                            {{ number_format(isset($mutasi->jml_masuk) ? floatval($mutasi->jml_masuk) : 0, 0, ',', '.') }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <small class="text-danger mr-1">
+                                                                <i class="fa fa-arrow-down"></i>
+                                                            </small>
+                                                            Rp.
+                                                            {{ number_format(isset($mutasi->jml_keluar) ? floatval($mutasi->jml_keluar) : 0, 0, ',', '.') }}
+                                                        </td>
+                                                        <td class="text-center">{{ $mutasi->catatan }}</td>
+                                                        <td class="text-center">
+                                                            @if ($mutasi->jml_keluar == '' || $mutasi->jml_keluar == null)
+                                                                <button class="btn btn-primary btn-sm view-button"
+                                                                    data-url="{{ route('viewBukti', ['id_pemasukan' => $mutasi->id_pemasukan]) }}"
+                                                                    data-toggle="modal"
+                                                                    data-target="#viewPemasukanModal{{ $mutasi->id_pemasukan }}">
+                                                                    <i class="fa fa-eye"></i>
+                                                                </button>
+                                                            @else
+                                                                <button class="btn btn-primary btn-sm view-button"
+                                                                    data-url="{{ route('viewBukti', ['id_pengeluaran' => $mutasi->id_pengeluaran]) }}"
+                                                                    data-toggle="modal"
+                                                                    data-target="#viewPengeluaranModal{{ $mutasi->id_pengeluaran }}">
+                                                                    <i class="fa fa-eye"></i>
+                                                                </button>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="4" class="text-center">No data available
+                                                        </td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -549,7 +558,10 @@
                 scrollY: '350px',
             };
 
-            var dataTableModalConfig = {                
+            var dataTableModalConfig = {
+                "scrollY": '325px',
+                "pageLength": 5,
+                "lengthChange": false,
                 columnDefs: [{
                     orderable: false,
                     targets: [1, 2, 3, 4, 5],
@@ -557,7 +569,7 @@
             };
 
             //Responsivitas
-            if (window.innerWidth <= 767) {
+            if (window.innerWidth <= 900) {
                 dataTableDivisiConfig.scrollX = true;
                 dataTableKaryawanConfig.scrollX = true;
                 dataTableModalConfig.scrollX = true;
