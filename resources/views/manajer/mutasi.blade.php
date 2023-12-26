@@ -57,6 +57,7 @@
                 </table>
             </div>
         </div>
+        
 
         @foreach($users as $user)
             @php
@@ -76,7 +77,7 @@
                         <div class="modal-body">
                             <div class="card-header">
                                 <div class="btn btn-outline-primary" role="button" data-toggle="modal" data-target="#tambahData">Saldo : Rp. {{ number_format($result, 0, ',', '.') }}</div>
-                                <a href="{{route('createRole')}}" class="btn btn-primary" role="button" data-dismiss="modal" data-toggle="modal" data-target="#tambahPemasukanModalLabel" data-userid="{{ $user->id }}">Tambah Saldo</a>
+                                <a href="{{route('createRole')}}" class="btn btn-primary fa fa-plus" role="button" data-dismiss="modal" data-toggle="modal" data-target="#tambahPemasukanModalLabel" data-userid="{{ $user->id }}"></a>
                             </div>
                             <div class="card-body">
                                 <table class="table table-hover mb-0" id="tabelModal">
@@ -88,7 +89,7 @@
                                             <th class="text-center">Pengeluaran</th>
                                             <th class="text-center">Catatan</th>
                                             <th class="text-center">Bukti</th>
-                                            <!-- <th class="text-center">Aksi</th> -->
+                                            <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -115,19 +116,19 @@
                                                 </td>
                                                 <td class="text-center">{{ $mutasi->catatan }}</td>
                                                 <td class="text-center">
-                                                    <button class="btn btn-primary btn-sm view-button" data-url="{{ route('viewBukti', ['id_pemasukan'=>$mutasi->id_pemasukan]) }}" data-dismiss="modal" data-toggle="modal" data-target="#viewPemasukanModal{{ $mutasi->id_pemasukan }}">
+                                                    <button class="btn btn-primary btn-sm view-button" data-url="{{ route('viewBukti', ['id_pemasukan'=>$mutasi->id_pemasukan]) }}"  data-toggle="modal" data-target="#viewPemasukanModal{{ $mutasi->id_pemasukan }}">
                                                         <i class="fa fa-eye"></i>
                                                     </button>
                                                 </td>
-                                                <!-- <td class="d-flex">
+                                                <td class="d-flex">
                                                 @if(isset($mutasi->jml_keluar))
-                                                <a class="btn btn-warning btn-sm fa fa-pencil" role="button" data-dismiss="modal" data-toggle="modal" data-target="#editMutasi{{$mutasi->id_pengeluaran}}"></a>
-								                <button onclick="confirmDelete(this)"  data-url="{{route('deleteMutasiPengeluaran',['id'=>$user->id])}}"data-nama="{{ $user->nama}}" class="btn btn-danger btn-sm ml-1 text-white fa fa-trash" role="button"></button>
+                                                <button class="btn btn-warning btn-sm fa fa-pencil" role="button" data-dismiss="modal" data-toggle="modal" data-target="#editMutasi{{$mutasi->id_pengeluaran}}"></butt>
+								                <button onclick="confirmDelete(this, '{{ $mutasi->id_pengeluaran }}')"  data-url="{{route('deleteMutasiPengeluaran',$mutasi->id_pengeluaran)}}"data-nama="{{ $user->nama}}" class="btn btn-danger btn-sm ml-1 text-white fa fa-trash" role="button"></button>
                                                 @else
                                                 <a class="btn btn-warning btn-sm fa fa-pencil" role="button" data-dismiss="modal" data-toggle="modal" data-target="#editMutasi{{$mutasi->id_pemasukan}}"></a>
-								                <button onclick="confirmDelete(this)"  data-url="{{route('deleteMutasiPemasukan',['id'=>$user->id])}}"data-nama="{{ $user->nama}}" class="btn btn-danger btn-sm ml-1 text-white fa fa-trash" role="button"></button>
+								                <button onclick="confirmDelete(this, '{{ $mutasi->id_pemasukan }}')"  data-url="{{route('deleteMutasiPemasukan',$mutasi->id_pemasukan)}}"data-nama="{{ $user->nama}}" class="btn btn-danger btn-sm ml-1 text-white fa fa-trash" role="button"></button>
                                                 @endif
-                                                </td> -->
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
@@ -301,6 +302,7 @@
         </div>
     </div>
     @endforeach
+    @endsection  
 
 
     <!-- javascript -->
@@ -332,7 +334,7 @@
             $(function(){
                 $("#dataTable").DataTable({
                     "columnDefs": [
-                        { "width": "50px", "targets": 0 } // Ganti 50px sesuai dengan lebar yang Anda inginkan
+                        { "width": "50px", "targets": 0 }
                     ]
                 });
 
@@ -354,4 +356,4 @@
     @endsection
 </div>
 <!-- /.content -->
-@endsection
+

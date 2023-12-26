@@ -20,6 +20,8 @@ class AnggaranController extends Controller
         $user = Auth::user();
 
         $divisi_login = $user->id_divisi;
+        $year = date('Y');
+
 
         $anggarans = tbl_anggaran::all()->where('status', '1')
                                         ->where('id_divisi', $divisi_login);
@@ -64,6 +66,7 @@ class AnggaranController extends Controller
             'rencanaBulanans' => $rencanaBulanans,
             'aktualisasiBulanans' => $aktualisasiBulanans,
             'perbandinganAnggaran' => $perbandinganAnggaran,
+            'tahun' => $year,
         ]);
 
     }

@@ -1,10 +1,3 @@
-@php
-function formatRupiah($angka){
-$rupiah = "Rp. " . number_format($angka,0,',','.');
-return $rupiah;
-}
-@endphp
-
 @extends('karyawan.layouts.master')
 
 @section("addCss")
@@ -69,7 +62,7 @@ return $rupiah;
                             <th>Kategori</th>
                             <th>Nominal</th>
                             <th>Catatan</th>
-                            <th class="text-center">Keterangan</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,7 +71,7 @@ return $rupiah;
                             <td>{{ $loop->index + 1 }}</td>
                             <td>{{ \Carbon\Carbon::parse($pengeluaran->tgl_pengeluaran)->format('d/m/Y') }}</td>
                             <td>{{ $pengeluaran->kategori->nama_kategori }}</td>
-                            <td>{{ formatRupiah($pengeluaran->jml_keluar) }}</td>
+                            <td>{{"Rp ".number_format($pengeluaran->jml_keluar, 0, ",", "." ) }}</td>
                             <td>{{ $pengeluaran->catatan }}</td>
                             <td class="text-center">
                                 <button class="btn btn-primary btn-sm view-button"
@@ -222,7 +215,7 @@ return $rupiah;
                                     <div class="form-group">
                                         <label for="tgl_pengeluaran_edit">Tanggal pengeluaran</label>
                                         <input type="date" class="form-control" id="tgl_pengeluaran_edit"
-                                            name="tgl_pengeluaran" value="{{ $pengeluaran->tgl_pengeluaran }}" required>
+                                            name="tgl_pengeluaran" value="{{ $pengeluaran->tgl_pengeluaran }}" required readonly>
                                     </div>
 
                                     <!-- Pilih kategori menggunakan select -->
@@ -242,14 +235,7 @@ return $rupiah;
                                     <div class="form-group">
                                         <label for="jml_keluar_edit">Nominal</label>
                                         <input type="text" class="form-control" id="jml_keluar_edit" name="jml_keluar"
-                                            value="{{ $pengeluaran->jml_keluar }}" required>
-                                    </div>
-
-                                    <!-- Input untuk tanggal pengeluaran -->
-                                    <div class="form-group">
-                                        <label for="tgl_pengeluaran_edit">Tanggal pengeluaran</label>
-                                        <input type="date" class="form-control" id="tgl_pengeluaran_edit"
-                                            name="tgl_pengeluaran" value="{{ $pengeluaran->tgl_pengeluaran }}" required>
+                                            value="{{ $pengeluaran->jml_keluar }}" required readonly>
                                     </div>
 
                                     <!-- Textarea untuk catatan -->
@@ -257,17 +243,6 @@ return $rupiah;
                                         <label for="catatan_edit">Catatan</label>
                                         <textarea class="form-control" id="catatan_edit" name="catatan" rows="3"
                                             required>{{ $pengeluaran->catatan }}</textarea>
-                                    </div>
-
-                                    <!-- Input untuk bukti pengeluaran -->
-                                    <div class="form-group">
-                                        <label for="bukti_pengeluaran_edit">Bukti Pengeluaran</label>
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="bukti_pengeluaran_edit"
-                                                name="bukti_pengeluaran" accept="image/*">
-                                            <label class="custom-file-label" for="bukti_pengeluaran_edit">Choose
-                                                file</label>
-                                        </div>
                                     </div>
 
                                     <div class="text-right">
@@ -326,10 +301,6 @@ return $rupiah;
             $(".view-button").on("click", function () {
                 var url = $(this).data("url");
                 $("#viewPengeluaranModal").modal("show");
-            });
-            // Format Rupiah
-            $('.rupiah').mask('000.000.000.000', {
-                reverse: true
             });
         });
 

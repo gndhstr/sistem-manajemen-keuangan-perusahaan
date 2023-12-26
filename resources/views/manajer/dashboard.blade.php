@@ -63,7 +63,7 @@
             {{-- card grafik --}}
             <div class="card">
                 <div class="card-header border-0">
-                    <h3 class="card-title text-bold text-lg text-center">Grafik Keuangan Karyawan ({{ $tahun }})</h3>
+                    <h3 class="card-title text-bold text-lg text-center">Grafik Keuangan Divisi {{ Auth::user()->division->nama_divisi }} ({{ $tahun }})</h3>
                     <div class="card-tools">
                         <span class="badge badge-info">{{ date('Y') }}</span>
                     </div>

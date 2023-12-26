@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class PemasukanController extends Controller
@@ -33,7 +35,12 @@ class PemasukanController extends Controller
             ->get();
             $total =$pemasukans->sum("jml_masuk");
             // dd($startDate, $endDate);
+<<<<<<< HEAD
         return view('pemasukan.index', compact('pemasukans', 'kategori',"total"));
+=======
+            $total =$pemasukans->sum("jml_masuk");
+        return view('pemasukan.index', compact('pemasukans', 'kategori', 'total'));
+>>>>>>> 5354da65b7a0037c24581643be085954c4d38b79
     }
 
     //cetak
@@ -140,20 +147,10 @@ class PemasukanController extends Controller
             'id_user_edit' => 'required|integer',
             'tgl_pemasukan' => 'required|string',
             'jml_masuk' => 'required|string|max:255',
-            'bukti_pemasukan' => 'nullable|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'catatan' => 'nullable|string',
             'status' => 'nullable',
         ]);
-        if ($request->hasFile('bukti_pemasukan')) {
-            // Delete the old file
-            Storage::delete('bukti_pemasukan/' . $pemasukan->bukti_pemasukan);
-    
-            // Upload and save the new file
-            $file = $request->file('bukti_pemasukan');
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('bukti_pemasukan', $fileName, 'public');
-            $pemasukan->bukti_pemasukan = $fileName;
-        }
+
         $pemasukan->id_kategori = $validatedData['id_kategori'];
         $pemasukan->id_user = $validatedData['id_user'];
         $pemasukan->id_user_create = $validatedData['id_user_create'];

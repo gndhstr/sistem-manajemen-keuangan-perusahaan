@@ -1,10 +1,3 @@
-@php
-function formatRupiah($angka){
-$rupiah = "Rp. " . number_format($angka,0,',','.');
-return $rupiah;
-}
-@endphp
-
 @extends('karyawan.layouts.master')
 
 @section("addCss")
@@ -65,7 +58,7 @@ return $rupiah;
                             <th>Kategori</th>
                             <th>Nominal</th>
                             <th>Catatan</th>
-                            <th class="text-center">Keterangan</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,7 +67,7 @@ return $rupiah;
                             <td>{{ $loop->index + 1 }}</td>
                             <td>{{ \Carbon\Carbon::parse($pemasukan->tgl_pemasukan)->format('d/m/Y') }}</td>
                             <td>{{ $pemasukan->kategori->nama_kategori }}</td>
-                            <td>{{ formatRupiah($pemasukan->jml_masuk) }}</td>
+                            <td>{{ "Rp ".number_format($pemasukan->jml_masuk, 0, ",", "." ) }}</td>
                             <td>{{ $pemasukan->catatan }}</td>
                             <td class="text-center">
                                 <button class="btn btn-primary btn-sm view-button" data-url="{{ route('viewPemasukan', ['id_pemasukan'=>$pemasukan->id_pemasukan]) }}" data-toggle="modal" data-target="#viewPemasukanModal{{ $pemasukan->id_pemasukan }}">
@@ -87,7 +80,11 @@ return $rupiah;
                         @endforeach
                         <tr>
                             <td colspan="3" class="text-center">Jumlah</td>
+<<<<<<< HEAD
                             <td colspan="3">{{"Rp ".number_format($total, 0, ",", "." ) }}</td>
+=======
+                            <td colspan="2">{{"Rp ".number_format($total, 0, ",", "." ) }}</td>
+>>>>>>> 5354da65b7a0037c24581643be085954c4d38b79
                         </tr>
                     </tbody>
                 </table>
@@ -198,7 +195,7 @@ return $rupiah;
                                     <!-- Input untuk tanggal pemasukan -->
                                     <div class="form-group">
                                         <label for="tgl_pemasukan_edit">Tanggal Pemasukan</label>
-                                        <input type="date" class="form-control" id="tgl_pemasukan_edit" name="tgl_pemasukan" value="{{ $pemasukan->tgl_pemasukan }}" required>
+                                        <input type="date" class="form-control" id="tgl_pemasukan_edit" name="tgl_pemasukan" value="{{ $pemasukan->tgl_pemasukan }}" required readonly>
                                     </div>
 
                                     <!-- Pilih kategori menggunakan select -->
@@ -216,22 +213,13 @@ return $rupiah;
                                     <!-- Input untuk jumlah masuk -->
                                     <div class="form-group">
                                         <label for="jml_masuk_edit">Nominal</label>
-                                        <input type="text" class="form-control" id="jml_masuk_edit" name="jml_masuk" value="{{ $pemasukan->jml_masuk }}" required>
+                                        <input type="text" class="form-control" id="jml_masuk_edit" name="jml_masuk" value="{{ $pemasukan->jml_masuk }}" required readonly>
                                     </div>
 
                                     <!-- Textarea untuk catatan -->
                                     <div class="form-group">
                                         <label for="catatan_edit">Catatan</label>
                                         <textarea class="form-control" id="catatan_edit" name="catatan" rows="3" required>{{ $pemasukan->catatan }}</textarea>
-                                    </div>
-
-                                    <!-- Input untuk bukti edit pemasukan -->
-                                    <div class="form-group">
-                                        <label for="bukti_pemasukan_edit">Bukti Pemasukan</label>
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="bukti_pemasukan_edit" name="bukti_pemasukan" accept="image/*">
-                                            <label class="custom-file-label" for="bukti_pemasukan_edit">Choose file</label>
-                                        </div>
                                     </div>
 
                                     <div class="text-right">
@@ -290,10 +278,6 @@ return $rupiah;
             $(".view-button").on("click", function() {
                 var url = $(this).data("url");
                 $("#viewPemasukanModal").modal("show");
-            });
-            // Format Rupiah
-            $('.rupiah').mask('000.000.000.000', {
-                reverse: true
             });
         });
     </script>
