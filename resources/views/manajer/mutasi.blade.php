@@ -14,7 +14,7 @@
             </div><!-- /.col -->
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{route('dashboardManajer')}}">Dashboard</a></li>
                     <li class="breadcrumb-item active">Mutasi Keuangan</li>
                 </ol>
             </div><!-- /.col -->
@@ -47,7 +47,7 @@
                             <tr>
                                 <td class="text-center">{{ $loop->index + 1}}</td>
                                 <td class="text-center">{{ $user->nama}}</td>
-                                <td class="text-center">Rp. {{ number_format($result, 0, ',', '.') }} </td>
+                                <td class="text-center">Rp. {{ number_format($result, 0, ',', '.') }},00 </td>
                                 <td class="text-center">
                                     <a data-url="{{route('editUser',['id'=>$user->id])}}" class="btn btn-warning btn-sm fa fa-search" role="button" data-toggle="modal" data-target="#editData{{$user->id}}"></a>
                                 </td>
@@ -76,7 +76,7 @@
                         </div>
                         <div class="modal-body">
                             <div class="card-header">
-                                <div class="btn btn-outline-primary" role="button" data-toggle="modal" data-target="#tambahData">Saldo : Rp. {{ number_format($result, 0, ',', '.') }}</div>
+                                <div class="btn btn-outline-primary" role="button" data-toggle="modal" data-target="#tambahData">Saldo : Rp. {{ number_format($result, 0, ',', '.') }},00</div>
                                 <a href="{{ route('storeSaldo')}}" class="btn btn-primary fa fa-plus" role="button" data-dismiss="modal" data-toggle="modal" data-target="#tambahPemasukanModalLabel" data-userid="{{ $user->id }}"></a>
                             </div>
                             <div class="card-body">
@@ -106,13 +106,13 @@
                                                     <small class="text-success mr-1">
                                                         <i class="fa fa-arrow-up"></i>
                                                     </small>
-                                                    Rp. {{ number_format(isset($mutasi->jml_masuk) ? floatval($mutasi->jml_masuk) : 0, 0, ',', '.') }}
+                                                    Rp. {{ number_format(isset($mutasi->jml_masuk) ? floatval($mutasi->jml_masuk) : 0, 0, ',', '.') }},00
                                                 </td>
                                                 <td class="text-center">
                                                     <small class="text-danger mr-1">
                                                         <i class="fa fa-arrow-down"></i>
                                                     </small>
-                                                    Rp. {{ number_format(isset($mutasi->jml_keluar) ? floatval($mutasi->jml_keluar) : 0, 0, ',', '.') }}
+                                                    Rp. {{ number_format(isset($mutasi->jml_keluar) ? floatval($mutasi->jml_keluar) : 0, 0, ',', '.') }},00
                                                 </td>
                                                 <td class="text-center">{{ $mutasi->catatan }}</td>
                                                 <td class="text-center">

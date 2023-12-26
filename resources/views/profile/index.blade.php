@@ -29,7 +29,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
-                            <img src="{{ asset('storage/' . Auth()->user()->foto_profil) }}" alt="Admin"
+                            <img src="{{ !is_null(Auth()->user()->foto_profil) && file_exists(public_path('storage/' . Auth()->user()->foto_profil)) ? asset('storage/' . Auth()->user()->foto_profil) : asset('img/user-photo-default.png') }}" alt="Admin"
                                 class="rounded-circle p-1" width="110" height="110">
                             <div class="mt-3">
                                 <div class="row">
