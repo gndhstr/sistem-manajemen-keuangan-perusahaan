@@ -23,6 +23,8 @@ class PemasukanController extends Controller
      */
     public function index(Request $tampil)
     {
+        $user = Auth::user();
+        $id_user = $user->id;
         // $pemasukans = tbl_pemasukan::with('kategori')->where('status', '1')->get();
         $kategori = tbl_kategori::all();
         //filter tanggal
@@ -31,16 +33,14 @@ class PemasukanController extends Controller
     
         $pemasukans = tbl_pemasukan::with('kategori')
             ->where('status', '1')
+            ->where('id_user', $id_user)
             ->whereBetween('tgl_pemasukan', [$startDate, $endDate])
             ->get();
             $total =$pemasukans->sum("jml_masuk");
             // dd($startDate, $endDate);
-<<<<<<< HEAD
         return view('pemasukan.index', compact('pemasukans', 'kategori',"total"));
-=======
             $total =$pemasukans->sum("jml_masuk");
         return view('pemasukan.index', compact('pemasukans', 'kategori', 'total'));
->>>>>>> 5354da65b7a0037c24581643be085954c4d38b79
     }
 
     //cetak

@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+
 
 class PengeluaranController extends Controller
 {
@@ -20,13 +22,16 @@ class PengeluaranController extends Controller
      */
     public function index(Request $tampil)
     {
-        $pengeluarans = tbl_pengeluaran::with('kategori')->where('status', '1')->get();
+        $user = Auth::user();
+        $id_user = $user->id;
+
         $kategori = tbl_kategori::all();
         $startDate = $tampil->input('start_date', now()->subMonth()->startOfDay());
         $endDate = $tampil->input('end_date', now()->endOfDay());
     
         $pengeluarans = tbl_pengeluaran::with('kategori')
             ->where('status', '1')
+            ->where('id_user', $id_user)
             ->whereBetween('tgl_pengeluaran', [$startDate, $endDate])
             ->get();
             $total =$pengeluarans->sum("jml_keluar");
