@@ -31,8 +31,8 @@ class PemasukanController extends Controller
         // $pemasukans = tbl_pemasukan::with('kategori')->where('status', '1')->get();
         $kategori = tbl_kategori::all()->where('id_kategori', '<>', 8);
         //filter tanggal
-        $startDate = $tampil->input('start_date', now()->subMonth()->startOfDay());
-        $endDate = $tampil->input('end_date', now()->endOfDay());
+        $startDate = $tampil->input('start_date', now()->startOfMonth());
+        $endDate = $tampil->input('end_date', now()->endOfMonth());
         $start_date = $time->now()->startOfMonth();
         $end_date = $time->now()->endOfMonth();
     

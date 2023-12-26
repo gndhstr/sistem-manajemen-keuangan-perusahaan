@@ -22,12 +22,17 @@ class PengeluaranController extends Controller
      */
     public function index(Request $tampil)
     {
+        $time = new Carbon();
+        $time->setTimeZone('Asia/Jakarta');
+
         $user = Auth::user();
         $id_user = $user->id;
 
-        $kategori = tbl_kategori::all();
-        $startDate = $tampil->input('start_date', now()->subMonth()->startOfDay());
-        $endDate = $tampil->input('end_date', now()->endOfDay());
+        $kategori = tbl_kategori::all()->where('id_kategori', '<>', 8);
+        $startDate = $tampil->input('start_date', now()->startOfMonth());
+        $endDate = $tampil->input('end_date', now()->endOfMonth());
+        $start_date = $time->now()->startOfMonth()->format('Y-m-d');
+        $end_date = $time->now()->endOfMonth()->format('Y-m-d');
     
         $pengeluarans = tbl_pengeluaran::with('kategori')
             ->where('status', '1')
@@ -36,7 +41,7 @@ class PengeluaranController extends Controller
             ->get();
             $total =$pengeluarans->sum("jml_keluar");
             // dd($startDate, $endDate);
-        return view('pengeluaran.index', compact('pengeluarans','kategori',"total"));
+        return view('pengeluaran.index', compact('pengeluarans', 'kategori', "total", 'start_date', 'end_date'));
     }
         //cetak
         public function cetak(Request $cetak)
