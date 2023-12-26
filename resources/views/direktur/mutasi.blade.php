@@ -206,7 +206,7 @@
                                         <td>
                                             {{ $riwayat->kategori->nama_kategori }}
                                         </td>
-                                        <td>
+                                        <td class="text-right">
                                             <small
                                                 class="{{ $riwayat->jenis_transaksi == 'pemasukan' ? 'text-success' : 'text-danger' }} mr-1">
                                                 <i
@@ -307,14 +307,14 @@
                                                                 <i class="fa fa-arrow-up"></i>
                                                             </small>
                                                             Rp.
-                                                            {{ number_format(isset($mutasi->jml_masuk) ? floatval($mutasi->jml_masuk) : 0, 0, ',', '.') }}
+                                                            {{ number_format(isset($mutasi->jml_masuk) ? floatval($mutasi->jml_masuk) : 0, 2, ',', '.') }}
                                                         </td>
-                                                        <td class="text-center">
+                                                        <td class="text-right">
                                                             <small class="text-danger mr-1">
                                                                 <i class="fa fa-arrow-down"></i>
                                                             </small>
                                                             Rp.
-                                                            {{ number_format(isset($mutasi->jml_keluar) ? floatval($mutasi->jml_keluar) : 0, 0, ',', '.') }}
+                                                            {{ number_format(isset($mutasi->jml_keluar) ? floatval($mutasi->jml_keluar) : 0, 2, ',', '.') }}
                                                         </td>
                                                         <td class="text-center">{{ $mutasi->catatan }}</td>
                                                         <td class="text-center">
