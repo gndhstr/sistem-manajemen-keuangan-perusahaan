@@ -64,7 +64,7 @@
         <input id="username" type="text" name="username" placeholder="Masukkan username" required autocomplete="username" autofocus />
         <!-- input password -->
         <input id="password" type="password" placeholder="Password" name="password" required autocomplete="current-password">
-        <!-- <a href="#">Forgot your password?</a> -->
+        <a href="{{ route('lupa') }}" style="color: blue">Lupa Password ?</a>
         <button type="submit">Masuk</button>
       </form>
     </div>

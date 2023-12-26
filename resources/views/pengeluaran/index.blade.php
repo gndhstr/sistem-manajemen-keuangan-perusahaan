@@ -99,7 +99,7 @@ return $rupiah;
                         @endforeach
                         <tr>
                             <td colspan="3" class="text-center">Jumlah</td>
-                            <td colspan="2">{{"Rp ".number_format($total, 0, ",", "." ) }}</td>
+                            <td colspan="3">{{"Rp ".number_format($total, 0, ",", "." ) }}</td>
                         </tr>
                     </tbody>
                 </table>

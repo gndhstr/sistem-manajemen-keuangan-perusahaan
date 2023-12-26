@@ -113,8 +113,13 @@
                         <!-- password -->
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="text" name="password" id="password" class="form-control" required
+                            <input type="password" name="password" id="password" class="form-control" required
                                 placeholder="Masukkan Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Email</label>
+                            <input type="email" name="email" id="email" class="form-control" required
+                                placeholder="Masukkan Email">
                         </div>
                         <div class="text-right">
                             <button type="submit" class="btn btn-success">Simpan</button>

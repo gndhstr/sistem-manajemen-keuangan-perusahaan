@@ -68,6 +68,10 @@
                                 <h6 class="mb-0">No.Telepon</h6>
                                 <span class="text-secondary">{{$profile->nomor_telepon}}</span>
                             </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <h6 class="mb-0">Email</h6>
+                                <span class="text-secondary">{{$profile->email}}</span>
+                            </li>
                         </ul>
                     </div>
                 </div>

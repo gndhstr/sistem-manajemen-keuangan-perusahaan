@@ -78,6 +78,11 @@
                                             id="nomor_telepon" placeholder="Masukkan No. Telepon"
                                             value="{{$profile->nomor_telepon}}">
                                     </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" name="email" id="email"
+                                            placeholder="Masukkan Email" value="{{$profile->email}}">
+                                    </div>
                                     <div class="text-right mb-5 mt-3">
                                         <button type="submit" class="btn btn-primary">Simpan</button>&nbsp;
                                         <a href="{{ route('indexProfile') }}" class="btn btn-default">Batal</a>

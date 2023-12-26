@@ -56,6 +56,7 @@ class ProfileController extends Controller
             "nama"     =>"string|max:255",  
             "alamat"  => "string",  
             "no_telepon"=>"string",
+            "email"     => "string",
             
         ])->validate();
         $profile = new profile($validasiData);
@@ -101,6 +102,7 @@ class ProfileController extends Controller
             "alamat"         => "string",
             "nomor_telepon"  => "string",
             "foto_profil"    => "mimes:jpeg,png,jpg|max:2000",
+            "email"         => "string",
         ]);
         if ($request->hasFile('foto_profil')) {
             $foto_profil = $request->file('foto_profil');
@@ -108,6 +110,7 @@ class ProfileController extends Controller
             $validatedData['foto_profil'] = $path ;
             // dd($validatedData);
         }
+        
         $profile->update($validatedData);
         // session()->flash('success', 'Profil berhasil diperbarui');
         return redirect(route("Profile"))->with("success","Profile Berhasil Diperbarui");
@@ -133,8 +136,8 @@ class ProfileController extends Controller
 
         $user->password = Hash::make($request->input("pw_baru"));
         $user->save();
-        session()->flash('success', 'Kata sandi berhasil diperbarui');
-        return redirect(route("Profile"));
+        // session()->flash('success', 'Kata sandi berhasil diperbarui');
+        return redirect(route("Profile"))->with("success","Kata Sandi Berhasil Diperbarui");
     }
 
 

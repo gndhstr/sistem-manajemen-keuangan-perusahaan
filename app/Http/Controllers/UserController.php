@@ -86,7 +86,8 @@ class UserController extends Controller
             "role"      => $request->role,
             "id_divisi" => $request->id_divisi,
             "username"  => $request->username,
-            "password"  => bcrypt($request->password)
+            "password"  => bcrypt($request->password),
+            "email"  => $request->email,
         ]);
     
         return redirect(route("daftarUser"))

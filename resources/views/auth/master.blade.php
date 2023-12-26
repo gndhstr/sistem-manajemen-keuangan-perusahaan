@@ -20,14 +20,9 @@
     @yield('addCss')
 </head>
 
-<body class="hold-transition login-page">
-    <div class="login-box">
-        <div class="login-logo">
-            {{config('app.name')}}
-        </div>
-        
-        @yield('content')
-    </div>
+<body class="login-page">
+@yield('content')
+</div>
     <!-- /.login-box -->
 
     <!-- jQuery -->
