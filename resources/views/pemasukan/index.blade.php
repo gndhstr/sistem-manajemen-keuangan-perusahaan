@@ -30,7 +30,7 @@
         <div class="card">
             <div class="card-header text-right">
                 <a href="{{ route('createPemasukan') }}" class="btn btn-primary" role="button" data-toggle="modal" data-target="#tambahPemasukanModal">Tambah Data</a>
-                <a href="{{ route('cetakPemasukan', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" class="btn btn-success mx-1" role="button">Export PDF <i class="fa fa-file-pdf"></i></a>
+                <a href="{{ route('cetakPemasukan', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" class="btn btn-success mx-1 " role="button">Export PDF <i class="fa fa-file-pdf-o"></i></a>
             </div>
             <div class="card-body">
                 <form method="get" action="{{ route('daftarPemasukan') }}" class="mb-3">
@@ -45,7 +45,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="d-block invisible">Filter</label>
-                            <button type="submit" class="btn btn-primary">Filter</button>
+                            <button type="submit" class="btn btn-primary fa fa-filter"></i></button>
                         </div>
                     </div>
                 </form>
@@ -71,10 +71,10 @@
                             <td>{{ $pemasukan->catatan }}</td>
                             <td class="text-center">
                                 <button class="btn btn-primary btn-sm view-button" data-url="{{ route('viewPemasukan', ['id_pemasukan'=>$pemasukan->id_pemasukan]) }}" data-toggle="modal" data-target="#viewPemasukanModal{{ $pemasukan->id_pemasukan }}">
-                                    <i class="fa fa-eye"></i> Lihat
+                                    <i class="fa fa-eye"></i>
                                 </button>
-                                <a data-url="{{ route('editPemasukan', ['id_pemasukan'=>$pemasukan->id_pemasukan]) }}" class="btn btn-warning btn-sm edit-button" role="button" data-toggle="modal" data-target="#editPemasukanModal{{ $pemasukan->id_pemasukan }}">Edit</a>
-                                <a onclick="confirmDelete(this, '{{ $pemasukan->id_pemasukan }}')" href="{{ route('deletePemasukan', $pemasukan->id_pemasukan) }}" data-nama="{{ $pemasukan->kategori->nama_kategori }}" class="btn btn-danger btn-sm ml-1 text-white delete-button" role="button">Hapus</a>
+                                <a data-url="{{ route('editPemasukan', ['id_pemasukan'=>$pemasukan->id_pemasukan]) }}" class="btn btn-warning btn-sm edit-button fa fa-pencil" role="button" data-toggle="modal" data-target="#editPemasukanModal{{ $pemasukan->id_pemasukan }}"></a>
+                                <a onclick="confirmDelete(this, '{{ $pemasukan->id_pemasukan }}')" href="{{ route('deletePemasukan', $pemasukan->id_pemasukan) }}" data-nama="{{ $pemasukan->kategori->nama_kategori }}" class="btn btn-danger btn-sm ml-1 text-white delete-button fa fa-trash" role="button"></a>
                             </td>
                         </tr>
                         @endforeach
