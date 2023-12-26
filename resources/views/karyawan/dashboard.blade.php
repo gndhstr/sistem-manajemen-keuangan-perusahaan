@@ -104,7 +104,7 @@
                                 <!-- /.d-flex -->
 
                                 <div class="position-relative mb-4">
-                                    <canvas id="sales-chart" height="140"></canvas>
+                                    <canvas id="sales-chart" height="145"></canvas>
                                 </div>
 
                                 <div class="d-flex flex-row justify-content-end">
