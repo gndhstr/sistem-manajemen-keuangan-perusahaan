@@ -2,60 +2,68 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-	<!-- Font Awesome Icons -->
-	<link rel="stylesheet" href="{{asset('css/fontawesome.min.css')}}">
-	<!-- Theme style -->
-	<link rel="stylesheet" href="{{asset('css/adminlte.min.css')}}">
-	<!-- Google Font: Source Sans Pro -->
-	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="{{asset('css/fontawesome.min.css')}}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{asset('css/adminlte.min.css')}}">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
-	@yield('addCss')
+    <!-- Favicon -->
+             
+    <link rel="icon" href="{{asset('assets/img/app-logo-shadow.png')}}" type="png">
+             
+    <!-- Ikon Perangkat Seluler -->
+             
+    <link rel="apple-touch-icon" sizes="180x180" href="{{asset('assets/img/app-logo-shadow.png')}}">
+
+    @yield('addCss')
 </head>
 
 <body class="hold-transition sidebar-mini sidebar-collapse">
-	<div class="wrapper">
+    <div class="wrapper">
 
-		@if (Auth::user()->role == '1')
-			@include('admin.layouts.sidebar')
-		@elseif (Auth::user()->role == '2')
-			@include('direktur.layouts.sidebar')
-		@elseif (Auth::user()->role == '3')
-			@include('manajer.layouts.sidebar')
-		@elseif (Auth::user()->role == '4')
-			@include('karyawan.layouts.sidebar')
-		@endif
-		
-		@include('admin.layouts.navbar')
-		{{-- @include('admin.layouts.sidebar') --}}
+        @if (Auth::user()->role == '1')
+        @include('admin.layouts.sidebar')
+        @elseif (Auth::user()->role == '2')
+        @include('direktur.layouts.sidebar')
+        @elseif (Auth::user()->role == '3')
+        @include('manajer.layouts.sidebar')
+        @elseif (Auth::user()->role == '4')
+        @include('karyawan.layouts.sidebar')
+        @endif
 
-		<!-- Content Wrapper. Contains page content -->
-		<div class="content-wrapper">
-			@yield('content')
-		</div>
-		<!-- /.content-wrapper -->
+        @include('admin.layouts.navbar')
+        {{-- @include('admin.layouts.sidebar') --}}
 
-		@include('admin.layouts.footer')
-	</div>
-	<!-- ./wrapper -->
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            @yield('content')
+        </div>
+        <!-- /.content-wrapper -->
 
-	<!-- REQUIRED SCRIPTS -->
-	@include('sweetalert::alert')
-	<!-- jQuery -->
-	<script src="{{asset('js/jquery.min.js')}}"></script>
-	<!-- Bootstrap 4 -->
-	<script src="{{asset('js/bootstrap.bundle.min.js')}}"></script>
-	<!-- AdminLTE App -->
-	<script src="{{asset('js/adminlte.min.js')}}"></script>
-	<!-- Sweetalert -->
-	<script src="{{asset('js/sweetalert.min.js')}}"></script>
+        @include('admin.layouts.footer')
+    </div>
+    <!-- ./wrapper -->
 
-	@yield('addJavascript')
+    <!-- REQUIRED SCRIPTS -->
+    @include('sweetalert::alert')
+    <!-- jQuery -->
+    <script src="{{asset('js/jquery.min.js')}}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{{asset('js/bootstrap.bundle.min.js')}}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{asset('js/adminlte.min.js')}}"></script>
+    <!-- Sweetalert -->
+    <script src="{{asset('js/sweetalert.min.js')}}"></script>
+
+    @yield('addJavascript')
 </body>
 
 </html>

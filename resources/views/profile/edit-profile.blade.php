@@ -2,6 +2,27 @@
 
 @section("addCss")
 <link rel="stylesheet" href="{{asset('css/profile.css')}}">
+<style>
+    @media (max-width: 500px) {
+        .wadah {
+            margin-left: 110px;
+            margin-bottom: 15px;
+        }
+
+        .profile-image {
+            max-width: 100%;
+            height: auto;
+            max-height: 100px
+        }
+
+        .wadah2 {
+            margin-left: 65px;
+        }
+    }
+
+</style>
+
+
 @endsection
 @section('content')
 <!-- Content Header (Page header) -->
@@ -10,7 +31,7 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h4 class="font-weight-bold">
-                    Account settings
+                    Edit Profil
                 </h4>
             </div>
             <div class="col-sm-6">
@@ -26,12 +47,12 @@
 <div class="container light-style flex-grow-1 container-p-y">
     <div class="card overflow-hidden">
         <div class="row no-gutters row-bordered row-border-light">
-            <div class="col-md-3 pt-0">
+            <div class="col-md-3 pt-0 mb-3">
                 <div class="list-group list-group-flush account-settings-links">
                     <a class="list-group-item list-group-item-action active" data-toggle="list"
-                        href="#account-general"><i class="fa fa-user  mx-1"></i>Akun</a>
+                        href="#account-general"><i class="fa fa-user  mx-1"></i> Akun</a>
                     <a class="list-group-item list-group-item-action" data-toggle="list"
-                        href="#account-change-password"><i class="fa fa-lock mx-1"></i>Keamanan Sandi</a>
+                        href="#account-change-password"><i class="fa fa-lock mx-1"></i> Keamanan Sandi</a>
                 </div>
             </div>
             <div class="col-md-9">
@@ -41,12 +62,12 @@
                             <form action="{{ route('updateProfile',$profile->id) }}" method="post"
                                 enctype="multipart/form-data">
                                 @csrf
-                                <div class="row ">
-                                    <div class="col-md-3 text-center">
+                                <div class="row">
+                                    <div class="col-md-3 wadah  ">
                                         <img src="{{ asset('storage/' . Auth()->user()->foto_profil) }}" alt=""
-                                            class="d-block ui-w-80 ml-2 " height="80">
+                                            class="d-block ui-w-80 ml-2 profile-image" height="80">
                                     </div>
-                                    <div class="col-md-6 d-flex align-items-center">
+                                    <div class="col-md-6 d-flex align-items-center wadah2">
                                         <label class="btn btn-outline-primary">
                                             Upload Foto
                                             <input type="file" name="foto_profil" id="foto_profil"
@@ -54,7 +75,7 @@
                                         </label>
                                         <button type="reset" class="btn btn-default md-btn-flat ml-2">Reset</button>
                                     </div>
-                                    <div class="text-light small ml-3 mt-1">Rasio ukuran 1 : 1 <br>
+                                    <div class="text-light small ml-3 mt-1 text center">Rasio ukuran 1 : 1 <br>
                                         Perubahan foto saat sudah klik simpan <br>Format JPG, JPEG, dan PNG dengan
                                         maksimal 2Mb
                                     </div>
