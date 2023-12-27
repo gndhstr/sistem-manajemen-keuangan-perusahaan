@@ -35,7 +35,7 @@
 	</style>
 </head>
 <body>
-    <h3>DAFTAR PEGAWAI KANTOR ABC</h3>
+    <h3>DAFTAR PEGAWAI</h3>
     <table>
         <thead>
             <tr>
