@@ -47,7 +47,8 @@
 </head>
 
 <body>
-    <h3>DATA PENGELUARAN KARYAWAN <br>BULAN {{ strtoupper(\Carbon\Carbon::parse($startDate)->formatLocalized('%B')) }} - {{ strtoupper(\Carbon\Carbon::parse($endDate)->formatLocalized('%B')) }} <br>2023</h3>
+    <h3>Periode {{\Carbon\Carbon::parse($startDate)->locale('id')->isoFormat('D MMMM Y') }} -
+        {{ \Carbon\Carbon::parse($endDate)->locale('id')->isoFormat('D MMMM Y') }} </h3>
     <table>
         <thead>
             <tr>

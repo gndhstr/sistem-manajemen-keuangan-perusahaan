@@ -39,7 +39,7 @@
 
 <body>
     <h3>DATA PEMASUKAN KARYAWAN</h3>
-    <h3>PERIODE {{\Carbon\Carbon::parse($startDate)->locale('id')->isoFormat('D MMMM Y') }} -
+    <h3>Periode {{\Carbon\Carbon::parse($startDate)->locale('id')->isoFormat('D MMMM Y') }} -
         {{ \Carbon\Carbon::parse($endDate)->locale('id')->isoFormat('D MMMM Y') }} </h3>
     <table>
         <thead>
