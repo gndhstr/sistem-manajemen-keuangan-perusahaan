@@ -111,7 +111,7 @@ class PengeluaranController extends Controller
         $pengeluaran->status ='1';
         $pengeluaran->save();
 
-        return redirect()->route('daftarPengeluaran')->with('success', 'Pengeluaran berhasil ditambahkan');
+        return redirect()->route('daftarPengeluaran')->with('berhasil', 'Pengeluaran berhasil ditambahkan');
     }
 
     /**
@@ -169,7 +169,7 @@ class PengeluaranController extends Controller
         $pengeluaran->catatan = $validatedData['catatan'];
         $pengeluaran->save();
     
-        return redirect()->route('daftarPengeluaran')->with('success', 'Data pengeluaran berhasil diperbarui');
+        return redirect()->route('daftarPengeluaran')->with('berhasil', 'Data pengeluaran berhasil diperbarui');
     }
 
     /**
@@ -182,6 +182,6 @@ class PengeluaranController extends Controller
     {
         $pengeluaran->status = '0';
         $pengeluaran->save();
-        return redirect()->route('daftarPengeluaran')->with('success', 'Data Berhasil dihapus');
+        return redirect()->route('daftarPengeluaran')->with('berhasil', 'Data Berhasil dihapus');
     }
 }

@@ -83,7 +83,7 @@ class MutasiController extends Controller
         $pemasukan->status = '1';
         $pemasukan->save();
 
-        return redirect()->route('daftarMutasi')->with('success', 'Pemasukan berhasil ditambahkan');
+        return redirect()->route('daftarMutasi')->with('berhasil', 'Pemasukan berhasil ditambahkan');
     }
 
     /**
@@ -138,7 +138,7 @@ class MutasiController extends Controller
         $pemasukan->catatan = $validatedData['catatan'];
         $pemasukan->save();
 
-        return redirect()->route('daftarMutasi')->with('success', 'Data berhasil diperbarui');
+        return redirect()->route('daftarMutasi')->with('berhasil', 'Data berhasil diperbarui');
     }
 
     
@@ -165,7 +165,7 @@ class MutasiController extends Controller
         $pengeluaran->catatan = $validatedData['catatan'];
         $pengeluaran->save();
 
-        return redirect()->route('daftarMutasi')->with('success', 'Data berhasil diperbarui');
+        return redirect()->route('daftarMutasi')->with('berhasil', 'Data berhasil diperbarui');
     }
 
     /**
@@ -181,13 +181,13 @@ class MutasiController extends Controller
         $pemasukan->save();
         $modalToOpen = '#editData{{$user->id}}';
 
-        return redirect()->route('daftarMutasi')->with('success', 'Data berhasil dihapus')->with('modalToOpen', $modalToOpen);
+        return redirect()->route('daftarMutasi')->with('berhasil', 'Data berhasil dihapus')->with('modalToOpen', $modalToOpen);
     }    public function destroyPengeluaran(tbl_pengeluaran $pengeluaran)
     {
         $pengeluaran->status = '0';
         $pengeluaran->save();
         $modalToOpen = '#editData{{$user->id}}';
 
-        return redirect()->route('daftarMutasi')->with('success', 'Data berhasil dihapus')->with('modalToOpen', $modalToOpen);
+        return redirect()->route('daftarMutasi')->with('berhasil', 'Data berhasil dihapus')->with('modalToOpen', $modalToOpen);
     }
 }

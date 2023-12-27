@@ -128,7 +128,7 @@ class PemasukanController extends Controller
         $pemasukan->status = '1';
         $pemasukan->save();
 
-        return redirect()->route('daftarPemasukan')->with('success', 'Pemasukan berhasil ditambahkan');
+        return redirect()->route('daftarPemasukan')->with('berhasil', 'Pemasukan berhasil ditambahkan');
     }
 
     /**
@@ -172,7 +172,7 @@ class PemasukanController extends Controller
         $pemasukan->catatan = $validatedData['catatan'];
         $pemasukan->save();
 
-        return redirect()->route('daftarPemasukan')->with('success', 'Data pemasukan berhasil diperbarui');
+        return redirect()->route('daftarPemasukan')->with('berhasil', 'Data pemasukan berhasil diperbarui');
     }
 
     /**
@@ -185,6 +185,6 @@ class PemasukanController extends Controller
     {
         $pemasukan->status = '0';
         $pemasukan->save();
-        return redirect()->route('daftarPemasukan')->with('success', 'Data Berhasil dihapus');
+        return redirect()->route('daftarPemasukan')->with('berhasil', 'Data Berhasil dihapus');
     }
 }
