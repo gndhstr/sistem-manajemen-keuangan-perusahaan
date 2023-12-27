@@ -113,7 +113,7 @@ class AnggaranController extends Controller
         ]);
         $anggaran->save();
     
-        return redirect(route('anggaran'))->with('success', 'Anggaran berhasil ditambah');
+        return redirect(route('anggaran'))->with('berhasil', 'Anggaran berhasil ditambah');
     }
     /**
      * Display the specified resource.
@@ -169,7 +169,7 @@ class AnggaranController extends Controller
     
         $anggaran->save();
     
-        return redirect(route('anggaran'))->with('success', 'Anggaran berhasil diperbarui');
+        return redirect(route('anggaran'))->with('berhasil', 'Anggaran berhasil diperbarui');
     }
     
 
@@ -183,6 +183,6 @@ class AnggaranController extends Controller
     {
         $anggaran->status = '0';
         $anggaran->save();
-        return redirect(route("anggaran"))->with("success","Anggaran berhasil dihapus");
+        return redirect(route("anggaran"))->with("berhasil","Anggaran berhasil dihapus");
     }
 }

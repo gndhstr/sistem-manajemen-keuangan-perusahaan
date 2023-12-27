@@ -77,7 +77,7 @@ class KaryawanController extends Controller
     
         $user->save();
     
-        return redirect(route('karyawan'))->with('success', 'Karyawan ' . $request->nama . ' berhasil ditambah');
+        return redirect(route('karyawan'))->with('berhasil', 'Karyawan ' . $request->nama . ' berhasil ditambah');
     }
     
     /**
@@ -133,7 +133,7 @@ class KaryawanController extends Controller
 
         $user->save();
     
-        return redirect(route('karyawan'))->with('success', 'Data karyawan ' . $request->nama . ' berhasil diperbarui');
+        return redirect(route('karyawan'))->with('berhasil', 'Data karyawan ' . $request->nama . ' berhasil diperbarui');
     }
     
 
@@ -146,6 +146,6 @@ class KaryawanController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect(route("karyawan"))->with("success","Karyawan $user->nama berhasil dihapus");
+        return redirect(route("karyawan"))->with("berhasil","Karyawan $user->nama berhasil dihapus");
     }
 }

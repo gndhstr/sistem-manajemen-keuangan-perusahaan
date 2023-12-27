@@ -211,6 +211,21 @@
 			});
 		</script>
 		 <script>
+        var successMessage = "{{ session('berhasil') }}";
+        if (successMessage) {
+            swal({
+                // title: "Sukses",
+                text: successMessage,
+                icon: "success",
+                confirmButtonClass: 'btn btn-primary',
+                confirmButtonText: 'OK',
+                timer: 5000,
+                customClass: {
+                    // title: 'swal-title',
+                    content: 'swal-text',
+                }
+            });
+        }
         $(function() {
             var tanggalBulanans = @json($tanggalBulanans);
             for (const key in tanggalBulanans) {
